@@ -14,6 +14,8 @@ const (
 
 	StyleMarkdown = "markdown"
 	StyleHTML     = "html"
+
+	errorInt64OrString = "use only int64 or string"
 )
 
 type Bot struct {
