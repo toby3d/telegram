@@ -54,5 +54,5 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 
 	var updates []Update
 	err = json.Unmarshal(*resp.Result, &updates)
-	return updates, nil
+	return updates, err
 }

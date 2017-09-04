@@ -370,7 +370,7 @@ type (
 		FileID string `json:"file_id"`
 
 		// Video width and height as defined by sender
-		Lenght int `json:"lenght"`
+		Length int `json:"length"`
 
 		// Duration of the video in seconds as defined by sender
 		Duration int `json:"duration"`
@@ -617,7 +617,7 @@ type (
 		CanAddWebPagePreviews bool `json:"can_add_web_page_previews"` // optional
 	}
 
-	// ResponseParameters contains information about why a request was unsuccessfull.
+	// ResponseParameters contains information about why a request was unsuccessful.
 	ResponseParameters struct {
 		// The group has been migrated to a supergroup with the specified identifier.
 		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
