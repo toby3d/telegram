@@ -1,6 +1,9 @@
 package telegram
 
 import (
+	"errors"
+	"strconv"
+
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -10,18 +13,18 @@ import (
 // Note: In regular groups (non-supergroups), this method will only work if the ‘All Members Are Admins’ setting is off in the target group.
 func (bot *Bot) DeleteChatPhoto(chat interface{}) (bool, error) {
 	var args http.Args
-	switch id := chatID.(type) {
+	switch id := chat.(type) {
 	case int64: // Unique identifier for the target chat...
 		args.Add("chat_id", strconv.FormatInt(id, 10))
 	case string: // ...or username of the target supergroup or channel (in the format @channelusername)
 		args.Add("chat_id", id)
 	default:
-		return nil, errors.New(errorInt64OrString)
+		return false, errors.New(errorInt64OrString)
 	}
 
 	resp, err := bot.post("deleteChatPhoto", &args)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	var data bool

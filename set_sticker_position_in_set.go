@@ -15,7 +15,7 @@ func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, err
 
 	resp, err := bot.post("setStickerPositionInSet", &args)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	var data bool

@@ -12,7 +12,7 @@ func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
 
 	resp, err := bot.post("deleteStickerFromSet", &args)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	var data bool

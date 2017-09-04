@@ -1,6 +1,9 @@
 package telegram
 
 import (
+	"errors"
+	"strconv"
+
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -8,7 +11,7 @@ import (
 // GetChat get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
 func (bot *Bot) GetChat(chat interface{}) (*Chat, error) {
 	var args http.Args
-	switch id := chatID.(type) {
+	switch id := chat.(type) {
 	case int64: // Unique identifier for the target chat...
 		args.Add("chat_id", strconv.FormatInt(id, 10))
 	case string: // ...or username of the target supergroup or channel (in the format @channelusername)

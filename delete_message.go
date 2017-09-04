@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"errors"
 	"strconv"
 
 	json "github.com/pquerna/ffjson/ffjson"
@@ -18,18 +19,18 @@ func (bot *Bot) DeleteMessage(chat interface{}, message int) (bool, error) {
 	var args http.Args
 	args.Add("message_id", strconv.Itoa(message)) // Identifier of the message to delete
 
-	switch id := chatID.(type) {
+	switch id := chat.(type) {
 	case int64: // Unique identifier for the target chat...
 		args.Add("chat_id", strconv.FormatInt(id, 10))
 	case string: // ...or username of the target supergroup or channel (in the format @channelusername)
 		args.Add("chat_id", id)
 	default:
-		return nil, errors.New(errorInt64OrString)
+		return false, errors.New(errorInt64OrString)
 	}
 
 	resp, err := bot.post("deleteMessage", &args)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	var data bool
