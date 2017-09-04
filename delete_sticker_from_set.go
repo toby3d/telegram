@@ -10,7 +10,7 @@ func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
 	var args http.Args
 	args.Add("sticker", sticker) // File identifier of the sticker
 
-	resp, err := bot.get("deleteStickerFromSet", &args)
+	resp, err := bot.post("deleteStickerFromSet", &args)
 	if err != nil {
 		return nil, err
 	}

@@ -37,7 +37,7 @@ func (bot *Bot) SendChatAction(chat interface{}, action string) (bool, error) {
 		return nil, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.get("sendChatAction", &args)
+	resp, err := bot.post("sendChatAction", &args)
 	if err != nil {
 		return nil, err
 	}
