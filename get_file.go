@@ -12,7 +12,7 @@ func (bot *Bot) GetFile(file string) (*File, error) {
 	var args http.Args
 	args.Add("file_id", file) // File identifier to get info about
 
-	resp, err := bot.request("getFile", &args)
+	resp, err := bot.request(nil, "getFile", &args)
 	if err != nil {
 		return nil, err
 	}

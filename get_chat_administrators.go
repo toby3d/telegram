@@ -20,7 +20,7 @@ func (bot *Bot) GetChatAdministrators(chat interface{}) (*[]ChatMember, error) {
 		return nil, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.request("getChatAdministrators", &args)
+	resp, err := bot.request(nil, "getChatAdministrators", &args)
 	if err != nil {
 		return nil, err
 	}

@@ -22,7 +22,7 @@ func (bot *Bot) GetChatMember(chat interface{}, user int) (*ChatMember, error) {
 		return nil, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.request("getChatMember", &args)
+	resp, err := bot.request(nil, "getChatMember", &args)
 	if err != nil {
 		return nil, err
 	}

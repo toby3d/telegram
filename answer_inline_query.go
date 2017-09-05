@@ -1,14 +1,14 @@
 package telegram
 
-import (
-	"errors"
-	"strconv"
-
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
 
 type AnswerInlineQueryParameters struct {
+	// Unique identifier for the answered query
+	InlineQueryID string `json:"inline_query_id"` // required
+
+	// A JSON-serialized array of results for the inline query
+	Results []*InlineQueryResult `json:"results"` // required
+
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
 	CacheTime int `json:"cache_time"` // optional
 
@@ -28,23 +28,13 @@ type AnswerInlineQueryParameters struct {
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
-func (bot *Bot) AnswerInlineQuery(id string, results []interface{}, params *AnswerInlineQueryParameters) (bool, error) {
-	var args http.Args
-	args.Add("inline_query_id", id) // Unique identifier for the query to be answered
-
-	data, err := json.Marshal(results)
+func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, error) {
+	dst, err := json.Marshal(*params)
 	if err != nil {
 		return false, err
 	}
-	args.Add("results", string(data)) // A JSON-serialized array of results for the inline query
 
-	args.Add("cache_time", strconv.Itoa(params.CacheTime))
-	args.Add("is_personal", strconv.FormatBool(params.IsPersonal))
-	args.Add("next_offset", params.NextOffset)
-	args.Add("switch_pm_text", params.SwitchPrivateMessageText)
-	args.Add("switch_pm_parameter", params.SwitchPrivateMessageParameter)
-
-	resp, err := bot.request("answerInlineQuery", &args)
+	resp, err := bot.request(dst, "answerInlineQuery", nil)
 	if err != nil {
 		return false, err
 	}

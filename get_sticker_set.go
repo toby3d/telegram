@@ -10,7 +10,7 @@ func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
 	var args http.Args
 	args.Add("name", name) // Name of the sticker set
 
-	resp, err := bot.request("getStickerSet", &args)
+	resp, err := bot.request(nil, "getStickerSet", &args)
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,7 @@ func (bot *Bot) LeaveChat(chat interface{}) (bool, error) {
 		return false, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.request("leaveChat", &args)
+	resp, err := bot.request(nil, "leaveChat", &args)
 	if err != nil {
 		return false, err
 	}

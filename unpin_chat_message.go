@@ -20,7 +20,7 @@ func (bot *Bot) UnpinChatMessage(chat interface{}) (bool, error) {
 		return false, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.request("unpinChatMessage", &args)
+	resp, err := bot.request(nil, "unpinChatMessage", &args)
 	if err != nil {
 		return false, err
 	}

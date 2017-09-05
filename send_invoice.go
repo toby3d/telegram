@@ -73,7 +73,7 @@ func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (*Message, error) {
 
 	resp, err := bot.request(dst, "sendInvoice", nil)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	var data Message

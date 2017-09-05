@@ -704,6 +704,9 @@ type (
 		Offset string `json:"offset"`
 	}
 
+	// InlineQueryResult represents one result of an inline query.
+	InlineQueryResult interface{}
+
 	// InlineQueryResultArticle represents a link to an article or web page.
 	InlineQueryResultArticle struct {
 		// Type of the result, must be article

@@ -20,7 +20,7 @@ func (bot *Bot) ExportChatInviteLink(chat interface{}) (string, error) {
 		return "", errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.request("exportChatInviteLink", &args)
+	resp, err := bot.request(nil, "exportChatInviteLink", &args)
 	if err != nil {
 		return "", err
 	}

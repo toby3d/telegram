@@ -1,14 +1,11 @@
 package telegram
 
-import (
-	"errors"
-	"strconv"
-
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
 
 type AnswerCallbackQueryParameters struct {
+	// Unique identifier for the query to be answered
+	CallbackQueryID string `json:"callback_query_id"` // required
+
 	// Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
 	Text string `json:"text"` // optional
 
@@ -27,15 +24,13 @@ type AnswerCallbackQueryParameters struct {
 // AnswerCallbackQuery send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
 //
 // Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your bot via @Botfather and accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
-func (bot *Bot) AnswerCallbackQuery(id string, params *AnswerCallbackQueryParameters) (bool, error) {
-	var args http.Args
-	args.Add("callback_query_id", id) // Unique identifier for the query to be answered
-	args.Add("text", params.Text)
-	args.Add("show_alert", strconv.FormatBool(params.ShowAlert))
-	args.Add("url", params.URL)
-	args.Add("cache_time", strconv.Itoa(params.CacheTime))
+func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (bool, error) {
+	dst, err := json.Marshal(*params)
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request("answerCallbackQuery", &args)
+	resp, err := bot.request(dst, "answerCallbackQuery", nil)
 	if err != nil {
 		return false, err
 	}
