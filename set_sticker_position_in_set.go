@@ -13,7 +13,7 @@ func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, err
 	args.Add("sticker", sticker)                 // File identifier of the sticker
 	args.Add("position", strconv.Itoa(position)) // New sticker position in the set, zero-based
 
-	resp, err := bot.post("setStickerPositionInSet", &args)
+	resp, err := bot.request("setStickerPositionInSet", &args)
 	if err != nil {
 		return false, err
 	}

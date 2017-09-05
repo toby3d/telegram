@@ -47,7 +47,7 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 		args.Add("allowed_updates", fmt.Sprint(`["`, strings.Join(params.AllowedUpdates, `","`), `"]`))
 	}
 
-	resp, err := bot.get("getUpdates", &args)
+	resp, err := bot.request("getUpdates", &args)
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,7 @@ func (bot *Bot) GetChat(chat interface{}) (*Chat, error) {
 		return nil, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.get("getChat", &args)
+	resp, err := bot.request("getChat", &args)
 	if err != nil {
 		return nil, err
 	}

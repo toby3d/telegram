@@ -22,7 +22,7 @@ func (bot *Bot) UnbanChatMember(chat interface{}, user int) (bool, error) {
 		return false, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.post("unbanChatMember", &args)
+	resp, err := bot.request("unbanChatMember", &args)
 	if err != nil {
 		return false, err
 	}

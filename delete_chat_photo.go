@@ -22,7 +22,7 @@ func (bot *Bot) DeleteChatPhoto(chat interface{}) (bool, error) {
 		return false, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.post("deleteChatPhoto", &args)
+	resp, err := bot.request("deleteChatPhoto", &args)
 	if err != nil {
 		return false, err
 	}

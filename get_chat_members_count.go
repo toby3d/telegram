@@ -20,7 +20,7 @@ func (bot *Bot) GetChatMembersCount(chat interface{}) (int, error) {
 		return 0, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.get("getChatMembersCount", &args)
+	resp, err := bot.request("getChatMembersCount", &args)
 	if err != nil {
 		return 0, err
 	}

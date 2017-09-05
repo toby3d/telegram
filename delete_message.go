@@ -28,7 +28,7 @@ func (bot *Bot) DeleteMessage(chat interface{}, message int) (bool, error) {
 		return false, errors.New(errorInt64OrString)
 	}
 
-	resp, err := bot.post("deleteMessage", &args)
+	resp, err := bot.request("deleteMessage", &args)
 	if err != nil {
 		return false, err
 	}
