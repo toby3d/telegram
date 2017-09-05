@@ -26,9 +26,9 @@ func NewBot(accessToken string) *Bot {
 	return &Bot{accessToken}
 }
 
-func (bot *Bot) request(method string, args *http.Args) (*Response, error) {
+func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
 	method = fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
-	_, body, err := http.Post(nil, method, args)
+	_, body, err := http.Post(dst, method, args)
 	if err != nil {
 		return nil, err
 	}
