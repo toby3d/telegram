@@ -447,18 +447,18 @@ type (
 	// ReplyKeyboardMarkup represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 	ReplyKeyboardMarkup struct {
 		// Array of button rows, each represented by an Array of KeyboardButton objects
-		keyboard [][]KeyboardButton `json:"keyboard"`
+		Keyboard [][]KeyboardButton `json:"keyboard"`
 
 		// Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
-		resize_keyboard bool `json:"resize_keyboard,omitempty"` // optional
+		ResizeKeyboard bool `json:"resize_keyboard,omitempty"` // optional
 
 		// Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
-		one_time_keyboard bool `json:"one_time_keyboard,omitempty"` // optional
+		OneTimeKeyboard bool `json:"one_time_keyboard,omitempty"` // optional
 
 		// Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		//
 		// Example: A user requests to change the bot‘s language, bot replies to the request with a keyboard to select the new language. Other users in the group don’t see the keyboard.
-		selective bool `json:"selective,omitempty"` // optional
+		Selective bool `json:"selective,omitempty"` // optional
 	}
 
 	// KeyboardButton represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields are mutually exclusive.
@@ -755,13 +755,13 @@ type (
 		PhotoURL string `json:"photo_url"`
 
 		// URL of the thumbnail for the photo
-		thumb_url string `json:"thumb_url"`
+		ThumbURL string `json:"thumb_url"`
 
 		// Width of the photo
-		photo_width int `json:"photo_width,omitempty"` // optional
+		PhotoWidth int `json:"photo_width,omitempty"` // optional
 
 		// Height of the photo
-		photo_height int `json:"photo_height,omitempty"` // optional
+		PhotoHeight int `json:"photo_height,omitempty"` // optional
 
 		// Title for the result
 		Title string `json:"title,omitempty"` // optional
