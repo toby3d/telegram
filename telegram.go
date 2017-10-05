@@ -14,21 +14,7 @@ const (
 
 	StyleMarkdown = "markdown"
 	StyleHTML     = "html"
-
-	errorInt64OrString = "use only int64 or string"
 )
-
-type Bot struct {
-	AccessToken string
-	Self        *User
-}
-
-func NewBot(accessToken string) (*Bot, error) {
-	var err error
-	bot := &Bot{AccessToken: accessToken}
-	bot.Self, err = bot.GetMe()
-	return bot, err
-}
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
 	method = fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
