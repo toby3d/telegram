@@ -20,10 +20,14 @@ const (
 
 type Bot struct {
 	AccessToken string
+	Self        *User
 }
 
-func NewBot(accessToken string) *Bot {
-	return &Bot{accessToken}
+func NewBot(accessToken string) (*Bot, error) {
+	var err error
+	bot := &Bot{AccessToken: accessToken}
+	bot.Self, err = bot.GetMe()
+	return bot, err
 }
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
