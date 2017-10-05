@@ -10,19 +10,19 @@ type AnswerInlineQueryParameters struct {
 	Results []*InlineQueryResult `json:"results"` // required
 
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
-	CacheTime int `json:"cache_time"` // optional
+	CacheTime int `json:"cache_time,omitempty"` // optional
 
 	// Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
-	IsPersonal bool `json:"is_personal"` // optional
+	IsPersonal bool `json:"is_personal,omitempty"` // optional
 
 	// Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
-	NextOffset string `json:"next_offset"` // optional
+	NextOffset string `json:"next_offset,omitempty"` // optional
 
 	// If passed, clients will display a button with specified text that switches the user to a private chat with the bot and sends the bot a start message with the parameter switch_pm_parameter
-	SwitchPrivateMessageText string `json:"switch_pm_text"` // optional
+	SwitchPrivateMessageText string `json:"switch_pm_text,omitempty"` // optional
 
 	// Deep-linking parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.
-	SwitchPrivateMessageParameter string `json:"switch_pm_parameter"` // optional
+	SwitchPrivateMessageParameter string `json:"switch_pm_parameter,omitempty"` // optional
 }
 
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
