@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"errors"
 	"strconv"
 
 	json "github.com/pquerna/ffjson/ffjson"
@@ -9,18 +8,10 @@ import (
 )
 
 // UnbanChatMember unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
-func (bot *Bot) UnbanChatMember(chat interface{}, user int) (bool, error) {
+func (bot *Bot) UnbanChatMember(chatID int64, user int) (bool, error) {
 	var args http.Args
 	args.Add("user_id", strconv.Itoa(user)) // Unique identifier of the target user
-
-	switch id := chat.(type) {
-	case int64: // Unique identifier for the target chat...
-		args.Add("chat_id", strconv.FormatInt(id, 10))
-	case string: // ...or username of the target supergroup or channel (in the format @username)
-		args.Add("chat_id", id)
-	default:
-		return false, errors.New(errorInt64OrString)
-	}
+	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
 	resp, err := bot.request(nil, "unbanChatMember", &args)
 	if err != nil {

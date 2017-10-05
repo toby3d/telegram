@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"errors"
 	"strconv"
 
 	json "github.com/pquerna/ffjson/ffjson"
@@ -24,18 +23,10 @@ const (
 // SendChatAction tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
 //
 // We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
-func (bot *Bot) SendChatAction(chat interface{}, action string) (bool, error) {
+func (bot *Bot) SendChatAction(chatID int64, action string) (bool, error) {
 	var args http.Args
 	args.Add("action", action) // Type of action to broadcast
-
-	switch id := chat.(type) {
-	case int64: // Unique identifier for the target chat...
-		args.Add("chat_id", strconv.FormatInt(id, 10))
-	case string: // ...or username of the target supergroup or channel (in the format @channelusername)
-		args.Add("chat_id", id)
-	default:
-		return false, errors.New(errorInt64OrString)
-	}
+	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
 	resp, err := bot.request(nil, "sendChatAction", &args)
 	if err != nil {
