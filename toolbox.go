@@ -78,12 +78,12 @@ func NewInlineKeyboardButtonsRow(rows ...[]InlineKeyboardButton) *InlineKeyboard
 	return &InlineKeyboardMarkup{InlineKeyboard: keyboard}
 }
 
-func NewInlineKeyboardButtonURL(text, url string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, URL: url}
+func NewInlineKeyboardButton(text, data string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{Text: text, CallbackData: data}
 }
 
-func NewInlineKeyboardButtonData(text, data string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, CallbackData: data}
+func NewInlineKeyboardButtonURL(text, url string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{Text: text, URL: url}
 }
 
 func NewInlineKeyboardButtonSwitch(text, query string) *InlineKeyboardButton {
