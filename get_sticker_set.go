@@ -8,7 +8,7 @@ import (
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
 func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
 	var args http.Args
-	args.Add("name", name) // Name of the sticker set
+	args.Add("name", name)
 
 	resp, err := bot.request(nil, "getStickerSet", &args)
 	if err != nil {

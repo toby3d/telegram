@@ -5,10 +5,11 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-// DeleteStickerFromSet delete a sticker from a set created by the bot. Returns True on success.
+// DeleteStickerFromSet delete a sticker from a set created by the bot. Returns
+// True on success.
 func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
 	var args http.Args
-	args.Add("sticker", sticker) // File identifier of the sticker
+	args.Add("sticker", sticker)
 
 	resp, err := bot.request(nil, "deleteStickerFromSet", &args)
 	if err != nil {

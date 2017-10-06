@@ -7,7 +7,8 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-// GetChatMembersCount get the number of members in a chat. Returns Int on success.
+// GetChatMembersCount get the number of members in a chat. Returns Int on
+// success.
 func (bot *Bot) GetChatMembersCount(chatID int64) (int, error) {
 	var args http.Args
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))

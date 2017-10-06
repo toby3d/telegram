@@ -7,7 +7,9 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-// GetChat get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
+// GetChat get up to date information about the chat (current name of the user
+// for one-on-one conversations, current username of a user, group or channel,
+// etc.). Returns a Chat object on success.
 func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
 	var args http.Args
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))

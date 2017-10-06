@@ -7,11 +7,12 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-// SetStickerPositionInSet move a sticker in a set created by the bot to a specific position. Returns True on success.
+// SetStickerPositionInSet move a sticker in a set created by the bot to a
+// specific position. Returns True on success.
 func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error) {
 	var args http.Args
-	args.Add("sticker", sticker)                 // File identifier of the sticker
-	args.Add("position", strconv.Itoa(position)) // New sticker position in the set, zero-based
+	args.Add("sticker", sticker)
+	args.Add("position", strconv.Itoa(position))
 
 	resp, err := bot.request(nil, "setStickerPositionInSet", &args)
 	if err != nil {
