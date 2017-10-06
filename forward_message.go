@@ -1,9 +1,6 @@
 package telegram
 
-import (
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
 
 type ForwardMessageParameters struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
