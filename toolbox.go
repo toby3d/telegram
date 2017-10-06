@@ -5,6 +5,22 @@ import (
 	"time"
 )
 
+func NewAnswerCallback(id string) *AnswerCallbackQueryParameters {
+	return &AnswerCallbackQueryParameters{CallbackQueryID: id}
+}
+
+func NewAnswerInline(id string, results ...InlineQueryResult) *AnswerInlineQueryParameters {
+	return &AnswerInlineQueryParameters{InlineQueryID: id, Results: results}
+}
+
+func NewAnswerPreCheckout(id string, ok bool) *AnswerPreCheckoutQueryParameters {
+	return &AnswerPreCheckoutQueryParameters{PreCheckoutQueryID: id, Ok: ok}
+}
+
+func NewAnswerShipping(id string, ok bool) *AnswerShippingQueryParameters {
+	return &AnswerShippingQueryParameters{ShippingQueryID: id, Ok: ok}
+}
+
 func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	var keyboard [][]KeyboardButton
 	keyboard = append(keyboard, rows...)
