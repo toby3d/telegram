@@ -11,9 +11,6 @@ import (
 const (
 	APIEndpoint  = "https://api.telegram.org/bot%s/%s"
 	FileEndpoind = "https://api.telegram.org/file/bot%s/%s"
-
-	StyleMarkdown = "markdown"
-	StyleHTML     = "html"
 )
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {

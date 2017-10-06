@@ -7,19 +7,6 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-const (
-	ActionTyping          = "typing"
-	ActionUploadPhoto     = "upload_photo"
-	ActionRecordVideo     = "record_video"
-	ActionUploadVideo     = "upload_video"
-	ActionRecordAudio     = "record_audio"
-	ActionUploadAudio     = "upload_audio"
-	ActionUploadDocument  = "upload_document"
-	ActionFindLocation    = "find_location"
-	ActionRecordVideoNote = "record_video_note"
-	ActionUploadVideoNote = "upload_video_note"
-)
-
 // SendChatAction tell the user that something is happening on the bot's side.
 // The status is set for 5 seconds or less (when a message arrives from your bot,
 // Telegram clients clear its typing status). Returns True on success.

@@ -5,6 +5,74 @@ import (
 	"time"
 )
 
+const (
+	ActionFindLocation    = "find_location"
+	ActionRecordAudio     = "record_audio"
+	ActionRecordVideo     = "record_video"
+	ActionRecordVideoNote = "record_video_note"
+	ActionTyping          = "typing"
+	ActionUploadAudio     = "upload_audio"
+	ActionUploadDocument  = "upload_document"
+	ActionUploadPhoto     = "upload_photo"
+	ActionUploadVideo     = "upload_video"
+	ActionUploadVideoNote = "upload_video_note"
+
+	ChatChannel    = "channel"
+	ChatGroup      = "group"
+	ChatPrivate    = "private"
+	ChatSuperGroup = "supergroup"
+
+	EntityBold        = "bold"
+	EntityBotCommand  = "bot_command"
+	EntityCode        = "code"
+	EntityEmail       = "email"
+	EntityHashtag     = "hashtag"
+	EntityItalic      = "italic"
+	EntityMention     = "mention"
+	EntityPre         = "pre"
+	EntityTextLink    = "text_link"
+	EntityTextMention = "text_mention"
+	EntityURL         = "url"
+
+	MimeHTML = "text/html"
+	MimeMP4  = "video/mp4"
+	MimePDF  = "application/pdf"
+	MimeZIP  = "application/zip"
+
+	StatusAdministrator = "administrator"
+	StatusCreator       = "creator"
+	StatusKicked        = "kicked"
+	StatusLeft          = "left"
+	StatusMember        = "member"
+	StatusRestricted    = "restricted"
+
+	StyleHTML     = "html"
+	StyleMarkdown = "markdown"
+
+	TypeArticle  = "article"
+	TypeAudio    = "audio"
+	TypeContact  = "contact"
+	TypeDocument = "document"
+	TypeGame     = "game"
+	TypeGIF      = "gif"
+	TypeLocation = "location"
+	TypeMPEG4GIF = "mpeg4_gif"
+	TypePhoto    = "photo"
+	TypeVenue    = "venue"
+	TypeVideo    = "video"
+	TypeVoice    = "voice"
+
+	UpdateCallbackQuery      = "callback_query"
+	UpdateChannelPost        = "channel_post"
+	UpdateChosenInlineResult = "chosen_inline_result"
+	UpdateEditedChannelPost  = "edited_channel_post"
+	UpdateEditedMessage      = "edited_message"
+	UpdateInlineQuery        = "inline_query"
+	UpdateMessage            = "message"
+	UpdatePreCheckoutQuery   = "pre_checkout_query"
+	UpdateShippingQuery      = "shipping_query"
+)
+
 type (
 	// Response represents a response from the Telegram API with the result
 	// stored raw. If ok equals true, the request was successful, and the result
