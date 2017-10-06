@@ -21,6 +21,10 @@ func NewAnswerShipping(id string, ok bool) *AnswerShippingQueryParameters {
 	return &AnswerShippingQueryParameters{ShippingQueryID: id, Ok: ok}
 }
 
+func NewMessage(chatID int64, text string) *SendMessageParameters {
+	return &SendMessageParameters{ChatID: chatID, Text: text}
+}
+
 func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	var keyboard [][]KeyboardButton
 	keyboard = append(keyboard, rows...)
