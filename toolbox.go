@@ -25,6 +25,10 @@ func NewMessage(chatID int64, text string) *SendMessageParameters {
 	return &SendMessageParameters{ChatID: chatID, Text: text}
 }
 
+func NewMessageForward(from, to int64, messageID int) *ForwardMessageParameters {
+	return &ForwardMessageParameters{FromChatID: from, ChatID: to, MessageID: messageID}
+}
+
 func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices ...LabeledPrice) *SendInvoiceParameters {
 	return &SendInvoiceParameters{
 		ChatID:         chatID,
