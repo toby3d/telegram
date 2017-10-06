@@ -1,5 +1,10 @@
 package telegram
 
+import (
+	"log"
+	"time"
+)
+
 func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	var keyboard [][]KeyboardButton
 	keyboard = append(keyboard, rows...)
@@ -58,4 +63,37 @@ func NewInlineKeyboardButtonGame(text string) *InlineKeyboardButton {
 
 func NewInlineKeyboardButtonPay(text string) *InlineKeyboardButton {
 	return &InlineKeyboardButton{Text: text, Pay: true}
+}
+
+func (bot *Bot) NewUpdatesChannel(params *GetUpdatesParameters) chan *Update {
+	if params == nil {
+		params = &GetUpdatesParameters{
+			Limit:   100,
+			Timeout: 60,
+		}
+	}
+
+	channel := make(chan *Update, params.Limit)
+
+	go func() {
+		for {
+			updates, err := bot.GetUpdates(params)
+			if err != nil {
+				log.Println(err.Error())
+				log.Println("failed to get updates, retrying in 3 seconds...")
+				time.Sleep(time.Second * 3)
+
+				continue
+			}
+
+			for _, update := range updates {
+				if update.ID >= params.Offset {
+					params.Offset = update.ID + 1
+					channel <- &update
+				}
+			}
+		}
+	}()
+
+	return channel
 }
