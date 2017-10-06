@@ -9,7 +9,7 @@ type AnswerShippingQueryParameters struct {
 	// Specify True if delivery to the specified address is possible and False
 	// if there are any problems (for example, if delivery to the specified
 	// address is not possible)
-	OK bool `json:"ok"`
+	Ok bool `json:"ok"`
 
 	// Required if ok is True. A JSON-serialized array of available shipping
 	// options.

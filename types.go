@@ -312,7 +312,7 @@ type (
 
 		// For "text_link" only, url that will be opened after user taps on the
 		// text
-		Url string `json:"url,omitempty"`
+		URL string `json:"url,omitempty"`
 
 		// For "text_mention" only, the mentioned user
 		User *User `json:"user,omitempty"`
