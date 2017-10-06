@@ -25,6 +25,19 @@ func NewMessage(chatID int64, text string) *SendMessageParameters {
 	return &SendMessageParameters{ChatID: chatID, Text: text}
 }
 
+func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices ...LabeledPrice) *SendInvoiceParameters {
+	return &SendInvoiceParameters{
+		ChatID:         chatID,
+		Title:          title,
+		Description:    description,
+		Payload:        payload,
+		ProviderToken:  providerToken,
+		StartParameter: startParameter,
+		Currency:       currency,
+		Prices:         prices,
+	}
+}
+
 func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	var keyboard [][]KeyboardButton
 	keyboard = append(keyboard, rows...)
