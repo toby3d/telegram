@@ -36,7 +36,7 @@ type GetUpdatesParameters struct {
 
 // GetUpdates receive incoming updates using long polling (wiki). An Array of
 // Update objects is returned.
-func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]*Update, error) {
+func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]*Update, error) {
 		return nil, err
 	}
 
-	data := make([]*Update, 100)
+	data := make([]Update, 100)
 	err = json.Unmarshal(*resp.Result, &data)
 	return data, err
 }
