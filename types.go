@@ -198,10 +198,10 @@ type (
 
 		// For text messages, special entities like usernames, URLs, bot
 		// commands, etc. that appear in the text
-		Entities *[]MessageEntity `json:"entities,omitempty"`
+		Entities []MessageEntity `json:"entities,omitempty"`
 
 		// Message is an audio file, information about the file
-		Autdio *Audio `json:"audio,omitempty"`
+		Audio *Audio `json:"audio,omitempty"`
 
 		// Message is a general file, information about the file
 		Document *Document `json:"document,omitempty"`
@@ -210,7 +210,7 @@ type (
 		Game *Game `json:"game,omitempty"`
 
 		// Message is a photo, available sizes of the photo
-		Photo *[]PhotoSize `json:"photo,omitempty"`
+		Photo []PhotoSize `json:"photo,omitempty"`
 
 		// Message is a sticker, information about the sticker
 		Sticker *Sticker `json:"sticker,omitempty"`
@@ -226,7 +226,7 @@ type (
 
 		// New members that were added to the group or supergroup and information
 		// about them (the bot itself may be one of these members)
-		NewChatMembers *[]User `json:"new_chat_members,omitempty"`
+		NewChatMembers []User `json:"new_chat_members,omitempty"`
 
 		// Caption for the document, photo or video, 0-200 characters
 		Caption string `json:"caption,omitempty"`
@@ -252,7 +252,7 @@ type (
 		NewChatTitle string `json:"new_chat_title,omitempty"`
 
 		// A chat photo was change to this value
-		NewChatPhoto *[]PhotoSize `json:"new_chat_photo,omitempty"`
+		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
 
 		// Service message: the chat photo was deleted
 		DeleteChatPhoto bool `json:"delete_chat_photo,omitempty"`
@@ -477,7 +477,7 @@ type (
 		TotalCount int `json:"total_count"`
 
 		// Requested profile pictures (in up to 4 sizes each)
-		Photos []*[]PhotoSize `json:"photos"`
+		Photos [][]PhotoSize `json:"photos"`
 	}
 
 	// File represents a file ready to be downloaded. The file can be downloaded
@@ -816,7 +816,7 @@ type (
 		ContainsMasks bool `json:"contains_masks"`
 
 		// List of all set stickers
-		Stickers *[]Sticker `json:"stickers"`
+		Stickers []Sticker `json:"stickers"`
 	}
 
 	// MaskPosition describes the position on faces where a mask should be placed
@@ -1684,7 +1684,7 @@ type (
 		Title string `json:"title"`
 
 		// List of price portions
-		Prices *[]LabeledPrice `json:"prices"`
+		Prices []LabeledPrice `json:"prices"`
 	}
 
 	// SuccessfulPayment contains basic information about a successful payment.
@@ -1768,7 +1768,7 @@ type (
 		Description string `json:"description"`
 
 		// Photo that will be displayed in the game message in chats.
-		Photo *[]PhotoSize `json:"photo"`
+		Photo []PhotoSize `json:"photo"`
 
 		// Brief description of the game or high scores included in the game
 		// message. Can be automatically edited to include current high scores
@@ -1778,7 +1778,7 @@ type (
 
 		// Special entities that appear in text, such as usernames, URLs, bot
 		// commands, etc.
-		TextEntities *[]MessageEntity `json:"text_entities,omitempty"`
+		TextEntities []MessageEntity `json:"text_entities,omitempty"`
 
 		// Animation that will be displayed in the game message in chats. Upload
 		// via BotFather
