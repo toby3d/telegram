@@ -1,8 +1,11 @@
 package telegram
 
 import (
+	"io/ioutil"
 	"log"
 	"time"
+
+	json "github.com/pquerna/ffjson/ffjson"
 )
 
 func NewAnswerCallback(id string) *AnswerCallbackQueryParameters {
@@ -48,61 +51,69 @@ func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	return &ReplyKeyboardMarkup{Keyboard: keyboard, ResizeKeyboard: true}
 }
 
-func NewKeyboardButtonsRow(buttons ...KeyboardButton) []KeyboardButton {
+func NewReplyKeyboardRow(buttons ...KeyboardButton) []KeyboardButton {
 	var row []KeyboardButton
 	row = append(row, buttons...)
 	return row
 }
 
-func NewKeyboardButton(text string) *KeyboardButton {
-	return &KeyboardButton{Text: text}
+func NewReplyKeyboardButton(text string) KeyboardButton {
+	return KeyboardButton{Text: text}
 }
 
-func NewKeyboardButtonContact(text string) *KeyboardButton {
-	return &KeyboardButton{Text: text, RequestContact: true}
+func NewReplyKeyboardButtonContact(text string) KeyboardButton {
+	return KeyboardButton{Text: text, RequestContact: true}
 }
 
-func NewKeyboardButtonLocation(text string) *KeyboardButton {
-	return &KeyboardButton{Text: text, RequestLocation: true}
+func NewReplyKeyboardButtonLocation(text string) KeyboardButton {
+	return KeyboardButton{Text: text, RequestLocation: true}
 }
 
-func NewInlineKeyboard(buttons ...InlineKeyboardButton) []InlineKeyboardButton {
+func NewInlineKeyboard(rows ...[]InlineKeyboardButton) [][]InlineKeyboardButton {
+	var keyboard [][]InlineKeyboardButton
+	keyboard = append(keyboard, rows...)
+	return keyboard
+}
+
+func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButton {
 	var row []InlineKeyboardButton
 	row = append(row, buttons...)
 	return row
 }
 
-func NewInlineKeyboardButtonsRow(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup {
-	var keyboard [][]InlineKeyboardButton
-	keyboard = append(keyboard, rows...)
-	return &InlineKeyboardMarkup{InlineKeyboard: keyboard}
+func NewInlineKeyboardButton(text, data string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, CallbackData: data}
 }
 
-func NewInlineKeyboardButton(text, data string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, CallbackData: data}
+func NewInlineKeyboardButtonURL(text, url string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, URL: url}
 }
 
-func NewInlineKeyboardButtonURL(text, url string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, URL: url}
+func NewInlineKeyboardButtonSwitch(text, query string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, SwitchInlineQuery: query}
 }
 
-func NewInlineKeyboardButtonSwitch(text, query string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, SwitchInlineQuery: query}
+func NewInlineKeyboardButtonSwitchSelf(text, query string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, SwitchInlineQueryCurrentChat: query}
 }
 
-func NewInlineKeyboardButtonSwitchSelf(text, query string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, SwitchInlineQueryCurrentChat: query}
+func NewInlineKeyboardButtonGame(text string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, CallbackGame: &CallbackGame{}}
 }
 
-func NewInlineKeyboardButtonGame(text string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, CallbackGame: &CallbackGame{}}
+func NewInlineKeyboardButtonPay(text string) InlineKeyboardButton {
+	return InlineKeyboardButton{Text: text, Pay: true}
+}
+
+func NewWebhook(url string, file *InputFile) *SetWebhookParameters {
+	return &SetWebhookParameters{URL: url, Certificate: file}
 }
 
 func NewInlineKeyboardButtonPay(text string) *InlineKeyboardButton {
 	return &InlineKeyboardButton{Text: text, Pay: true}
 }
 
-func (bot *Bot) NewUpdatesChannel(params *GetUpdatesParameters) chan *Update {
+func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{
 			Limit:   100,
