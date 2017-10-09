@@ -145,3 +145,54 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 
 	return channel
 }
+
+func (msg *Message) IsCommand() bool {
+	if len(msg.Entities) <= 0 {
+		return false
+	}
+
+	if msg.Entities[0].Type != EntityBotCommand {
+		return false
+	}
+
+	return true
+}
+
+func (msg *Message) Command() string {
+	if len(msg.Entities) <= 0 {
+		return ""
+	}
+
+	if msg.Entities[0].Type != EntityBotCommand {
+		return ""
+	}
+
+	start := msg.Entities[0].Offset
+	end := start + msg.Entities[0].Length
+
+	return string([]rune(msg.Text)[start:end])
+}
+
+func (chat *Chat) IsPrivate() bool {
+	return chat.Type == ChatPrivate
+}
+
+func (chat *Chat) IsGroup() bool {
+	return chat.Type == ChatGroup
+}
+
+func (chat *Chat) IsSuperGroup() bool {
+	return chat.Type == ChatSuperGroup
+}
+
+func (chat *Chat) IsChannel() bool {
+	return chat.Type == ChatChannel
+}
+
+func (entity *MessageEntity) ParseURL() (*url.URL, error) {
+	if entity.Type != EntityTextLink {
+		return nil, nil
+	}
+
+	return url.Parse(entity.URL)
+}
