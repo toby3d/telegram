@@ -23,7 +23,7 @@ type SendMessageParameters struct {
 	DisableNotification bool `json:"disable_notification,omitempty"`
 	// If the message is a reply, ID of the original message
 
-	ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
+	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
 	// Additional interface options. A JSON-serialized object for an inline
 	// keyboard, custom reply keyboard, instructions to remove reply keyboard or
