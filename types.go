@@ -214,6 +214,12 @@ type (
 
 		// Pinned message, for supergroups. Returned only in getChat.
 		PinnedMessage *Message `json:"pinned_message,omitempty"`
+
+		// For supergroups, name of Group sticker set. Returned only in getChat.
+		StickerSetName string `json:"sticker_set_name,omitempty"`
+
+		// True, if the bot can change group the sticker set. Returned only in getChat.
+		CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
 	}
 
 	// Message represents a message.
@@ -267,6 +273,9 @@ type (
 		// For text messages, special entities like usernames, URLs, bot
 		// commands, etc. that appear in the text
 		Entities []MessageEntity `json:"entities,omitempty"`
+
+		// For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+		CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
 
 		// Message is an audio file, information about the file
 		Audio *Audio `json:"audio,omitempty"`
