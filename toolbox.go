@@ -164,8 +164,36 @@ func NewWebhook(url string, file interface{}) *SetWebhookParameters {
 	}
 }
 
-func NewInlineKeyboardButtonPay(text string) *InlineKeyboardButton {
-	return &InlineKeyboardButton{Text: text, Pay: true}
+func (bot *Bot) NewWebhookChannel(endpoint string, params *GetUpdatesParameters) UpdatesChannel {
+	if params == nil {
+		params = &GetUpdatesParameters{
+			Limit:   100,
+			Timeout: 60,
+		}
+	}
+
+	channel := make(chan *Update, params.Limit)
+
+	/* From go-telegram-bot-api
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		bytes, _ := ioutil.ReadAll(r.Body)
+
+		var update Update
+		json.Unmarshal(bytes, &update)
+
+		channel <- update
+	})
+	*/
+
+	r := router.New()
+	r.Handle("POST", endpoint, func(ctx *http.RequestCtx) {
+		var update Update
+		json.Unmarshal(ctx.Request.Body(), &update)
+
+		channel <- &update
+	})
+
+	return channel
 }
 
 func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
