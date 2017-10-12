@@ -1,35 +1,56 @@
 package telegram
 
 import (
-	"io/ioutil"
 	"log"
+	"net/url"
 	"time"
 
+	router "github.com/buaazp/fasthttprouter"
 	json "github.com/pquerna/ffjson/ffjson"
+	http "github.com/valyala/fasthttp"
 )
 
+type UpdatesChannel <-chan *Update
+
 func NewAnswerCallback(id string) *AnswerCallbackQueryParameters {
-	return &AnswerCallbackQueryParameters{CallbackQueryID: id}
+	return &AnswerCallbackQueryParameters{
+		CallbackQueryID: id}
 }
 
 func NewAnswerInline(id string, results ...InlineQueryResult) *AnswerInlineQueryParameters {
-	return &AnswerInlineQueryParameters{InlineQueryID: id, Results: results}
+	return &AnswerInlineQueryParameters{
+		InlineQueryID: id,
+		Results:       results,
+	}
 }
 
 func NewAnswerPreCheckout(id string, ok bool) *AnswerPreCheckoutQueryParameters {
-	return &AnswerPreCheckoutQueryParameters{PreCheckoutQueryID: id, Ok: ok}
+	return &AnswerPreCheckoutQueryParameters{
+		PreCheckoutQueryID: id,
+		Ok:                 ok,
+	}
 }
 
 func NewAnswerShipping(id string, ok bool) *AnswerShippingQueryParameters {
-	return &AnswerShippingQueryParameters{ShippingQueryID: id, Ok: ok}
+	return &AnswerShippingQueryParameters{
+		ShippingQueryID: id,
+		Ok:              ok,
+	}
 }
 
 func NewMessage(chatID int64, text string) *SendMessageParameters {
-	return &SendMessageParameters{ChatID: chatID, Text: text}
+	return &SendMessageParameters{
+		ChatID: chatID,
+		Text:   text,
+	}
 }
 
 func NewMessageForward(from, to int64, messageID int) *ForwardMessageParameters {
-	return &ForwardMessageParameters{FromChatID: from, ChatID: to, MessageID: messageID}
+	return &ForwardMessageParameters{
+		FromChatID: from,
+		ChatID:     to,
+		MessageID:  messageID,
+	}
 }
 
 func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices ...LabeledPrice) *SendInvoiceParameters {
@@ -48,7 +69,10 @@ func NewInvoice(chatID int64, title, description, payload, providerToken, startP
 func NewReplyKeyboard(rows ...[]KeyboardButton) *ReplyKeyboardMarkup {
 	var keyboard [][]KeyboardButton
 	keyboard = append(keyboard, rows...)
-	return &ReplyKeyboardMarkup{Keyboard: keyboard, ResizeKeyboard: true}
+	return &ReplyKeyboardMarkup{
+		Keyboard:       keyboard,
+		ResizeKeyboard: true,
+	}
 }
 
 func NewReplyKeyboardRow(buttons ...KeyboardButton) []KeyboardButton {
@@ -58,15 +82,23 @@ func NewReplyKeyboardRow(buttons ...KeyboardButton) []KeyboardButton {
 }
 
 func NewReplyKeyboardButton(text string) KeyboardButton {
-	return KeyboardButton{Text: text}
+	return KeyboardButton{
+		Text: text,
+	}
 }
 
 func NewReplyKeyboardButtonContact(text string) KeyboardButton {
-	return KeyboardButton{Text: text, RequestContact: true}
+	return KeyboardButton{
+		Text:           text,
+		RequestContact: true,
+	}
 }
 
 func NewReplyKeyboardButtonLocation(text string) KeyboardButton {
-	return KeyboardButton{Text: text, RequestLocation: true}
+	return KeyboardButton{
+		Text:            text,
+		RequestLocation: true,
+	}
 }
 
 func NewInlineKeyboard(rows ...[]InlineKeyboardButton) [][]InlineKeyboardButton {
@@ -82,31 +114,54 @@ func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButto
 }
 
 func NewInlineKeyboardButton(text, data string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, CallbackData: data}
+	return InlineKeyboardButton{
+		Text:         text,
+		CallbackData: data,
+	}
 }
 
 func NewInlineKeyboardButtonURL(text, url string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, URL: url}
+	return InlineKeyboardButton{
+		Text: text,
+		URL:  url,
+	}
 }
 
 func NewInlineKeyboardButtonSwitch(text, query string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, SwitchInlineQuery: query}
+	return InlineKeyboardButton{
+		Text:              text,
+		SwitchInlineQuery: query,
+	}
 }
 
 func NewInlineKeyboardButtonSwitchSelf(text, query string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, SwitchInlineQueryCurrentChat: query}
+	return InlineKeyboardButton{
+		Text: text,
+		SwitchInlineQueryCurrentChat: query,
+	}
 }
 
 func NewInlineKeyboardButtonGame(text string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, CallbackGame: &CallbackGame{}}
+	return InlineKeyboardButton{
+		Text:         text,
+		CallbackGame: &CallbackGame{},
+	}
 }
 
 func NewInlineKeyboardButtonPay(text string) InlineKeyboardButton {
-	return InlineKeyboardButton{Text: text, Pay: true}
+	return InlineKeyboardButton{
+		Text: text,
+		Pay:  true,
+	}
 }
 
-func NewWebhook(url string, file *InputFile) *SetWebhookParameters {
-	return &SetWebhookParameters{URL: url, Certificate: file}
+func NewWebhook(url string, file interface{}) *SetWebhookParameters {
+	var input InputFile
+	input = file
+	return &SetWebhookParameters{
+		URL:         url,
+		Certificate: &input,
+	}
 }
 
 func NewInlineKeyboardButtonPay(text string) *InlineKeyboardButton {
@@ -151,7 +206,8 @@ func (msg *Message) IsCommand() bool {
 		return false
 	}
 
-	if msg.Entities[0].Type != EntityBotCommand {
+	if msg.Entities[0].Type != EntityBotCommand &&
+		msg.Entities[0].Offset != 0 {
 		return false
 	}
 
@@ -163,14 +219,12 @@ func (msg *Message) Command() string {
 		return ""
 	}
 
-	if msg.Entities[0].Type != EntityBotCommand {
+	if msg.Entities[0].Type != EntityBotCommand &&
+		msg.Entities[0].Offset != 0 {
 		return ""
 	}
 
-	start := msg.Entities[0].Offset
-	end := start + msg.Entities[0].Length
-
-	return string([]rune(msg.Text)[start:end])
+	return string([]rune(msg.Text)[:msg.Entities[0].Length])
 }
 
 func (chat *Chat) IsPrivate() bool {
