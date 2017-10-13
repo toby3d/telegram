@@ -80,7 +80,7 @@ type (
 	// request, ok equals false, and the error is explained in the error field.
 	Response struct {
 		Ok          bool                `json:"ok"`
-		ErrorCode   string              `json:"error_code"`
+		ErrorCode   int                 `json:"error_code"`
 		Description string              `json:"description"`
 		Result      *json.RawMessage    `json:"result"`
 		Parameters  *ResponseParameters `json:"parameters"`
