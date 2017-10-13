@@ -14,20 +14,31 @@ const (
 )
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
-	method = fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
-	_, body, err := http.Post(dst, method, args)
-	if err != nil {
+	requestURI := fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
+	if args != nil {
+		requestURI += args.String()
+	}
+
+	var req http.Request
+	var resp http.Response
+
+	req.Header.SetMethod("POST")
+	req.Header.SetContentType("application/json")
+	req.SetBody(dst)
+	req.SetRequestURI(requestURI)
+
+	if err := http.Do(&req, &resp); err != nil {
 		return nil, err
 	}
 
-	var resp Response
-	if err := json.Unmarshal(body, &resp); err != nil {
+	var data Response
+	if err := json.Unmarshal(resp.Body(), &data); err != nil {
 		return nil, err
 	}
 
-	if !resp.Ok {
-		return &resp, errors.New(resp.Description)
+	if !data.Ok {
+		return &data, errors.New(data.Description)
 	}
 
-	return &resp, nil
+	return &data, nil
 }
