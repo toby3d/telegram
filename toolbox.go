@@ -7,12 +7,11 @@ import (
 	"strings"
 	"time"
 
-	router "github.com/buaazp/fasthttprouter"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
-type UpdatesChannel <-chan *Update
+type UpdatesChannel <-chan Update
 
 func NewAnswerCallback(id string) *AnswerCallbackQueryParameters {
 	return &AnswerCallbackQueryParameters{
@@ -103,10 +102,10 @@ func NewReplyKeyboardButtonLocation(text string) KeyboardButton {
 	}
 }
 
-func NewInlineKeyboard(rows ...[]InlineKeyboardButton) [][]InlineKeyboardButton {
+func NewInlineKeyboard(rows ...[]InlineKeyboardButton) InlineKeyboardMarkup {
 	var keyboard [][]InlineKeyboardButton
 	keyboard = append(keyboard, rows...)
-	return keyboard
+	return InlineKeyboardMarkup{InlineKeyboard: keyboard}
 }
 
 func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButton {
@@ -158,44 +157,14 @@ func NewInlineKeyboardButtonPay(text string) InlineKeyboardButton {
 }
 
 func NewWebhook(url string, file interface{}) *SetWebhookParameters {
-	var input InputFile
-	input = file
-	return &SetWebhookParameters{
-		URL:         url,
-		Certificate: &input,
-	}
-}
+	params := &SetWebhookParameters{URL: url}
 
-func (bot *Bot) NewWebhookChannel(endpoint string, params *GetUpdatesParameters) UpdatesChannel {
-	if params == nil {
-		params = &GetUpdatesParameters{
-			Limit:   100,
-			Timeout: 60,
-		}
+	if file != nil {
+		var input InputFile = file
+		params.Certificate = &input
 	}
 
-	channel := make(chan *Update, params.Limit)
-
-	/* From go-telegram-bot-api
-	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-		bytes, _ := ioutil.ReadAll(r.Body)
-
-		var update Update
-		json.Unmarshal(bytes, &update)
-
-		channel <- update
-	})
-	*/
-
-	r := router.New()
-	r.Handle("POST", endpoint, func(ctx *http.RequestCtx) {
-		var update Update
-		json.Unmarshal(ctx.Request.Body(), &update)
-
-		channel <- &update
-	})
-
-	return channel
+	return params
 }
 
 func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
@@ -207,7 +176,7 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 		}
 	}
 
-	channel := make(chan *Update, params.Limit)
+	channel := make(chan Update, params.Limit)
 
 	go func() {
 		for {
@@ -223,9 +192,37 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 			for _, update := range updates {
 				if update.ID >= params.Offset {
 					params.Offset = update.ID + 1
-					channel <- &update
+					channel <- update
 				}
 			}
+		}
+	}()
+
+	return channel
+}
+
+func NewWebhookChannel(serve, listen string, params *GetUpdatesParameters) UpdatesChannel {
+	if params == nil {
+		params = &GetUpdatesParameters{
+			Offset:  0,
+			Limit:   100,
+			Timeout: 60,
+		}
+	}
+
+	channel := make(chan Update, params.Limit)
+
+	go func() {
+		if err := http.ListenAndServe(serve, func(ctx *http.RequestCtx) {
+			log.Println("PATH:", string(ctx.Path()))
+			if strings.HasPrefix(string(ctx.Path()), listen) {
+				log.Println("rawBody:", string(ctx.Request.Body()))
+				var update Update
+				json.Unmarshal(ctx.Request.Body(), &update)
+				channel <- update
+			}
+		}); err != nil {
+			panic(err.Error())
 		}
 	}()
 
@@ -237,12 +234,12 @@ func (msg *Message) IsCommand() bool {
 		return false
 	}
 
-	if msg.Entities[0].Type != EntityBotCommand &&
-		msg.Entities[0].Offset != 0 {
-		return false
+	if msg.Entities[0].Type == EntityBotCommand &&
+		msg.Entities[0].Offset == 0 {
+		return true
 	}
 
-	return true
+	return false
 }
 
 func (msg *Message) Command() string {
@@ -271,11 +268,11 @@ func (msg *Message) HasArgument() bool {
 		return false
 	}
 
-	if msg.CommandArgument() == "" {
-		return false
+	if msg.CommandArgument() != "" {
+		return true
 	}
 
-	return true
+	return false
 }
 
 func (chat *Chat) IsPrivate() bool {
