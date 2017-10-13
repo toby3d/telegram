@@ -1,8 +1,10 @@
 package telegram
 
 import (
+	"fmt"
 	"log"
 	"net/url"
+	"strings"
 	"time"
 
 	router "github.com/buaazp/fasthttprouter"
@@ -199,6 +201,7 @@ func (bot *Bot) NewWebhookChannel(endpoint string, params *GetUpdatesParameters)
 func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{
+			Offset:  0,
 			Limit:   100,
 			Timeout: 60,
 		}
@@ -243,16 +246,36 @@ func (msg *Message) IsCommand() bool {
 }
 
 func (msg *Message) Command() string {
-	if len(msg.Entities) <= 0 {
+	if !msg.IsCommand() {
 		return ""
 	}
 
-	if msg.Entities[0].Type != EntityBotCommand &&
-		msg.Entities[0].Offset != 0 {
+	return string([]rune(msg.Text)[1:msg.Entities[0].Length])
+}
+
+func (msg *Message) CommandArgument() string {
+	if !msg.IsCommand() {
 		return ""
 	}
 
-	return string([]rune(msg.Text)[:msg.Entities[0].Length])
+	arg := strings.TrimPrefix(
+		msg.Text,
+		fmt.Sprint("/", msg.Command()),
+	)
+
+	return strings.TrimPrefix(arg, " ")
+}
+
+func (msg *Message) HasArgument() bool {
+	if !msg.IsCommand() {
+		return false
+	}
+
+	if msg.CommandArgument() == "" {
+		return false
+	}
+
+	return true
 }
 
 func (chat *Chat) IsPrivate() bool {
