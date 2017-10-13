@@ -19,10 +19,9 @@ type SendMessageParameters struct {
 
 	// Sends the message silently. Users will receive a notification with no
 	// sound.
-
 	DisableNotification bool `json:"disable_notification,omitempty"`
-	// If the message is a reply, ID of the original message
 
+	// If the message is a reply, ID of the original message
 	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
 	// Additional interface options. A JSON-serialized object for an inline
