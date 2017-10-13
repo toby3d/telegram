@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 
 	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
 )
 
 type SetWebhookParameters struct {
@@ -46,25 +45,18 @@ type SetWebhookParameters struct {
 // recommend using a secret path in the URL, e.g. https://www.example.com/<token>.
 // Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
 func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
-	var args http.Args
-
 	if params.Certificate != nil {
+		var err error
 		cert := *params.Certificate
 		switch f := cert.(type) {
 		case string:
-			body, err := ioutil.ReadFile(f)
+			cert, err = ioutil.ReadFile(f)
 			if err != nil {
 				return false, err
 			}
-
-			// args.AddBytesV("certificate", body)
-			cert = body
 		case []byte:
-			// args.AddBytesV("certificate", bytes.NewBuffer(f).Bytes())
 			cert = bytes.NewBuffer(f).Bytes()
 		}
-		// params.Certificate = nil
-		params.Certificate = &cert
 	}
 
 	dst, err := json.Marshal(*params)
@@ -72,7 +64,7 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "setWebhook", &args)
+	resp, err := bot.request(dst, "setWebhook", nil)
 	if err != nil {
 		return false, err
 	}
