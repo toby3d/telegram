@@ -2,9 +2,16 @@ package telegram
 
 import (
 	"bytes"
-	"io/ioutil"
+	"errors"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
+	"strconv"
+	"strings"
 
 	json "github.com/pquerna/ffjson/ffjson"
+	http "github.com/valyala/fasthttp"
 )
 
 type SetWebhookParameters struct {
@@ -56,26 +63,43 @@ func NewWebhook(url string, file interface{}) *SetWebhookParameters {
 // recommend using a secret path in the URL, e.g. https://www.example.com/<token>.
 // Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
 func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
+	var args http.Args
+	args.Add("url", params.URL)
+
+	if len(params.AllowedUpdates) > 0 {
+		args.Add("allowed_updates", fmt.Sprint(`["`, strings.Join(params.AllowedUpdates, `","`), `"]`))
+	}
+	if params.MaxConnections > 0 {
+		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
+	}
+
+	var buffer bytes.Buffer
+	multi := multipart.NewWriter(&buffer)
+
 	if params.Certificate != nil {
-		var err error
 		cert := *params.Certificate
-		switch f := cert.(type) {
+		switch file := cert.(type) {
 		case string:
-			cert, err = ioutil.ReadFile(f)
+			f, err := os.Open(file)
 			if err != nil {
 				return false, err
 			}
-		case []byte:
-			cert = bytes.NewBuffer(f).Bytes()
+			defer f.Close()
+
+			formFile, err := multi.CreateFormFile("certificate", f.Name())
+			if err != nil {
+				return false, err
+			}
+			if _, err = io.Copy(formFile, f); err != nil {
+				return false, err
+			}
+			multi.Close()
+		default:
+			return false, errors.New("use string only (for current version of go-telegram)")
 		}
 	}
 
-	dst, err := json.Marshal(*params)
-	if err != nil {
-		return false, err
-	}
-
-	resp, err := bot.request(dst, "setWebhook", nil)
+	resp, err := bot.upload(buffer.Bytes(), multi.Boundary(), "setWebhook", &args)
 	if err != nil {
 		return false, err
 	}
