@@ -15,7 +15,7 @@ const (
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
 	requestURI := fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
-	if &args != nil {
+	if args != nil {
 		requestURI += fmt.Sprint("?", args.String())
 	}
 
@@ -45,7 +45,7 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 
 func (bot *Bot) upload(dst []byte, boundary, method string, args *http.Args) (*Response, error) {
 	requestURI := fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
-	if &args != nil {
+	if args != nil {
 		requestURI += fmt.Sprint("?", args.String())
 	}
 
