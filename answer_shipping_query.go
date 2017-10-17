@@ -22,6 +22,13 @@ type AnswerShippingQueryParameters struct {
 	ErrorMessage string `json:"error_message,omitempty"`
 }
 
+func NewAnswerShippingQuery(shippingQueryID string, ok bool) *AnswerShippingQueryParameters {
+	return &AnswerShippingQueryParameters{
+		ShippingQueryID: shippingQueryID,
+		Ok:              ok,
+	}
+}
+
 // AnswerShippingQuery reply to shipping queries.
 //
 // If you sent an invoice requesting a shipping address and the parameter

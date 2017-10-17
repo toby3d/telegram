@@ -35,6 +35,13 @@ type AnswerInlineQueryParameters struct {
 	SwitchPrivateMessageParameter string `json:"switch_pm_parameter,omitempty"`
 }
 
+func NewAnswerInlineQuery(inlineQueryID string, results ...InlineQueryResult) *AnswerInlineQueryParameters {
+	return &AnswerInlineQueryParameters{
+		InlineQueryID: inlineQueryID,
+		Results:       results,
+	}
+}
+
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.

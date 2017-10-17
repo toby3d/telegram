@@ -73,6 +73,19 @@ type SendInvoiceParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices ...LabeledPrice) *SendInvoiceParameters {
+	return &SendInvoiceParameters{
+		ChatID:         chatID,
+		Title:          title,
+		Description:    description,
+		Payload:        payload,
+		ProviderToken:  providerToken,
+		StartParameter: startParameter,
+		Currency:       currency,
+		Prices:         prices,
+	}
+}
+
 // SendInvoice send invoices. On success, the sent Message is returned.
 func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (*Message, error) {
 	dst, err := json.Marshal(*params)

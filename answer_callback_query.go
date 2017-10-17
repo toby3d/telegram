@@ -29,6 +29,12 @@ type AnswerCallbackQueryParameters struct {
 	CacheTime int `json:"cache_time,omitempty"`
 }
 
+func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParameters {
+	return &AnswerCallbackQueryParameters{
+		CallbackQueryID: callbackQueryID,
+	}
+}
+
 // AnswerCallbackQuery send answers to callback queries sent from inline
 // keyboards. The answer will be displayed to the user as a notification at the
 // top of the chat screen or as an alert. On success, True is returned.

@@ -19,6 +19,13 @@ type AnswerPreCheckoutQueryParameters struct {
 	ErrorMessage string `json:"error_message,omitempty"`
 }
 
+func NewAnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool) *AnswerPreCheckoutQueryParameters {
+	return &AnswerPreCheckoutQueryParameters{
+		PreCheckoutQueryID: preCheckoutQueryID,
+		Ok:                 ok,
+	}
+}
+
 // AnswerPreCheckoutQuery respond to such pre-checkout queries.
 //
 // Once the user has confirmed their payment and shipping details, the Bot API

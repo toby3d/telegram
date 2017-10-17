@@ -30,6 +30,13 @@ type SendMessageParameters struct {
 	ReplyMarkup interface{} `json:"reply_markup,omitempty"`
 }
 
+func NewMessage(chatID int64, text string) *SendMessageParameters {
+	return &SendMessageParameters{
+		ChatID: chatID,
+		Text:   text,
+	}
+}
+
 // SendMessage send text messages. On success, the sent Message is returned.
 func (bot *Bot) SendMessage(params *SendMessageParameters) (*Message, error) {
 	dst, err := json.Marshal(*params)

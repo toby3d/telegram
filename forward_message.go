@@ -16,6 +16,14 @@ type ForwardMessageParameters struct {
 	MessageID int `json:"message_id"`
 }
 
+func NewForwardMessage(from, to int64, messageID int) *ForwardMessageParameters {
+	return &ForwardMessageParameters{
+		FromChatID: from,
+		ChatID:     to,
+		MessageID:  messageID,
+	}
+}
+
 // ForwardMessage forward messages of any kind. On success, the sent Message is returned.
 func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (*Message, error) {
 	dst, err := json.Marshal(params)

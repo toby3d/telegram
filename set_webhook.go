@@ -35,6 +35,17 @@ type SetWebhookParameters struct {
 	AllowedUpdates []string `json:"allowed_updates,omitempty"`
 }
 
+func NewWebhook(url string, file interface{}) *SetWebhookParameters {
+	params := &SetWebhookParameters{URL: url}
+
+	if file != nil {
+		var input InputFile = file
+		params.Certificate = &input
+	}
+
+	return params
+}
+
 // SetWebhook specify a url and receive incoming updates via an outgoing webhook.
 // Whenever there is an update for the bot, we will send an HTTPS POST request to
 // the specified url, containing a JSON-serialized Update. In case of an
