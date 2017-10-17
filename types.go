@@ -1,9 +1,6 @@
 package telegram
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 const (
 	ActionFindLocation    = "find_location"
@@ -34,6 +31,9 @@ const (
 	EntityTextMention = "text_mention"
 	EntityURL         = "url"
 
+	ModeHTML     = "html"
+	ModeMarkdown = "markdown"
+
 	MimeHTML = "text/html"
 	MimeMP4  = "video/mp4"
 	MimePDF  = "application/pdf"
@@ -46,9 +46,6 @@ const (
 	StatusMember        = "member"
 	StatusRestricted    = "restricted"
 
-	StyleHTML     = "html"
-	StyleMarkdown = "markdown"
-
 	TypeArticle  = "article"
 	TypeAudio    = "audio"
 	TypeContact  = "contact"
@@ -56,8 +53,9 @@ const (
 	TypeGame     = "game"
 	TypeGIF      = "gif"
 	TypeLocation = "location"
-	TypeMPEG4GIF = "mpeg4_gif"
+	TypeMpeg4Gif = "mpeg4_gif"
 	TypePhoto    = "photo"
+	TypeSticker  = "sticker"
 	TypeVenue    = "venue"
 	TypeVideo    = "video"
 	TypeVoice    = "voice"
@@ -80,10 +78,10 @@ type (
 	// request, ok equals false, and the error is explained in the error field.
 	Response struct {
 		Ok          bool                `json:"ok"`
-		ErrorCode   int                 `json:"error_code"`
-		Description string              `json:"description"`
-		Result      *json.RawMessage    `json:"result"`
-		Parameters  *ResponseParameters `json:"parameters"`
+		ErrorCode   int                 `json:"error_code,omitempty"`
+		Description string              `json:"description,omitempty"`
+		Result      *json.RawMessage    `json:"result,omitempty"`
+		Parameters  *ResponseParameters `json:"parameters,omitempty"`
 	}
 
 	// Update represents an incoming update.
@@ -218,7 +216,8 @@ type (
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
 
-		// True, if the bot can change group the sticker set. Returned only in getChat.
+		// True, if the bot can change group the sticker set. Returned only in
+		// getChat.
 		CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
 	}
 
@@ -231,7 +230,7 @@ type (
 		From *User `json:"from,omitempty"`
 
 		// Date the message was sent in Unix time
-		Date int `json:"date"`
+		Date int64 `json:"date"`
 
 		// Conversation the message belongs to
 		Chat *Chat `json:"chat"`
@@ -632,7 +631,7 @@ type (
 		// Requests clients to remove the custom keyboard (user will not be able
 		// to summon this keyboard; if you want to hide the keyboard from sight
 		// but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
-		SemoveKeyboard bool `json:"remove_keyboard"`
+		RemoveKeyboard bool `json:"remove_keyboard"`
 
 		// Use this parameter if you want to remove the keyboard for specific
 		// users only. Targets: 1) users that are @mentioned in the text of the
@@ -937,7 +936,28 @@ type (
 	}
 
 	// InlineQueryResult represents one result of an inline query.
-	InlineQueryResult interface{}
+	InlineQueryResult interface {
+		NewInlineQueryResultCachedAudio(resultID, fileID string) *InlineQueryResultCachedAudio
+		NewInlineQueryResultCachedDocument(resultID, fileID, title string) *InlineQueryResultCachedDocument
+		NewInlineQueryResultCachedGif(resultID, fileID string) *InlineQueryResultCachedGif
+		NewInlineQueryResultCachedMpeg4Gif(resultID, fileID string) *InlineQueryResultCachedMpeg4Gif
+		NewInlineQueryResultCachedPhoto(resultID, fileID string) *InlineQueryResultCachedPhoto
+		NewInlineQueryResultCachedSticker(resultID, fileID string) *InlineQueryResultCachedSticker
+		NewInlineQueryResultCachedVideo(resultID, fileID, title string) *InlineQueryResultCachedVideo
+		NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQueryResultCachedVoice
+		NewInlineQueryResultArticle(resultID, title, content *InputMessageContent) *InlineQueryResultArticle
+		NewInlineQueryResultAudio(resultID, audioURL, title string) *InlineQueryResultAudio
+		NewInlineQueryResultContact(resultID, phoneNumber, firstName string) *InlineQueryResultContact
+		NewInlineQueryResultGame(resultID, gameShortName string) *InlineQueryResultGame
+		NewInlineQueryResultDocument(resultID, title, documentURL, mimeType string) *InlineQueryResultDocument
+		NewInlineQueryResultGif(resultID, gifURL, thumbURL string) *InlineQueryResultGif
+		NewInlineQueryResultLocation(resultID, title string, latitude, longitude float32) *InlineQueryResultLocation
+		NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQueryResultMpeg4Gif
+		NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQueryResultPhoto
+		NewInlineQueryResultVenue(resultID, title, address string, latitude, longitude float32) *InlineQueryResultVenue
+		NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title string) *InlineQueryResultVideo
+		NewInlineQueryResultVoice(resultID, voiceURL, title string) *InlineQueryResultVoice
+	}
 
 	// InlineQueryResultArticle represents a link to an article or web page.
 	InlineQueryResultArticle struct {
@@ -1599,7 +1619,13 @@ type (
 		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	InputMessageContent interface{}
+	// InputMessageContent represents the content of a message to be sent as a result of an inline query.
+	InputMessageContent interface {
+		NewInputTextMessageContent(messageText string) *InputTextMessageContent
+		NewInputLocationMessageContent(latitude, longitude float32) *InputLocationMessageContent
+		NewInputVenueMessageContent(latitude, longitude float32, title, address string) *InputVenueMessageContent
+		NewInputContactMessageContent(phoneNumber, firstName string) *InputContactMessageContent
+	}
 
 	// InputTextMessageContent represents the content of a text message to be
 	// sent as the result of an inline query.
@@ -1677,8 +1703,6 @@ type (
 		// The query that was used to obtain the result
 		Query string `json:"query"`
 	}
-
-	/* ==== ====== */
 
 	// LabeledPrice represents a portion of the price for goods or services.
 	LabeledPrice struct {
@@ -1897,8 +1921,14 @@ type (
 		// Score
 		Score int `json:"score"`
 	}
-)
 
-func (msg *Message) Time() time.Time {
-	return time.Unix(int64(msg.Date), 0)
-}
+	// ReplyMarkup is a JSON-serialized object for an inline keyboard, custom
+	// reply keyboard, instructions to remove reply keyboard or to force a reply
+	// from the user.
+	ReplyMarkup interface {
+		NewInlineKeyboardMarkup(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup
+		NewReplyKeyboardMarkup(rows ...[]KeyboardButton) *ReplyKeyboardMarkup
+		NewReplyKeyboardRemove(selective bool) *ReplyKeyboardRemove
+		NewForceReply(selective bool) *ForceReply
+	}
+)
