@@ -358,7 +358,7 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 	return channel
 }
 
-func NewWebhookChannel(set, listen, serve string, params *GetUpdatesParameters) UpdatesChannel {
+func NewWebhookChannel(listen, serve string, params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{
 			Offset:  0,
@@ -377,7 +377,7 @@ func NewWebhookChannel(set, listen, serve string, params *GetUpdatesParameters) 
 				channel <- update
 			}
 		}); err != nil {
-			log.Fatalln(err.Error())
+			panic(err.Error())
 		}
 	}()
 

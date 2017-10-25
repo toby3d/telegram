@@ -1,12 +1,7 @@
 package telegram
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
-	"io"
-	"mime/multipart"
-	"os"
 	"strconv"
 	"strings"
 
@@ -73,33 +68,7 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
-	var buffer bytes.Buffer
-	multi := multipart.NewWriter(&buffer)
-
-	if params.Certificate != nil {
-		cert := *params.Certificate
-		switch file := cert.(type) {
-		case string:
-			f, err := os.Open(file)
-			if err != nil {
-				return false, err
-			}
-			defer f.Close()
-
-			formFile, err := multi.CreateFormFile("certificate", f.Name())
-			if err != nil {
-				return false, err
-			}
-			if _, err = io.Copy(formFile, f); err != nil {
-				return false, err
-			}
-			multi.Close()
-		default:
-			return false, errors.New("use string only (for current version of go-telegram)")
-		}
-	}
-
-	resp, err := bot.upload(buffer.Bytes(), multi.Boundary(), "setWebhook", &args)
+	resp, err := bot.upload(*params.Certificate, "certificate", "cert.pem", "setWebhook", &args)
 	if err != nil {
 		return false, err
 	}
