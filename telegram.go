@@ -1,3 +1,4 @@
+// Version of the bot API: 3.4 (October 11, 2017)
 package telegram
 
 import (
