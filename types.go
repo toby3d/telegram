@@ -184,7 +184,7 @@ type (
 		// "channel"
 		Type string `json:"type"`
 
-		//Title, for supergroups, channels and group chats
+		// Title, for supergroups, channels and group chats
 		Title string `json:"title,omitempty"`
 
 		// Username, for private chats, supergroups and channels if available
@@ -273,7 +273,8 @@ type (
 		// commands, etc. that appear in the text
 		Entities []MessageEntity `json:"entities,omitempty"`
 
-		// For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+		// For messages with a caption, special entities like usernames, URLs,
+		// bot commands, etc. that appear in the caption
 		CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
 
 		// Message is an audio file, information about the file
@@ -1619,7 +1620,8 @@ type (
 		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InputMessageContent represents the content of a message to be sent as a result of an inline query.
+	// InputMessageContent represents the content of a message to be sent as a
+	// result of an inline query.
 	InputMessageContent interface {
 		NewInputTextMessageContent(messageText string) *InputTextMessageContent
 		NewInputLocationMessageContent(latitude, longitude float32) *InputLocationMessageContent
