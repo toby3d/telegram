@@ -139,7 +139,7 @@ type (
 
 		// Unix time for the most recent error that happened when trying to
 		// deliver an update via webhook
-		LastErrorDate int `json:"last_error_date,omitempty"`
+		LastErrorDate int64 `json:"last_error_date,omitempty"`
 
 		// Error message in human-readable format for the most recent error that
 		// happened when trying to deliver an update via webhook
