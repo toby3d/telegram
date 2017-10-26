@@ -972,7 +972,7 @@ type (
 		Title string `json:"title"`
 
 		// Content of the message to be sent
-		InputMessageContent *InputMessageContent `json:"input_message_content"`
+		InputMessageContent interface{} `json:"input_message_content"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1033,7 +1033,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the photo
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultGif represents a link to an animated GIF file. By
@@ -1072,7 +1072,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the GIF animation
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultMpeg4Gif represents a link to a video animation
@@ -1112,7 +1112,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the video animation
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultVideo represents a link to a page containing an embedded
@@ -1163,7 +1163,7 @@ type (
 		// Content of the message to be sent instead of the video. This field is
 		// required if InlineQueryResultVideo is used to send an HTML-page as a
 		// result (e.g., a YouTube video).
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultAudio represents a link to an mp3 audio file. By default,
@@ -1196,7 +1196,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the audio
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultVoice represents a link to a voice recording in an .ogg
@@ -1226,7 +1226,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the voice recording
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultDocument represents a link to a file. By default, this
@@ -1261,7 +1261,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the file
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 
 		// URL of the thumbnail (jpeg only) for the file
 		ThumbURL string `json:"thumb_url,omitempty"`
@@ -1297,7 +1297,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		//Content of the message to be sent instead of the location
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 
 		//Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
@@ -1338,7 +1338,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the venue
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 
 		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
@@ -1374,7 +1374,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the contact
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 
 		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
@@ -1428,7 +1428,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the photo
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedGif represents a link to an animated GIF file
@@ -1456,7 +1456,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the GIF animation
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedMpeg4Gif represents a link to a video animation
@@ -1484,7 +1484,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the video animation
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedSticker represents a link to a sticker stored on
@@ -1505,7 +1505,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the sticker
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedDocument represents a link to a file stored on the
@@ -1535,7 +1535,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the file
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedVideo represents a link to a video file stored on
@@ -1566,7 +1566,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the video
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedVoice represents a link to a voice message stored
@@ -1593,7 +1593,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the voice message
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InlineQueryResultCachedAudio represents a link to an mp3 audio file
@@ -1617,7 +1617,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the audio
-		InputMessageContent *InputMessageContent `json:"input_message_content,omitempty"`
+		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
 	// InputMessageContent represents the content of a message to be sent as a

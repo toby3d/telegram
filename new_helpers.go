@@ -260,6 +260,7 @@ func NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQu
 func NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQueryResultPhoto {
 	return &InlineQueryResultPhoto{
 		Type:     TypePhoto,
+		ID:       resultID,
 		PhotoURL: photoURL,
 		ThumbURL: thumbURL,
 	}

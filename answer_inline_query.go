@@ -7,7 +7,7 @@ type AnswerInlineQueryParameters struct {
 	InlineQueryID string `json:"inline_query_id"`
 
 	// A JSON-serialized array of results for the inline query
-	Results []InlineQueryResult `json:"results"`
+	Results []interface{} `json:"results"`
 
 	// The maximum amount of time in seconds that the result of the inline query
 	// may be cached on the server. Defaults to 300.
@@ -35,7 +35,7 @@ type AnswerInlineQueryParameters struct {
 	SwitchPrivateMessageParameter string `json:"switch_pm_parameter,omitempty"`
 }
 
-func NewAnswerInlineQuery(inlineQueryID string, results ...InlineQueryResult) *AnswerInlineQueryParameters {
+func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerInlineQueryParameters {
 	return &AnswerInlineQueryParameters{
 		InlineQueryID: inlineQueryID,
 		Results:       results,
