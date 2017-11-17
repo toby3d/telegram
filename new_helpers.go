@@ -281,6 +281,7 @@ func NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title str
 	return &InlineQueryResultVideo{
 		Type:     TypeVideo,
 		ID:       resultID,
+		VideoURL: videoURL,
 		MimeType: mimeType,
 		ThumbURL: thumbURL,
 		Title:    title,
