@@ -326,17 +326,17 @@ func NewInputContactMessageContent(phoneNumber, firstName string) *InputContactM
 	}
 }
 
-func NewInputMediaPhoto(media InputFile) *InputMediaPhoto {
+func NewInputMediaPhoto(media string) *InputMediaPhoto {
 	return &InputMediaPhoto{
 		Type:  TypePhoto,
 		Media: media,
 	}
 }
 
-func NewInputMediaVideo(media InputFile) *InputMediaVideo {
+func NewInputMediaVideo(media string) *InputMediaVideo {
 	return &InputMediaVideo{
 		Type:  TypeVideo,
-		Media: file,
+		Media: media,
 	}
 }
 

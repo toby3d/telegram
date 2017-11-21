@@ -3,15 +3,20 @@ package telegram
 import (
 	"errors"
 	"fmt"
+	"net/url"
 
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
 func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
-	requestURI := fmt.Sprintf(APIEndpoint, bot.AccessToken, method)
+	requestURI := &url.URL{
+		Scheme: "https",
+		Host:   "api.telegram.org",
+		Path:   fmt.Sprint("/bot", bot.AccessToken, "/", method),
+	}
 	if args != nil {
-		requestURI += fmt.Sprint("?", args.String())
+		requestURI.RawQuery = args.String()
 	}
 
 	var req http.Request
@@ -19,7 +24,7 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 
 	req.Header.SetMethod("POST")
 	req.Header.SetContentType("application/json")
-	req.SetRequestURI(requestURI)
+	req.SetRequestURI(requestURI.String())
 	req.SetBody(dst)
 
 	if err := http.Do(&req, &resp); err != nil {
