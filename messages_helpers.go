@@ -1,6 +1,9 @@
 package telegram
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 func (msg *Message) IsCommand() bool {
 	if len(msg.Entities) <= 0 {
@@ -28,11 +31,10 @@ func (msg *Message) CommandArgument() string {
 		return ""
 	}
 
-	if !msg.HasArgument() {
-		return ""
-	}
-
-	return string([]rune(msg.Text)[(msg.Entities[0].Length + 1):])
+	return strings.TrimLeft(
+		string([]rune(msg.Text)[(msg.Entities[0].Length):]),
+		" ",
+	)
 }
 
 func (msg *Message) HasArgument() bool {
