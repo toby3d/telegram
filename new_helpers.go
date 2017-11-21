@@ -326,6 +326,20 @@ func NewInputContactMessageContent(phoneNumber, firstName string) *InputContactM
 	}
 }
 
+func NewInputMediaPhoto(media InputFile) *InputMediaPhoto {
+	return &InputMediaPhoto{
+		Type:  TypePhoto,
+		Media: media,
+	}
+}
+
+func NewInputMediaVideo(media InputFile) *InputMediaVideo {
+	return &InputMediaVideo{
+		Type:  TypeVideo,
+		Media: file,
+	}
+}
+
 func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{

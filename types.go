@@ -849,6 +849,54 @@ type (
 		RetryAfter int `json:"retry_after,omitempty"`
 	}
 
+	// InputMedia represents the content of a media message to be sent. It should
+	// be one of
+	InputMedia interface {
+		NewInputMediaPhoto(media InputFile) *InputMediaPhoto
+		NewInputMediaVideo(media InputFile) *InputMediaVideo
+	}
+
+	// InputMediaPhoto represents a photo to be sent.
+	InputMediaPhoto struct {
+		// Type of the result, must be photo
+		Type string `json:"type"`
+
+		// File to send. Pass a file_id to send a file that exists on the
+		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
+		// a file from the Internet, or pass "attach://<file_attach_name>" to
+		// upload a new one using multipart/form-data under <file_attach_name>
+		// name.
+		Media string `json:"media"`
+
+		// Caption of the photo to be sent, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+	}
+
+	// InputMediaVideo represents a video to be sent.
+	InputMediaVideo struct {
+		// Type of the result, must be video
+		Type string `json:"type"`
+
+		// File to send. Pass a file_id to send a file that exists on the
+		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
+		// a file from the Internet, or pass "attach://<file_attach_name>" to
+		// upload a new one using multipart/form-data under <file_attach_name>
+		// name.
+		Media string `json:"media"`
+
+		// Caption of the video to be sent, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
+		// Video width
+		Width int `json:"width,omitempty"`
+
+		// Video height
+		Height int `json:"height,omitempty"`
+
+		// Video duration
+		Duration int `json:"duration,omitempty"`
+	}
+
 	// InputFile represents the contents of a file to be uploaded. Must be posted
 	// using multipart/form-data in the usual way that files are uploaded via the
 	// browser.

@@ -30,6 +30,11 @@ type SendInvoiceParameters struct {
 	// delivery cost, delivery tax, bonus, etc.)
 	Prices []LabeledPrice `json:"prices"`
 
+	// JSON-encoded data about the invoice, which will be shared with the payment
+	// provider. A detailed description of required fields should be provided by
+	// the payment provider.
+	ProviderData string `json:"provider_data,omitempty"`
+
 	// URL of the product photo for the invoice. Can be a photo of the goods or a
 	// marketing image for a service. People like it better when they see what
 	// they are paying for.
