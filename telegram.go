@@ -18,43 +18,33 @@ import (
 const (
 	APIEndpoint  = "https://api.telegram.org/bot%s/%s"
 	FileEndpoind = "https://api.telegram.org/file/bot%s/%s"
-
-	methodPOST = "post"
-
-	mimeJSON      = "application/json"
-	mimeMultipart = "multipart/form-data"
-
-	urlHost       = "api.telegram.org"
-	urlPathPrefix = "/bot"
-	urlScheme     = "https"
-
-	userAgent = "go-telegram/3.5"
 )
 
-var (
-	ErrBadFileType = errors.New("bad file type")
-)
+var ErrBadFileType = errors.New("bad file type")
 
-func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
+func (bot *Bot) request(
+	dst []byte,
+	method string,
+	args *http.Args,
+) (*Response, error) {
 	requestURI := &url.URL{
-		Scheme: urlScheme,
-		Host:   urlHost,
-		Path:   fmt.Sprint(urlPathPrefix, bot.AccessToken, "/", method),
+		Scheme: "https",
+		Host:   "api.telegram.org",
+		Path:   fmt.Sprint("/bot", bot.AccessToken, "/", method),
 	}
+
 	if args != nil {
 		requestURI.RawQuery = args.String()
 	}
 
-	var req http.Request
-	var resp http.Response
-
-	req.Header.SetMethod(methodPOST)
-	req.Header.SetContentType(mimeJSON)
-	req.Header.SetUserAgent(userAgent)
-	req.SetRequestURI(requestURI.String())
+	req := http.AcquireRequest()
+	req.Header.SetMethod("POST")
+	req.Header.SetContentType("application/json; charset=utf-8")
+	req.Header.SetRequestURI(requestURI.String())
 	req.SetBody(dst)
 
-	if err := http.Do(&req, &resp); err != nil {
+	resp := http.AcquireResponse()
+	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
 
@@ -63,9 +53,6 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 		return nil, err
 	}
 
-	log.Ln("Raw response:")
-	log.D(data)
-
 	if !data.Ok {
 		return nil, errors.New(data.Description)
 	}
@@ -73,7 +60,11 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 	return &data, nil
 }
 
-func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
+func (bot *Bot) upload(
+	file InputFile,
+	fieldName, fileName, method string,
+	args *http.Args,
+) (*Response, error) {
 	var buffer bytes.Buffer
 	multi := multipart.NewWriter(&buffer)
 	defer multi.Close()
@@ -112,27 +103,24 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 	}
 
 	requestURI := &url.URL{
-		Scheme: urlScheme,
-		Host:   urlHost,
-		Path:   fmt.Sprint(urlPathPrefix, bot.AccessToken, "/", method),
+		Scheme: "https",
+		Host:   "api.telegram.org",
+		Path:   fmt.Sprint("/file/bot", bot.AccessToken, "/", method),
 	}
+
 	if args != nil {
 		requestURI.RawQuery = args.String()
 	}
 
-	var req http.Request
-	var resp http.Response
-
-	req.Header.SetMethod(methodPOST)
-	req.Header.SetContentType(mimeMultipart)
+	req := http.AcquireRequest()
+	req.Header.SetMethod("POST")
+	req.Header.SetContentType("multipart/form-data; charset=utf-8")
 	req.Header.SetMultipartFormBoundary(multi.Boundary())
-	req.Header.SetUserAgent(userAgent)
-	req.SetRequestURI(requestURI.String())
+	req.Header.SetRequestURI(requestURI.String())
 	req.SetBody(buffer.Bytes())
 
-	args.WriteTo(req.BodyWriter())
-
-	if err := http.Do(&req, &resp); err != nil {
+	resp := http.AcquireResponse()
+	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
 
