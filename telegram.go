@@ -1,7 +1,152 @@
 // Version of the bot API: 3.5 (November 17, 2017)
 package telegram
 
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/url"
+	"os"
+
+	log "github.com/kirillDanshin/dlog"
+	json "github.com/pquerna/ffjson/ffjson"
+	http "github.com/valyala/fasthttp"
+)
+
 const (
 	APIEndpoint  = "https://api.telegram.org/bot%s/%s"
 	FileEndpoind = "https://api.telegram.org/file/bot%s/%s"
+
+	methodPOST = "post"
+
+	mimeJSON      = "application/json"
+	mimeMultipart = "multipart/form-data"
+
+	urlHost       = "api.telegram.org"
+	urlPathPrefix = "/bot"
+	urlScheme     = "https"
+
+	userAgent = "go-telegram/3.5"
 )
+
+var (
+	ErrBadFileType = errors.New("bad file type")
+)
+
+func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
+	requestURI := &url.URL{
+		Scheme: urlScheme,
+		Host:   urlHost,
+		Path:   fmt.Sprint(urlPathPrefix, bot.AccessToken, "/", method),
+	}
+	if args != nil {
+		requestURI.RawQuery = args.String()
+	}
+
+	var req http.Request
+	var resp http.Response
+
+	req.Header.SetMethod(methodPOST)
+	req.Header.SetContentType(mimeJSON)
+	req.Header.SetUserAgent(userAgent)
+	req.SetRequestURI(requestURI.String())
+	req.SetBody(dst)
+
+	if err := http.Do(&req, &resp); err != nil {
+		return nil, err
+	}
+
+	var data Response
+	if err := json.Unmarshal(resp.Body(), &data); err != nil {
+		return nil, err
+	}
+
+	log.Ln("Raw response:")
+	log.D(data)
+
+	if !data.Ok {
+		return nil, errors.New(data.Description)
+	}
+
+	return &data, nil
+}
+
+func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
+	var buffer bytes.Buffer
+	multi := multipart.NewWriter(&buffer)
+	defer multi.Close()
+
+	switch source := file.(type) {
+	case string:
+		f, err := os.Open(source)
+		if err != nil {
+			return nil, err
+		}
+		defer f.Close()
+
+		formFile, err := multi.CreateFormFile(fieldName, f.Name())
+		if err != nil {
+			return nil, err
+		}
+		if _, err = io.Copy(formFile, f); err != nil {
+			return nil, err
+		}
+	case []byte:
+		formFile, err := multi.CreateFormFile(fieldName, fileName)
+		if err != nil {
+			return nil, err
+		}
+		if _, err = io.Copy(formFile, bytes.NewReader(source)); err != nil {
+			return nil, err
+		}
+	case *url.URL:
+		if err := multi.WriteField(fieldName, source.String()); err != nil {
+			return nil, err
+		}
+	case io.Reader:
+		multi.CreateFormFile(fieldName, fileName)
+	default:
+		return nil, ErrBadFileType
+	}
+
+	requestURI := &url.URL{
+		Scheme: urlScheme,
+		Host:   urlHost,
+		Path:   fmt.Sprint(urlPathPrefix, bot.AccessToken, "/", method),
+	}
+	if args != nil {
+		requestURI.RawQuery = args.String()
+	}
+
+	var req http.Request
+	var resp http.Response
+
+	req.Header.SetMethod(methodPOST)
+	req.Header.SetContentType(mimeMultipart)
+	req.Header.SetMultipartFormBoundary(multi.Boundary())
+	req.Header.SetUserAgent(userAgent)
+	req.SetRequestURI(requestURI.String())
+	req.SetBody(buffer.Bytes())
+
+	args.WriteTo(req.BodyWriter())
+
+	if err := http.Do(&req, &resp); err != nil {
+		return nil, err
+	}
+
+	var data Response
+	if err := json.Unmarshal(resp.Body(), &data); err != nil {
+		return nil, err
+	}
+
+	log.Ln("Raw response:")
+	log.D(data)
+
+	if !data.Ok {
+		return nil, errors.New(data.Description)
+	}
+
+	return &data, nil
+}

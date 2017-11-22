@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -16,7 +15,7 @@ type SetWebhookParameters struct {
 
 	// Upload your public key certificate so that the root certificate in use can
 	// be checked. See our self-signed guide for details.
-	Certificate *InputFile `json:"certificate,omitempty"`
+	Certificate InputFile `json:"certificate,omitempty"`
 
 	// Maximum allowed number of simultaneous HTTPS connections to the webhook
 	// for update delivery, 1-100. Defaults to 40. Use lower values to limit the
@@ -38,14 +37,14 @@ type SetWebhookParameters struct {
 }
 
 func NewWebhook(url string, file interface{}) *SetWebhookParameters {
-	params := &SetWebhookParameters{URL: url}
+	var params SetWebhookParameters
+	params.URL = url
 
 	if file != nil {
-		var input InputFile = file
-		params.Certificate = &input
+		params.Certificate = &file
 	}
 
-	return params
+	return &params
 }
 
 // SetWebhook specify a url and receive incoming updates via an outgoing webhook.
@@ -62,13 +61,25 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	args.Add("url", params.URL)
 
 	if len(params.AllowedUpdates) > 0 {
-		args.Add("allowed_updates", fmt.Sprint(`["`, strings.Join(params.AllowedUpdates, `","`), `"]`))
+		args.Add("allowed_updates", strings.Join(params.AllowedUpdates, `","`))
 	}
 	if params.MaxConnections > 0 {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
-	resp, err := bot.upload(*params.Certificate, "certificate", "cert.pem", "setWebhook", &args)
+	var err error
+	resp := &Response{}
+	if params.Certificate != nil {
+		resp, err = bot.upload(
+			params.Certificate,
+			"certificate",
+			"cert.pem",
+			"setWebhook",
+			&args,
+		)
+	} else {
+		resp, err = bot.request(nil, "setWebhook", &args)
+	}
 	if err != nil {
 		return false, err
 	}
