@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"os"
 
-	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -42,6 +41,7 @@ func (bot *Bot) request(
 	req.Header.SetMethod("POST")
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetRequestURI(requestURI.String())
+	req.Header.SetUserAgent("go-telegram/3.5")
 	req.SetBody(dst)
 
 	resp := http.AcquireResponse()
@@ -115,13 +115,16 @@ func (bot *Bot) upload(
 	}
 
 	req := http.AcquireRequest()
+	defer http.ReleaseRequest(req)
 	req.Header.SetMethod("POST")
 	req.Header.SetContentType("multipart/form-data; charset=utf-8")
 	req.Header.SetMultipartFormBoundary(multi.Boundary())
 	req.Header.SetRequestURI(requestURI.String())
+	req.Header.SetUserAgent("go-telegram/3.5")
 	req.SetBody(buffer.Bytes())
 
 	resp := http.AcquireResponse()
+	defer http.ReleaseResponse(resp)
 	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
@@ -130,9 +133,6 @@ func (bot *Bot) upload(
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
 		return nil, err
 	}
-
-	log.Ln("Raw response:")
-	log.D(data)
 
 	if !data.Ok {
 		return nil, errors.New(data.Description)
