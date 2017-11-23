@@ -38,12 +38,14 @@ func (bot *Bot) request(
 	}
 
 	req := http.AcquireRequest()
+	defer http.ReleaseRequest(req)
 	req.Header.SetMethod("POST")
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetRequestURI(requestURI.String())
 	req.SetBody(dst)
 
 	resp := http.AcquireResponse()
+	defer http.ReleaseResponse(resp)
 	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
