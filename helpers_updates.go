@@ -62,37 +62,48 @@ func (bot *Bot) NewWebhookChannel(
 	channel := make(chan Update, params.MaxConnections)
 	go func() {
 		var err error
-		if params.Certificate != nil {
+		if certFile != "" && keyFile != "" {
+			log.Ln("Creating TLS router...")
 			err = http.ListenAndServeTLS(
 				serve,
 				certFile,
 				keyFile,
 				func(ctx *http.RequestCtx) {
-					if strings.HasPrefix(string(ctx.Path()), listen) {
-
-						var update Update
-						err = json.Unmarshal(ctx.Request.Body(), &update)
-						if err != nil {
-							return
-						}
-
-						channel <- update
+					if !strings.HasPrefix(string(ctx.Path()), listen) {
+						log.Ln("Unsupported request path:", string(ctx.Path()))
+						return
 					}
+
+					log.Ln("Catched supported request path:", string(ctx.Path()))
+					var update Update
+					err = json.Unmarshal(ctx.Request.Body(), &update)
+					if err != nil {
+						log.Ln(err.Error())
+						return
+					}
+
+					channel <- update
 				},
 			)
 		} else {
+			log.Ln("Creating simple router...")
 			err = http.ListenAndServe(
 				serve,
 				func(ctx *http.RequestCtx) {
-					if strings.HasPrefix(string(ctx.Path()), listen) {
-						var update Update
-						err = json.Unmarshal(ctx.Request.Body(), &update)
-						if err != nil {
-							return
-						}
-
-						channel <- update
+					if !strings.HasPrefix(string(ctx.Path()), listen) {
+						log.Ln("Unsupported request path:", string(ctx.Path()))
+						return
 					}
+
+					log.Ln("Catched supported request path:", string(ctx.Path()))
+					var update Update
+					err = json.Unmarshal(ctx.Request.Body(), &update)
+					if err != nil {
+						log.Ln(err.Error())
+						return
+					}
+
+					channel <- update
 				},
 			)
 		}
