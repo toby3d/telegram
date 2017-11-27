@@ -1,13 +1,13 @@
 package telegram
 
 import (
-	"strings"
+	"bytes"
+	"log"
 	"time"
-	// "net/url"
 
-	log "github.com/kirillDanshin/dlog"
+	http "github.com/erikdubbelboer/fasthttp"
+	"github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
 )
 
 type UpdatesChannel <-chan Update
@@ -26,8 +26,8 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 		for {
 			updates, err := bot.GetUpdates(params)
 			if err != nil {
-				log.Ln(err.Error())
-				log.Ln("Failed to get updates, retrying in 3 seconds...")
+				dlog.Ln(err.Error())
+				dlog.Ln("Failed to get updates, retrying in 3 seconds...")
 				time.Sleep(time.Second * 3)
 				continue
 			}
@@ -56,59 +56,35 @@ func (bot *Bot) NewWebhookChannel(
 	}
 
 	if _, err := bot.SetWebhook(params); err != nil {
-		panic(err.Error())
+		log.Fatalln(err.Error())
 	}
 
-	channel := make(chan Update, params.MaxConnections)
+	channel := make(chan Update, 100)
 	go func() {
-		var err error
-		if certFile != "" && keyFile != "" {
-			log.Ln("Creating TLS router...")
-			err = http.ListenAndServeTLS(
-				serve,
-				certFile,
-				keyFile,
-				func(ctx *http.RequestCtx) {
-					if !strings.HasPrefix(string(ctx.Path()), listen) {
-						log.Ln("Unsupported request path:", string(ctx.Path()))
-						return
-					}
+		requiredPath := []byte(listen)
+		dlog.Ln("requiredPath:", string(requiredPath))
+		handleFunc := func(ctx *http.RequestCtx) {
+			dlog.Ln("Request path:", string(ctx.Path()))
+			if !bytes.HasPrefix(ctx.Path(), requiredPath) {
+				dlog.Ln("Unsupported request path:", string(ctx.Path()))
+				return
+			}
 
-					log.Ln("Catched supported request path:", string(ctx.Path()))
-					var update Update
-					err = json.Unmarshal(ctx.Request.Body(), &update)
-					if err != nil {
-						log.Ln(err.Error())
-						return
-					}
+			dlog.Ln("Catched supported request path:", string(ctx.Path()))
+			var update Update
+			if err := json.Unmarshal(ctx.Request.Body(), &update); err != nil {
+				log.Fatalln(err.Error())
+			}
 
-					channel <- update
-				},
-			)
-		} else {
-			log.Ln("Creating simple router...")
-			err = http.ListenAndServe(
-				serve,
-				func(ctx *http.RequestCtx) {
-					if !strings.HasPrefix(string(ctx.Path()), listen) {
-						log.Ln("Unsupported request path:", string(ctx.Path()))
-						return
-					}
-
-					log.Ln("Catched supported request path:", string(ctx.Path()))
-					var update Update
-					err = json.Unmarshal(ctx.Request.Body(), &update)
-					if err != nil {
-						log.Ln(err.Error())
-						return
-					}
-
-					channel <- update
-				},
-			)
+			channel <- update
 		}
-		if err != nil {
-			panic(err.Error())
+
+		if certFile != "" && keyFile != "" {
+			dlog.Ln("Creating TLS router...")
+			log.Fatal(http.ListenAndServeTLS(serve, certFile, keyFile, handleFunc))
+		} else {
+			dlog.Ln("Creating simple router...")
+			log.Fatal(http.ListenAndServe(serve, handleFunc))
 		}
 	}()
 
