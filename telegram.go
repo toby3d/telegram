@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 
+	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -49,6 +50,9 @@ func (bot *Bot) request(
 	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
+
+	log.Ln("Response:")
+	log.D(*resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
@@ -128,6 +132,9 @@ func (bot *Bot) upload(
 	if err := http.Do(req, resp); err != nil {
 		return nil, err
 	}
+
+	log.Ln("Response:")
+	log.D(*resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
