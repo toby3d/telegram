@@ -47,14 +47,14 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
-	log.Ln("Do...")
 	if err := http.Do(req, resp); err != nil {
-		log.Ln("Response:")
+		log.Ln("Resp:")
 		log.D(*resp)
+
 		return nil, err
 	}
 
-	log.Ln("Response:")
+	log.Ln("Resp:")
 	log.D(*resp)
 
 	var data Response
@@ -63,7 +63,7 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 	}
 
 	if !data.Ok {
-		return nil, errors.New(data.Description)
+		return &data, errors.New(data.Description)
 	}
 
 	return &data, nil
@@ -142,14 +142,14 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
-	log.Ln("Do...")
 	if err := http.Do(req, resp); err != nil {
-		log.Ln("Response:")
+		log.Ln("Resp:")
 		log.D(*resp)
+
 		return nil, err
 	}
 
-	log.Ln("Response:")
+	log.Ln("Resp:")
 	log.D(*resp)
 
 	var data Response
