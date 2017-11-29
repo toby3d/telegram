@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
+	http "github.com/erikdubbelboer/fasthttp"
 	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
 )
 
 const setWebhook = "setWebhook"
@@ -59,9 +59,10 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	args.Add("url", params.URL)
 
 	if len(params.AllowedUpdates) > 0 {
-		args.Add("allowed_updates", strings.Join(params.AllowedUpdates, `","`))
+		args.Add("allowed_updates", strings.Join(params.AllowedUpdates, ","))
 	}
-	if params.MaxConnections > 0 {
+	if params.MaxConnections > 0 &&
+		params.MaxConnections <= 100 {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
