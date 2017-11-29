@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	http "github.com/erikdubbelboer/fasthttp"
 	"github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
+	http "github.com/valyala/fasthttp"
 )
 
 type UpdatesChannel <-chan Update

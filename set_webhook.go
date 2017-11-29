@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	http "github.com/erikdubbelboer/fasthttp"
 	json "github.com/pquerna/ffjson/ffjson"
+	http "github.com/valyala/fasthttp"
 )
 
 const setWebhook = "setWebhook"
