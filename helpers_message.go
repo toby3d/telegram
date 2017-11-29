@@ -7,8 +7,11 @@ func (msg *Message) IsCommand() bool {
 		return false
 	}
 
-	if msg.Entities[0].Type == EntityBotCommand &&
-		msg.Entities[0].Offset == 0 {
+	if msg.Entities[0].Type != EntityBotCommand {
+		return false
+	}
+
+	if msg.Entities[0].Offset == 0 {
 		return true
 	}
 
