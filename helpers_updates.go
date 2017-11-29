@@ -55,10 +55,6 @@ func (bot *Bot) NewWebhookChannel(
 		}
 	}
 
-	if _, err := bot.SetWebhook(params); err != nil {
-		log.Fatalln(err.Error())
-	}
-
 	channel := make(chan Update, 100)
 	go func() {
 		requiredPath := []byte(listen)
@@ -69,11 +65,11 @@ func (bot *Bot) NewWebhookChannel(
 				dlog.Ln("Unsupported request path:", string(ctx.Path()))
 				return
 			}
-
 			dlog.Ln("Catched supported request path:", string(ctx.Path()))
+
 			var update Update
 			if err := json.Unmarshal(ctx.Request.Body(), &update); err != nil {
-				log.Fatalln(err.Error())
+				return
 			}
 
 			channel <- update
@@ -87,6 +83,10 @@ func (bot *Bot) NewWebhookChannel(
 			log.Fatal(http.ListenAndServe(serve, handleFunc))
 		}
 	}()
+
+	if _, err := bot.SetWebhook(params); err != nil {
+		log.Fatalln(err.Error())
+	}
 
 	return channel
 }
