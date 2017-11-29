@@ -4,9 +4,11 @@ import (
 	"strconv"
 	"strings"
 
+	http "github.com/erikdubbelboer/fasthttp"
 	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
 )
+
+const setWebhook = "setWebhook"
 
 type SetWebhookParameters struct {
 	// HTTPS url to send updates to. Use an empty string to remove webhook
@@ -37,14 +39,10 @@ type SetWebhookParameters struct {
 }
 
 func NewWebhook(url string, file interface{}) *SetWebhookParameters {
-	var params SetWebhookParameters
-	params.URL = url
-
-	if file != nil {
-		params.Certificate = &file
+	return &SetWebhookParameters{
+		URL:         url,
+		Certificate: file,
 	}
-
-	return &params
 }
 
 // SetWebhook specify a url and receive incoming updates via an outgoing webhook.
@@ -61,9 +59,10 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	args.Add("url", params.URL)
 
 	if len(params.AllowedUpdates) > 0 {
-		args.Add("allowed_updates", strings.Join(params.AllowedUpdates, `","`))
+		args.Add("allowed_updates", strings.Join(params.AllowedUpdates, ","))
 	}
-	if params.MaxConnections > 0 {
+	if params.MaxConnections > 0 &&
+		params.MaxConnections <= 100 {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
@@ -71,14 +70,10 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	resp := &Response{}
 	if params.Certificate != nil {
 		resp, err = bot.upload(
-			params.Certificate,
-			"certificate",
-			"cert.pem",
-			"setWebhook",
-			&args,
+			params.Certificate, "certificate", "cert.pem", setWebhook, &args,
 		)
 	} else {
-		resp, err = bot.request(nil, "setWebhook", &args)
+		resp, err = bot.request(nil, setWebhook, &args)
 	}
 	if err != nil {
 		return false, err

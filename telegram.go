@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 
+	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -21,11 +22,7 @@ const (
 
 var ErrBadFileType = errors.New("bad file type")
 
-func (bot *Bot) request(
-	dst []byte,
-	method string,
-	args *http.Args,
-) (*Response, error) {
+func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, error) {
 	requestURI := &url.URL{
 		Scheme: "https",
 		Host:   "api.telegram.org",
@@ -39,16 +36,26 @@ func (bot *Bot) request(
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
 	req.Header.SetMethod("POST")
-	req.Header.SetContentType("application/json; charset=utf-8")
-	req.Header.SetRequestURI(requestURI.String())
+	req.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent("go-telegram/3.5")
+	req.Header.SetHost("api.telegram.org")
+	req.Header.SetContentType("application/json; charset=utf-8")
 	req.SetBody(dst)
+
+	log.Ln("Request:")
+	log.D(*req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
+	log.Ln("Do...")
 	if err := http.Do(req, resp); err != nil {
+		log.Ln("Response:")
+		log.D(*resp)
 		return nil, err
 	}
+
+	log.Ln("Response:")
+	log.D(*resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
@@ -62,28 +69,40 @@ func (bot *Bot) request(
 	return &data, nil
 }
 
-func (bot *Bot) upload(
-	file InputFile,
-	fieldName, fileName, method string,
-	args *http.Args,
-) (*Response, error) {
-	var buffer bytes.Buffer
-	multi := multipart.NewWriter(&buffer)
-	defer multi.Close()
+func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
+	buffer := &bytes.Buffer{}
+	multi := multipart.NewWriter(buffer)
 
-	switch source := file.(type) {
+	requestURI := &url.URL{
+		Scheme: "https",
+		Host:   "api.telegram.org",
+		Path:   fmt.Sprint("/bot", bot.AccessToken, "/", method),
+	}
+
+	query, err := url.ParseQuery(args.String())
+	if err != nil {
+		return nil, err
+	}
+
+	for key, val := range query {
+		if err := multi.WriteField(key, val[0]); err != nil {
+			return nil, err
+		}
+	}
+
+	switch f := file.(type) {
 	case string:
-		f, err := os.Open(source)
+		src, err := os.Open(f)
 		if err != nil {
 			return nil, err
 		}
-		defer f.Close()
+		defer src.Close()
 
-		formFile, err := multi.CreateFormFile(fieldName, f.Name())
+		formFile, err := multi.CreateFormFile(fieldName, src.Name())
 		if err != nil {
 			return nil, err
 		}
-		if _, err = io.Copy(formFile, f); err != nil {
+		if _, err = io.Copy(formFile, src); err != nil {
 			return nil, err
 		}
 	case []byte:
@@ -91,43 +110,47 @@ func (bot *Bot) upload(
 		if err != nil {
 			return nil, err
 		}
-		if _, err = io.Copy(formFile, bytes.NewReader(source)); err != nil {
+		if _, err = io.Copy(formFile, bytes.NewReader(f)); err != nil {
 			return nil, err
 		}
 	case *url.URL:
-		if err := multi.WriteField(fieldName, source.String()); err != nil {
+		if err := multi.WriteField(fieldName, f.String()); err != nil {
 			return nil, err
 		}
 	case io.Reader:
-		multi.CreateFormFile(fieldName, fileName)
+		if _, err := multi.CreateFormFile(fieldName, fileName); err != nil {
+			return nil, err
+		}
 	default:
 		return nil, ErrBadFileType
 	}
-
-	requestURI := &url.URL{
-		Scheme: "https",
-		Host:   "api.telegram.org",
-		Path:   fmt.Sprint("/file/bot", bot.AccessToken, "/", method),
-	}
-
-	if args != nil {
-		requestURI.RawQuery = args.String()
+	if err := multi.Close(); err != nil {
+		return nil, err
 	}
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
+	req.SetBody(buffer.Bytes())
+	req.Header.SetContentType(multi.FormDataContentType())
 	req.Header.SetMethod("POST")
-	req.Header.SetContentType("multipart/form-data; charset=utf-8")
-	req.Header.SetMultipartFormBoundary(multi.Boundary())
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent("go-telegram/3.5")
-	req.SetBody(buffer.Bytes())
+	req.Header.SetHost("api.telegram.org")
+
+	log.Ln("Request:")
+	log.D(*req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
+	log.Ln("Do...")
 	if err := http.Do(req, resp); err != nil {
+		log.Ln("Response:")
+		log.D(*resp)
 		return nil, err
 	}
+
+	log.Ln("Response:")
+	log.D(*resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
