@@ -16,7 +16,7 @@ import (
 
 var ErrBadFileType = errors.New("bad file type")
 
-// UploadFile is a helper method which provide are three ways to send files
+// upload is a helper method which provide are three ways to send files
 // (photos, stickers, audio, media, etc.):
 //
 // 1. If the file is already stored somewhere on the Telegram servers, you don't
@@ -48,10 +48,6 @@ var ErrBadFileType = errors.New("bad file type")
 // - To use SendVoice, the file must have the type audio/ogg and be no more than
 // 1MB in size. 1–20MB voice notes will be sent as files.
 // - Other configurations may work but we can't guarantee that they will.
-func (bot *Bot) UploadFile(name string, file InputFile) (*Response, error) {
-	return bot.upload(file, "file", name, "", nil)
-}
-
 func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
