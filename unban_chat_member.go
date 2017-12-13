@@ -12,11 +12,12 @@ import (
 // to join via link, etc. The bot must be an administrator for this to work.
 // Returns True on success.
 func (bot *Bot) UnbanChatMember(chatID int64, user int) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("user_id", strconv.Itoa(user))
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "unbanChatMember", &args)
+	resp, err := bot.request(nil, "unbanChatMember", args)
 	if err != nil {
 		return false, err
 	}

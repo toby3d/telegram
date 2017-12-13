@@ -11,10 +11,11 @@ import (
 // for one-on-one conversations, current username of a user, group or channel,
 // etc.). Returns a Chat object on success.
 func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "getChat", &args)
+	resp, err := bot.request(nil, "getChat", args)
 	if err != nil {
 		return nil, err
 	}

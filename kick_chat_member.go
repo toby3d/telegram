@@ -16,12 +16,13 @@ import (
 // Admins' setting is off in the target group. Otherwise members may only be removed by the group's
 // creator or by the member that added them.
 func (bot *Bot) KickChatMember(chatID int64, userID int, untilDate int64) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 	args.Add("user_id", strconv.Itoa(userID))
 	args.Add("until_date", strconv.FormatInt(untilDate, 10))
 
-	resp, err := bot.request(nil, "kickChatMember", &args)
+	resp, err := bot.request(nil, "kickChatMember", args)
 	if err != nil {
 		return false, err
 	}

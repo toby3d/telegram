@@ -9,10 +9,11 @@ import (
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
 func (bot *Bot) LeaveChat(chat int64) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chat, 10))
 
-	resp, err := bot.request(nil, "leaveChat", &args)
+	resp, err := bot.request(nil, "leaveChat", args)
 	if err != nil {
 		return false, err
 	}

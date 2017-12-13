@@ -14,10 +14,11 @@ import (
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
 func (bot *Bot) DeleteChatPhoto(chatID int64) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "deleteChatPhoto", &args)
+	resp, err := bot.request(nil, "deleteChatPhoto", args)
 	if err != nil {
 		return false, err
 	}
