@@ -39,6 +39,8 @@ const (
 	MimePDF  = "application/pdf"
 	MimeZIP  = "application/zip"
 
+	PrefixAttach = "attach://"
+
 	StatusAdministrator = "administrator"
 	StatusCreator       = "creator"
 	StatusKicked        = "kicked"
