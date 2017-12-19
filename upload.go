@@ -70,21 +70,28 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 	}
 
 	switch f := file.(type) {
-	case string:
-		src, err := os.Open(f)
+	case string: // Send by 'file_id'
+		err := multi.WriteField(fieldName, f)
 		if err != nil {
 			return nil, err
 		}
-		defer src.Close()
 
-		formFile, err := multi.CreateFormFile(fieldName, src.Name())
-		if err != nil {
-			return nil, err
-		}
-		if _, err = io.Copy(formFile, src); err != nil {
-			return nil, err
-		}
-	case []byte:
+		/*
+			src, err := os.Open(f)
+			if err != nil {
+				return nil, err
+			}
+			defer src.Close()
+
+			formFile, err := multi.CreateFormFile(fieldName, src.Name())
+			if err != nil {
+				return nil, err
+			}
+			if _, err = io.Copy(formFile, src); err != nil {
+				return nil, err
+			}
+		*/
+	case []byte: // Upload new
 		formFile, err := multi.CreateFormFile(fieldName, fileName)
 		if err != nil {
 			return nil, err
