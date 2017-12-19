@@ -123,7 +123,7 @@ func (bot *Bot) upload(
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent("go-telegram/3.5")
-	// req.Header.SetHost("api.telegram.org")
+	req.Header.SetHost("api.telegram.org")
 
 	log.Ln("Request:")
 	log.D(*req)

@@ -27,7 +27,7 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent("go-telegram/3.5")
-	// req.Header.SetHost("api.telegram.org")
+	req.Header.SetHost("api.telegram.org")
 	req.SetBody(dst)
 
 	log.Ln("Request:")
