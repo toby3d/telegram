@@ -42,6 +42,10 @@ func (msg *Message) CommandArgument() string {
 	}
 }
 
+func (msg *Message) IsReply() bool {
+	return msg.ReplyToMessage != nil
+}
+
 func (msg *Message) Time() time.Time {
 	return time.Unix(msg.Date, 0)
 }
