@@ -9,7 +9,7 @@ func (msg *Message) IsCommand() bool {
 	}
 
 	return msg.Entities[0].Offset == 0 &&
-		msg.Entities[0].Type != EntityBotCommand
+		msg.Entities[0].Type == EntityBotCommand
 }
 
 func (msg *Message) Command() string {
