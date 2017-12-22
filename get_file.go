@@ -17,10 +17,11 @@ import (
 // should save the file's MIME type and name (if available) when the File object
 // is received.
 func (bot *Bot) GetFile(file string) (*File, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("file_id", file)
 
-	resp, err := bot.request(nil, "getFile", &args)
+	resp, err := bot.request(nil, "getFile", args)
 	if err != nil {
 		return nil, err
 	}

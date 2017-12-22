@@ -10,11 +10,12 @@ import (
 // GetChatMember get information about a member of a chat. Returns a ChatMember
 // object on success.
 func (bot *Bot) GetChatMember(chatID int64, user int) (*ChatMember, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("user_id", strconv.Itoa(user))
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "getChatMember", &args)
+	resp, err := bot.request(nil, "getChatMember", args)
 	if err != nil {
 		return nil, err
 	}

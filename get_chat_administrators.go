@@ -12,10 +12,11 @@ import (
 // chat administrators except other bots. If the chat is a group or a supergroup
 // and no administrators were appointed, only the creator will be returned.
 func (bot *Bot) GetChatAdministrators(chatID int64) (*[]ChatMember, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "getChatAdministrators", &args)
+	resp, err := bot.request(nil, "getChatAdministrators", args)
 	if err != nil {
 		return nil, err
 	}

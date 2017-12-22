@@ -15,11 +15,12 @@ import (
 // bot has can_delete_messages permission in a supergroup or a channel, it can
 // delete any message there. Returns True on success.
 func (bot *Bot) DeleteMessage(chatID int64, message int) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("message_id", strconv.Itoa(message))
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "deleteMessage", &args)
+	resp, err := bot.request(nil, "deleteMessage", args)
 	if err != nil {
 		return false, err
 	}

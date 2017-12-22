@@ -55,7 +55,8 @@ func NewWebhook(url string, file interface{}) *SetWebhookParameters {
 // recommend using a secret path in the URL, e.g. https://www.example.com/<token>.
 // Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
 func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("url", params.URL)
 
 	if len(params.AllowedUpdates) > 0 {
@@ -70,10 +71,10 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	resp := &Response{}
 	if params.Certificate != nil {
 		resp, err = bot.upload(
-			params.Certificate, "certificate", "cert.pem", setWebhook, &args,
+			params.Certificate, "certificate", "cert.pem", setWebhook, args,
 		)
 	} else {
-		resp, err = bot.request(nil, setWebhook, &args)
+		resp, err = bot.request(nil, setWebhook, args)
 	}
 	if err != nil {
 		return false, err

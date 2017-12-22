@@ -11,10 +11,11 @@ import (
 // administrator in the chat for this to work and must have the appropriate admin
 // rights. Returns True on success.
 func (bot *Bot) UnpinChatMessage(chatID int64) (bool, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.request(nil, "unpinChatMessage", &args)
+	resp, err := bot.request(nil, "unpinChatMessage", args)
 	if err != nil {
 		return false, err
 	}

@@ -51,7 +51,8 @@ func NewSticker(chatID int64, sticker interface{}) *SendStickerParameters {
 
 // SendSticker send .webp stickers. On success, the sent Message is returned.
 func (bot *Bot) SendSticker(params *SendStickerParameters) (*Message, error) {
-	var args http.Args
+	args := http.AcquireArgs()
+defer http.ReleaseArgs(args)
 	args.Add("chat_id", params.ChatID)
 	args.Add("disable_notification", strconv.FormatBool(params.DisableNotification))
 
@@ -86,7 +87,7 @@ func (bot *Bot) SendSticker(params *SendStickerParameters) (*Message, error) {
 		return false, errors.New("use string only (for current version of go-telegram)")
 	}
 
-	resp, err := bot.upload(buffer.Bytes(), multi.Boundary(), "setWebhook", &args)
+	resp, err := bot.upload(buffer.Bytes(), multi.Boundary(), "setWebhook", args)
 	if err != nil {
 		return false, err
 	}
