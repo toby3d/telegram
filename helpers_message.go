@@ -20,8 +20,6 @@ func (msg *Message) Command() string {
 	return string([]rune(msg.Text)[1:msg.Entities[0].Length])
 }
 
-	return ""
-}
 func (msg *Message) HasArgument() bool {
 	switch {
 	case msg.IsCommand(),
@@ -44,6 +42,10 @@ func (msg *Message) CommandArgument() string {
 
 func (msg *Message) IsReply() bool {
 	return msg.ReplyToMessage != nil
+}
+
+func (msg *Message) IsForward() bool {
+	return msg.ForwardFrom != nil
 }
 
 func (msg *Message) Time() time.Time {
