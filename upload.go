@@ -44,11 +44,7 @@ var ErrBadFileType = errors.New("bad file type")
 // - To use SendVoice, the file must have the type audio/ogg and be no more than 1MB in size. 1–20MB
 // voice notes will be sent as files.
 // - Other configurations may work but we can't guarantee that they will.
-func (bot *Bot) upload(
-	file InputFile,
-	fieldName, fileName, method string,
-	args *http.Args,
-) (*Response, error) {
+func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
@@ -126,19 +122,19 @@ func (bot *Bot) upload(
 	req.Header.SetHost("api.telegram.org")
 
 	log.Ln("Request:")
-	log.D(*req)
+	log.D(req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
 	if err := http.Do(req, resp); err != nil {
 		log.Ln("Resp:")
-		log.D(*resp)
+		log.D(resp)
 
 		return nil, err
 	}
 
 	log.Ln("Resp:")
-	log.D(*resp)
+	log.D(resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {

@@ -31,19 +31,19 @@ func (bot *Bot) request(dst []byte, method string, args *http.Args) (*Response, 
 	req.SetBody(dst)
 
 	log.Ln("Request:")
-	log.D(*req)
+	log.D(req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
 	if err := http.Do(req, resp); err != nil {
 		log.Ln("Resp:")
-		log.D(*resp)
+		log.D(resp)
 
 		return nil, err
 	}
 
 	log.Ln("Resp:")
-	log.D(*resp)
+	log.D(resp)
 
 	var data Response
 	if err := json.Unmarshal(resp.Body(), &data); err != nil {
