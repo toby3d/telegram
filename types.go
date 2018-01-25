@@ -254,7 +254,7 @@ type (
 
 		// For forwarded messages, date the original message was sent in Unix
 		// time
-		ForwardDate int `json:"forward_date,omitempty"`
+		ForwardDate int64 `json:"forward_date,omitempty"`
 
 		// For replies, the original message. Note that the Message object in
 		// this field will not contain further reply_to_message fields even if it
@@ -262,7 +262,10 @@ type (
 		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
 
 		// Date the message was last edited in Unix time
-		EditDate int `json:"edit_date,omitempty"`
+		EditDate int64 `json:"edit_date,omitempty"`
+
+		// The unique identifier of a media message group this message belongs to
+		MediaGroupID string `json:"media_group_id,omitempty"`
 
 		// Signature of the post author for messages in channels
 		AuthorSignature string `json:"author_signature,omitempty"`
@@ -303,10 +306,6 @@ type (
 		// Message is a video note, information about the video message
 		VideoNote *VideoNote `json:"video_note,omitempty"`
 
-		// New members that were added to the group or supergroup and information
-		// about them (the bot itself may be one of these members)
-		NewChatMembers []User `json:"new_chat_members,omitempty"`
-
 		// Caption for the document, photo or video, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
@@ -319,9 +318,9 @@ type (
 		// Message is a venue, information about the venue
 		Venue *Venue `json:"venue,omitempty"`
 
-		// A new member was added to the group, information about them (this
-		// member may be the bot itself)
-		NewChatMember *User `json:"new_chat_member,omitempty"`
+		// New members that were added to the group or supergroup and information
+		// about them (the bot itself may be one of these members)
+		NewChatMembers []User `json:"new_chat_member,omitempty"`
 
 		// A member was removed from the group, information about them (this
 		// member may be the bot itself)
@@ -782,7 +781,7 @@ type (
 
 		// Restictred and kicked only. Date when restrictions will be lifted for
 		// this user, unix time
-		UntilDate int `json:"until_date,omitempty"`
+		UntilDate int64 `json:"until_date,omitempty"`
 
 		// Administrators only. True, if the bot is allowed to edit administrator
 		// privileges of that user
