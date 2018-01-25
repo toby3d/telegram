@@ -1,8 +1,6 @@
 package telegram
 
-func NewInlineQueryResultCachedAudio(
-	resultID, fileID string,
-) *InlineQueryResultCachedAudio {
+func NewInlineQueryResultCachedAudio(resultID, fileID string) *InlineQueryResultCachedAudio {
 	return &InlineQueryResultCachedAudio{
 		Type:        TypeAudio,
 		ID:          resultID,
@@ -10,9 +8,7 @@ func NewInlineQueryResultCachedAudio(
 	}
 }
 
-func NewInlineQueryResultCachedDocument(
-	resultID, fileID, title string,
-) *InlineQueryResultCachedDocument {
+func NewInlineQueryResultCachedDocument(resultID, fileID, title string) *InlineQueryResultCachedDocument {
 	return &InlineQueryResultCachedDocument{
 		Type:           TypeDocument,
 		ID:             resultID,
@@ -21,9 +17,7 @@ func NewInlineQueryResultCachedDocument(
 	}
 }
 
-func NewInlineQueryResultCachedGif(
-	resultID, fileID string,
-) *InlineQueryResultCachedGif {
+func NewInlineQueryResultCachedGif(resultID, fileID string) *InlineQueryResultCachedGif {
 	return &InlineQueryResultCachedGif{
 		Type:      TypeGIF,
 		ID:        resultID,
@@ -31,9 +25,7 @@ func NewInlineQueryResultCachedGif(
 	}
 }
 
-func NewInlineQueryResultCachedMpeg4Gif(
-	resultID, fileID string,
-) *InlineQueryResultCachedMpeg4Gif {
+func NewInlineQueryResultCachedMpeg4Gif(resultID, fileID string) *InlineQueryResultCachedMpeg4Gif {
 	return &InlineQueryResultCachedMpeg4Gif{
 		Type:        TypeMpeg4Gif,
 		ID:          resultID,
@@ -41,9 +33,7 @@ func NewInlineQueryResultCachedMpeg4Gif(
 	}
 }
 
-func NewInlineQueryResultCachedPhoto(
-	resultID, fileID string,
-) *InlineQueryResultCachedPhoto {
+func NewInlineQueryResultCachedPhoto(resultID, fileID string) *InlineQueryResultCachedPhoto {
 	return &InlineQueryResultCachedPhoto{
 		Type:        TypePhoto,
 		ID:          resultID,
@@ -51,9 +41,7 @@ func NewInlineQueryResultCachedPhoto(
 	}
 }
 
-func NewInlineQueryResultCachedSticker(
-	resultID, fileID string,
-) *InlineQueryResultCachedSticker {
+func NewInlineQueryResultCachedSticker(resultID, fileID string) *InlineQueryResultCachedSticker {
 	return &InlineQueryResultCachedSticker{
 		Type:          TypeSticker,
 		ID:            resultID,
@@ -61,9 +49,7 @@ func NewInlineQueryResultCachedSticker(
 	}
 }
 
-func NewInlineQueryResultCachedVideo(
-	resultID, fileID, title string,
-) *InlineQueryResultCachedVideo {
+func NewInlineQueryResultCachedVideo(resultID, fileID, title string) *InlineQueryResultCachedVideo {
 	return &InlineQueryResultCachedVideo{
 		Type:        TypeVideo,
 		ID:          resultID,
@@ -72,9 +58,7 @@ func NewInlineQueryResultCachedVideo(
 	}
 }
 
-func NewInlineQueryResultCachedVoice(
-	resultID, fileID, title string,
-) *InlineQueryResultCachedVoice {
+func NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQueryResultCachedVoice {
 	return &InlineQueryResultCachedVoice{
 		Type:        TypeVoice,
 		ID:          resultID,
@@ -83,10 +67,7 @@ func NewInlineQueryResultCachedVoice(
 	}
 }
 
-func NewInlineQueryResultArticle(
-	resultID, title string,
-	content *InputMessageContent,
-) *InlineQueryResultArticle {
+func NewInlineQueryResultArticle(resultID, title string, content *InputMessageContent) *InlineQueryResultArticle {
 	return &InlineQueryResultArticle{
 		Type:                TypeArticle,
 		ID:                  resultID,
@@ -95,9 +76,7 @@ func NewInlineQueryResultArticle(
 	}
 }
 
-func NewInlineQueryResultAudio(
-	resultID, audioURL, title string,
-) *InlineQueryResultAudio {
+func NewInlineQueryResultAudio(resultID, audioURL, title string) *InlineQueryResultAudio {
 	return &InlineQueryResultAudio{
 		Type:     TypeAudio,
 		ID:       resultID,
@@ -106,9 +85,7 @@ func NewInlineQueryResultAudio(
 	}
 }
 
-func NewInlineQueryResultContact(
-	resultID, phoneNumber, firstName string,
-) *InlineQueryResultContact {
+func NewInlineQueryResultContact(resultID, phoneNumber, firstName string) *InlineQueryResultContact {
 	return &InlineQueryResultContact{
 		Type:        TypeContact,
 		ID:          resultID,
@@ -117,9 +94,7 @@ func NewInlineQueryResultContact(
 	}
 }
 
-func NewInlineQueryResultGame(
-	resultID, gameShortName string,
-) *InlineQueryResultGame {
+func NewInlineQueryResultGame(resultID, gameShortName string) *InlineQueryResultGame {
 	return &InlineQueryResultGame{
 		Type:          TypeGame,
 		ID:            resultID,
@@ -127,9 +102,7 @@ func NewInlineQueryResultGame(
 	}
 }
 
-func NewInlineQueryResultDocument(
-	resultID, title, documentURL, mimeType string,
-) *InlineQueryResultDocument {
+func NewInlineQueryResultDocument(resultID, title, documentURL, mimeType string) *InlineQueryResultDocument {
 	return &InlineQueryResultDocument{
 		Type:        TypeDocument,
 		ID:          resultID,
@@ -139,9 +112,7 @@ func NewInlineQueryResultDocument(
 	}
 }
 
-func NewInlineQueryResultGif(
-	resultID, gifURL, thumbURL string,
-) *InlineQueryResultGif {
+func NewInlineQueryResultGif(resultID, gifURL, thumbURL string) *InlineQueryResultGif {
 	return &InlineQueryResultGif{
 		Type:     TypeGIF,
 		ID:       resultID,
@@ -150,10 +121,7 @@ func NewInlineQueryResultGif(
 	}
 }
 
-func NewInlineQueryResultLocation(
-	resultID, title string,
-	latitude, longitude float32,
-) *InlineQueryResultLocation {
+func NewInlineQueryResultLocation(resultID, title string, latitude, longitude float32) *InlineQueryResultLocation {
 	return &InlineQueryResultLocation{
 		Type:      TypeLocation,
 		ID:        resultID,
@@ -163,9 +131,7 @@ func NewInlineQueryResultLocation(
 	}
 }
 
-func NewInlineQueryResultMpeg4Gif(
-	resultID, mpeg4URL, thumbURL string,
-) *InlineQueryResultMpeg4Gif {
+func NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQueryResultMpeg4Gif {
 	return &InlineQueryResultMpeg4Gif{
 		Type:     TypeMpeg4Gif,
 		ID:       resultID,
@@ -174,9 +140,7 @@ func NewInlineQueryResultMpeg4Gif(
 	}
 }
 
-func NewInlineQueryResultPhoto(
-	resultID, photoURL, thumbURL string,
-) *InlineQueryResultPhoto {
+func NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQueryResultPhoto {
 	return &InlineQueryResultPhoto{
 		Type:     TypePhoto,
 		ID:       resultID,
@@ -185,10 +149,7 @@ func NewInlineQueryResultPhoto(
 	}
 }
 
-func NewInlineQueryResultVenue(
-	resultID, title, address string,
-	latitude, longitude float32,
-) *InlineQueryResultVenue {
+func NewInlineQueryResultVenue(resultID, title, address string, latitude, longitude float32) *InlineQueryResultVenue {
 	return &InlineQueryResultVenue{
 		Type:      TypeVenue,
 		ID:        resultID,
@@ -199,9 +160,7 @@ func NewInlineQueryResultVenue(
 	}
 }
 
-func NewInlineQueryResultVideo(
-	resultID, videoURL, mimeType, thumbURL, title string,
-) *InlineQueryResultVideo {
+func NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title string) *InlineQueryResultVideo {
 	return &InlineQueryResultVideo{
 		Type:     TypeVideo,
 		ID:       resultID,
@@ -212,9 +171,7 @@ func NewInlineQueryResultVideo(
 	}
 }
 
-func NewInlineQueryResultVoice(
-	resultID, voiceURL, title string,
-) *InlineQueryResultVoice {
+func NewInlineQueryResultVoice(resultID, voiceURL, title string) *InlineQueryResultVoice {
 	return &InlineQueryResultVoice{
 		Type:     TypeVoice,
 		ID:       resultID,
