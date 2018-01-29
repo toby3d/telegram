@@ -138,3 +138,34 @@ func (bot *Bot) NewFileURL(filePath string) *url.URL {
 		Path:   fmt.Sprint("/file/bot", bot.AccessToken, "/", filePath),
 	}
 }
+
+func (bot *Bot) NewRedirectURL(param string, group bool) *url.URL {
+	if bot == nil {
+		return nil
+	}
+
+	if bot.Self == nil {
+		return nil
+	}
+
+	if bot.Self.Username == "" {
+		return nil
+	}
+
+	link := &url.URL{
+		Scheme: "https",
+		Host:   "t.me",
+		Path:   bot.Self.Username,
+	}
+
+	q := link.Query()
+	if group {
+		q.Add("startgroup", param)
+	} else {
+		q.Add("start", param)
+	}
+
+	link.RawQuery = q.Encode()
+
+	return link
+}
