@@ -15,7 +15,7 @@ func (entity *MessageEntity) ParseURL() (*url.URL, error) {
 }
 
 func (entity *MessageEntity) IsBold() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -23,7 +23,7 @@ func (entity *MessageEntity) IsBold() bool {
 }
 
 func (entity *MessageEntity) IsBotCommand() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -31,7 +31,7 @@ func (entity *MessageEntity) IsBotCommand() bool {
 }
 
 func (entity *MessageEntity) IsCode() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -39,7 +39,7 @@ func (entity *MessageEntity) IsCode() bool {
 }
 
 func (entity *MessageEntity) IsEmail() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -47,7 +47,7 @@ func (entity *MessageEntity) IsEmail() bool {
 }
 
 func (entity *MessageEntity) IsHashTag() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -55,7 +55,7 @@ func (entity *MessageEntity) IsHashTag() bool {
 }
 
 func (entity *MessageEntity) IsItalic() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -63,7 +63,7 @@ func (entity *MessageEntity) IsItalic() bool {
 }
 
 func (entity *MessageEntity) IsMention() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -71,7 +71,7 @@ func (entity *MessageEntity) IsMention() bool {
 }
 
 func (entity *MessageEntity) IsPre() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -79,7 +79,7 @@ func (entity *MessageEntity) IsPre() bool {
 }
 
 func (entity *MessageEntity) IsTextLink() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -87,7 +87,7 @@ func (entity *MessageEntity) IsTextLink() bool {
 }
 
 func (entity *MessageEntity) IsTextMention() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 
@@ -95,7 +95,7 @@ func (entity *MessageEntity) IsTextMention() bool {
 }
 
 func (entity *MessageEntity) IsURL() bool {
-	if entity != nil {
+	if entity == nil {
 		return false
 	}
 

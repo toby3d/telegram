@@ -33,5 +33,9 @@ func (chat *Chat) IsChannel() bool {
 }
 
 func (chat *Chat) HasPinnedMessage() bool {
+	if chat == nil {
+		return false
+	}
+
 	return chat.PinnedMessage != nil
 }

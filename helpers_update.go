@@ -93,37 +93,73 @@ func (bot *Bot) NewWebhookChannel(params *SetWebhookParameters, certFile, keyFil
 }
 
 func (upd *Update) IsMessage() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.Message != nil
 }
 
 func (upd *Update) IsEditedMessage() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.EditedMessage != nil
 }
 
 func (upd *Update) IsChannelPost() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.ChannelPost != nil
 }
 
 func (upd *Update) IsEditedChannelPost() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.EditedChannelPost != nil
 }
 
 func (upd *Update) IsInlineQuery() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.InlineQuery != nil
 }
 
 func (upd *Update) IsChosenInlineResult() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.ChosenInlineResult != nil
 }
 
 func (upd *Update) IsCallbackQuery() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.CallbackQuery != nil
 }
 
 func (upd *Update) IsShippingQuery() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.ShippingQuery != nil
 }
 
 func (upd *Update) IsPreCheckoutQuery() bool {
+	if upd == nil {
+		return false
+	}
+
 	return upd.PreCheckoutQuery != nil
 }
