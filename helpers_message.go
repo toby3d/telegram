@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func (msg *Message) IsCommand() bool {
+func (msg *Message) IsCommand(command string) bool {
 	if !msg.IsText() {
 		return false
 	}
@@ -15,11 +15,16 @@ func (msg *Message) IsCommand() bool {
 	}
 
 	entity := msg.Entities[0]
-	return entity.IsBotCommand() && entity.Offset == 0
+
+	isBotCommand := entity.IsBotCommand() && entity.Offset == 0
+	if command != "" {
+		return isBotCommand && strings.EqualFold(msg.Command(), command)
+	}
+	return isBotCommand
 }
 
 func (msg *Message) Command() string {
-	if !msg.IsCommand() {
+	if !msg.IsCommand("") {
 		return ""
 	}
 
@@ -27,7 +32,7 @@ func (msg *Message) Command() string {
 }
 
 func (msg *Message) RawCommand() string {
-	if !msg.IsCommand() {
+	if !msg.IsCommand("") {
 		return ""
 	}
 
@@ -35,7 +40,7 @@ func (msg *Message) RawCommand() string {
 }
 
 func (msg *Message) HasCommandArgument() bool {
-	if !msg.IsCommand() {
+	if !msg.IsCommand("") {
 		return false
 	}
 

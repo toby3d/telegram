@@ -45,7 +45,7 @@ func (bot *Bot) IsReplyToMe(msg *Message) bool {
 }
 
 func (bot *Bot) IsCommandToMe(msg *Message) bool {
-	if !msg.IsCommand() {
+	if !msg.IsCommand("") {
 		return false
 	}
 
