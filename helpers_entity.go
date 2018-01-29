@@ -1,6 +1,9 @@
 package telegram
 
-import "net/url"
+import (
+	"fmt"
+	"net/url"
+)
 
 func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
 	if entity == nil {
@@ -8,10 +11,10 @@ func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
 	}
 
 	var err error
-	parsedURL := new(url.URL)
+	link := new(url.URL)
 	switch {
 	case entity.IsTextLink():
-		parsedURL, err = url.Parse(entity.URL)
+		link, err = url.Parse(entity.URL)
 	case entity.IsURL():
 		if messageText == "" {
 			return nil
@@ -24,13 +27,17 @@ func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
 
 		from := entity.Offset
 		to := from + entity.Length
-		parsedURL, err = url.Parse(string([]rune(messageText)[from:to]))
+		rawURL := string([]rune(messageText)[from:to])
+		link, err = url.Parse(rawURL)
+		if err == nil && link.Scheme == "" {
+			link, err = url.Parse(fmt.Sprint("http://", link))
+		}
 	}
 	if err != nil {
 		return nil
 	}
 
-	return parsedURL
+	return link
 }
 
 func (entity *MessageEntity) IsBold() bool {
