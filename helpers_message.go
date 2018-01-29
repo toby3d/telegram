@@ -98,7 +98,15 @@ func (msg *Message) EditTime() time.Time {
 		return time.Time{}
 	}
 
+	if !msg.HasBeenEdited() {
+		return time.Time{}
+	}
+
 	return time.Unix(msg.EditDate, 0)
+}
+
+func (msg *Message) HasBeenEdited() bool {
+	return msg.EditDate > 0
 }
 
 func (msg *Message) IsText() bool {
