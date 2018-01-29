@@ -2,16 +2,35 @@ package telegram
 
 import "net/url"
 
-func (entity *MessageEntity) ParseURL() (*url.URL, error) {
-	if entity != nil {
-		return nil, nil
+func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
+	if entity == nil {
+		return nil
 	}
 
-	if entity.IsTextLink() {
-		return url.Parse(entity.URL)
+	var err error
+	parsedURL := new(url.URL)
+	switch {
+	case entity.IsTextLink():
+		parsedURL, err = url.Parse(entity.URL)
+	case entity.IsURL():
+		if messageText == "" {
+			return nil
+		}
+
+		rawMessageText := []rune(messageText)
+		if len(rawMessageText) < (entity.Offset + entity.Length) {
+			return nil
+		}
+
+		from := entity.Offset
+		to := from + entity.Length
+		parsedURL, err = url.Parse(string([]rune(messageText)[from:to]))
+	}
+	if err != nil {
+		return nil
 	}
 
-	return nil, nil
+	return parsedURL
 }
 
 func (entity *MessageEntity) IsBold() bool {
