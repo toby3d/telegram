@@ -72,7 +72,7 @@ func (entity *MessageEntity) IsEmail() bool {
 	return entity.Type == EntityEmail
 }
 
-func (entity *MessageEntity) IsHashTag() bool {
+func (entity *MessageEntity) IsHashtag() bool {
 	if entity == nil {
 		return false
 	}
