@@ -122,3 +122,19 @@ func (bot *Bot) IsMessageToMe(msg *Message) bool {
 
 	return false
 }
+
+func (bot *Bot) NewFileURL(filePath string) *url.URL {
+	if bot == nil {
+		return nil
+	}
+
+	if bot.AccessToken == "" || filePath == "" {
+		return nil
+	}
+
+	return &url.URL{
+		Scheme: "https",
+		Host:   "api.telegram.org",
+		Path:   fmt.Sprint("/file/bot", bot.AccessToken, "/", filePath),
+	}
+}
