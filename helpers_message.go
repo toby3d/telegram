@@ -230,3 +230,7 @@ func (msg *Message) HasCaptionMentions() bool {
 
 	return false
 }
+
+func (msg *Message) HasCaption() bool {
+	return !msg.IsText() && msg.Caption != ""
+}
