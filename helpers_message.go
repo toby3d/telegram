@@ -20,6 +20,7 @@ func (msg *Message) IsCommand(command string) bool {
 	if command != "" {
 		return isBotCommand && strings.EqualFold(msg.Command(), command)
 	}
+
 	return isBotCommand
 }
 

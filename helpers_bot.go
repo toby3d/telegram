@@ -1,15 +1,17 @@
 package telegram
 
-import "strings"
+import (
+	"fmt"
+	"net/url"
+	"strings"
+)
 
 func (bot *Bot) IsMessageFromMe(msg *Message) bool {
-	if msg == nil ||
-		bot == nil {
+	if msg == nil || bot == nil {
 		return false
 	}
 
-	if msg.From == nil ||
-		bot.Self == nil {
+	if msg.From == nil || bot.Self == nil {
 		return false
 	}
 
@@ -62,8 +64,7 @@ func (bot *Bot) IsCommandToMe(msg *Message) bool {
 }
 
 func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
-	if msg == nil ||
-		bot == nil {
+	if msg == nil || bot == nil {
 		return false
 	}
 
@@ -95,13 +96,11 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 }
 
 func (bot *Bot) IsForwardMentionsMe(msg *Message) bool {
-	return msg.IsForward() &&
-		bot.IsMessageMentionsMe(msg)
+	return msg.IsForward() && bot.IsMessageMentionsMe(msg)
 }
 
 func (bot *Bot) IsReplyMentionsMe(msg *Message) bool {
-	return msg.IsReply() &&
-		bot.IsMessageMentionsMe(msg.ReplyToMessage)
+	return msg.IsReply() && bot.IsMessageMentionsMe(msg.ReplyToMessage)
 }
 
 func (bot *Bot) IsMessageToMe(msg *Message) bool {
@@ -139,7 +138,7 @@ func (bot *Bot) NewFileURL(filePath string) *url.URL {
 	}
 }
 
-func (bot *Bot) NewRedirectURL(param string, group bool) *url.URL {
+func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
 	if bot == nil {
 		return nil
 	}

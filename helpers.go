@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"fmt"
 	"net/url"
 	"strconv"
 )
