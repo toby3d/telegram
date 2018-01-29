@@ -234,3 +234,11 @@ func (msg *Message) HasCaptionMentions() bool {
 func (msg *Message) HasCaption() bool {
 	return !msg.IsText() && msg.Caption != ""
 }
+
+func (msg *Message) HasAuthorSignature() bool {
+	if msg == nil {
+		return false
+	}
+
+	return msg.AuthorSignature != ""
+}
