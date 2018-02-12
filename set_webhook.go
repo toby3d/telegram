@@ -67,8 +67,10 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
-	var err error
-	resp := &Response{}
+	var (
+		err  error
+		resp *Response
+	)
 	if params.Certificate != nil {
 		resp, err = bot.upload(
 			params.Certificate, "certificate", "cert.pem", setWebhook, args,
