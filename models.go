@@ -907,6 +907,9 @@ type (
 
 		// Video duration
 		Duration int `json:"duration,omitempty"`
+
+		// Pass true, if the uploaded video is suitable for streaming
+		SupportsStreaming bool `json:"supports_streaming,omitempty"`
 	}
 
 	// InputFile represents the contents of a file to be uploaded. Must be posted
