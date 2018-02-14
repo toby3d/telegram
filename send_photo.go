@@ -19,6 +19,10 @@ type SendPhotoParameters struct {
 	// Photo caption (may also be used when resending photos by file_id), 0-200 characters
 	Caption string `json:"caption,omitempty"`
 
+	// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+	// fixed-width text or inline URLs in the media caption.
+	ParseMode string `json:"parse_mode,omitempty"`
+
 	// Disables link previews for links in this message
 	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 

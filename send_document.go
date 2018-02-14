@@ -19,6 +19,10 @@ type SendDocumentParameters struct {
 	// Document caption (may also be used when resending documents by file_id), 0-200 characters
 	Caption string `json:"caption,omitempty"`
 
+	// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+	// fixed-width text or inline URLs in the media caption.
+	ParseMode string `json:"parse_mode,omitempty"`
+
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification bool `json:"disable_notification,omitempty"`
 
