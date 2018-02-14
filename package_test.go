@@ -167,6 +167,17 @@ func TestSendMediaGroup(t *testing.T) {
 	}
 }
 
+func TestSendLocation(t *testing.T) {
+	resp, err := bot.SendLocation(NewLocation(chatID, 36.724510, 139.268181))
+	if err != nil {
+		t.Error(err.Error())
+	}
+	log.D(resp)
+	if resp == nil {
+		t.Error("unexpected result: message is nil")
+	}
+}
+
 func TestSendChatAction(t *testing.T) {
 	ok, err := bot.SendChatAction(chatID, ActionTyping)
 	if err != nil {
