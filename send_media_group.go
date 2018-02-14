@@ -1,34 +1,44 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type SendMediaGroupParameters struct {
+	// Unique identifier for the target chat.
+	ChatID int64 `json:"chat_id"`
+
+	// A JSON-serialized array describing photos and videos to be sent, must
+	// include 2–10 items
+	Media []interface{} `json:"media"`
+
+	// Sends the messages silently. Users will receive a notification with no
+	// sound.
+	DisableNotification bool `json:"disable_notification,omitempty"`
+
+	// If the messages are a reply, ID of the original message
+	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+}
+
+func NewMediaGroup(chatID int64, media ...interface{}) *SendMediaGroupParameters {
+	return &SendMediaGroupParameters{
+		ChatID: chatID,
+		Media:  media,
+	}
+}
 
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent
 // Messages is returned.
-func (bot *Bot) SendMediaGroup(chatID int64, media []InputFile, replyToMessageID int, disableNotification bool) ([]*Message, error) {
-	args := http.AcquireArgs()
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
-	args.Add("disable_notification", strconv.FormatBool(disableNotification))
-
-	if replyToMessageID != 0 {
-		args.Add("reply_to_message_id", strconv.Itoa(replyToMessageID))
-	}
-
-	dst, err := json.Marshal(media)
+func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) ([]Message, error) {
+	dst, err := json.Marshal(*params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendMediaGroup", args)
+	resp, err := bot.request(dst, "sendMediaGroup", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var data []*Message
+	var data []Message
 	err = json.Unmarshal(*resp.Result, &data)
 	return data, err
 }
