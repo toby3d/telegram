@@ -178,6 +178,17 @@ func TestSendLocation(t *testing.T) {
 	}
 }
 
+func TestSendContact(t *testing.T) {
+	resp, err := bot.SendContact(NewContact(chatID, "+42410", "Telegram"))
+	if err != nil {
+		t.Error(err.Error())
+	}
+	log.D(resp)
+	if resp == nil {
+		t.Error("unexpected result: message is nil")
+	}
+}
+
 func TestSendChatAction(t *testing.T) {
 	ok, err := bot.SendChatAction(chatID, ActionTyping)
 	if err != nil {
