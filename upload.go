@@ -8,7 +8,7 @@ import (
 	// "io/ioutil"
 	"mime/multipart"
 	"net/url"
-	// "os"
+	"os"
 
 	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
@@ -67,12 +67,12 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 
 	switch f := file.(type) {
 	case string: // Send by 'file_id'
-		err := multi.WriteField(fieldName, f)
-		if err != nil {
-			return nil, err
-		}
-
-		/*
+		if _, err = os.Stat(f); os.IsNotExist(err) {
+			err = multi.WriteField(fieldName, f)
+			if err != nil {
+				return nil, err
+			}
+		} else {
 			src, err := os.Open(f)
 			if err != nil {
 				return nil, err
@@ -86,7 +86,7 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 			if _, err = io.Copy(formFile, src); err != nil {
 				return nil, err
 			}
-		*/
+		}
 	case []byte: // Upload new
 		formFile, err := multi.CreateFormFile(fieldName, fileName)
 		if err != nil {
