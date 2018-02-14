@@ -371,6 +371,9 @@ type (
 		// Message is a service message about a successful payment, information
 		// about the payment.
 		SuccessfulPayment *SuccessfulPayment `json:"successful_payment,omitempty"`
+
+		// The domain name of the website on which the user has logged in.
+		ConnectedWebsite string `json:"connected_website,omitempty"`
 	}
 
 	// MessageEntity represents one special entity in a text message. For
