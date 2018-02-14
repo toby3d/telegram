@@ -11,7 +11,7 @@ import (
 // returns an Array of ChatMember objects that contains information about all
 // chat administrators except other bots. If the chat is a group or a supergroup
 // and no administrators were appointed, only the creator will be returned.
-func (bot *Bot) GetChatAdministrators(chatID int64) (*[]ChatMember, error) {
+func (bot *Bot) GetChatAdministrators(chatID int64) ([]ChatMember, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
@@ -23,5 +23,5 @@ func (bot *Bot) GetChatAdministrators(chatID int64) (*[]ChatMember, error) {
 
 	var data []ChatMember
 	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	return data, err
 }
