@@ -371,6 +371,9 @@ type (
 		// Message is a service message about a successful payment, information
 		// about the payment.
 		SuccessfulPayment *SuccessfulPayment `json:"successful_payment,omitempty"`
+
+		// The domain name of the website on which the user has logged in.
+		ConnectedWebsite string `json:"connected_website,omitempty"`
 	}
 
 	// MessageEntity represents one special entity in a text message. For
@@ -871,6 +874,10 @@ type (
 
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 	}
 
 	// InputMediaVideo represents a video to be sent.
@@ -888,6 +895,10 @@ type (
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Video width
 		Width int `json:"width,omitempty"`
 
@@ -896,6 +907,9 @@ type (
 
 		// Video duration
 		Duration int `json:"duration,omitempty"`
+
+		// Pass true, if the uploaded video is suitable for streaming
+		SupportsStreaming bool `json:"supports_streaming,omitempty"`
 	}
 
 	// InputFile represents the contents of a file to be uploaded. Must be posted
@@ -1078,6 +1092,10 @@ type (
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1116,6 +1134,10 @@ type (
 
 		// Caption of the GIF file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1194,6 +1216,10 @@ type (
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Video width
 		VideoWidth int `json:"video_width,omitempty"`
 
@@ -1235,6 +1261,10 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Performer
 		Performer string `json:"performer,omitempty"`
 
@@ -1268,6 +1298,10 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Recording duration in seconds
 		VoiceDuration int `json:"voice_duration,omitempty"`
 
@@ -1295,6 +1329,10 @@ type (
 
 		// Caption of the document to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 
 		// A valid URL for the file
 		DocumentURL string `json:"document_url"`
@@ -1473,6 +1511,10 @@ type (
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1501,6 +1543,10 @@ type (
 		// Caption of the GIF file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1528,6 +1574,10 @@ type (
 
 		// Caption of the MPEG-4 file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1580,6 +1630,10 @@ type (
 		// Caption of the document to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1611,6 +1665,10 @@ type (
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1638,6 +1696,10 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
@@ -1661,6 +1723,10 @@ type (
 
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`

@@ -19,6 +19,10 @@ type EditMessageCaptionParameters struct {
 	// New caption of the message
 	Caption string `json:"caption,omitempty"`
 
+	// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+	// fixed-width text or inline URLs in the media caption.
+	ParseMode string `json:"parse_mode,omitempty"`
+
 	// A JSON-serialized object for an inline keyboard.
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
