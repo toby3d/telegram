@@ -433,7 +433,7 @@ func TestEditMessageReplyMarkup(t *testing.T) {
 	markup.MessageID = replyToMessageID
 	markup.ReplyMarkup = NewInlineKeyboardMarkup(
 		NewInlineKeyboardRow(
-			NewInlineKeyboardButton("hello", "world"),
+			NewInlineKeyboardButton("hello", fmt.Sprint("time", time.Now().Unix())),
 		),
 	)
 	resp, err := bot.EditMessageReplyMarkup(&markup)
