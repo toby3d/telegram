@@ -24,11 +24,11 @@ func TestSendChatAction(t *testing.T) {
 }
 
 func TestKickChatMember(t *testing.T) {
-	ok, err := bot.KickChatMember(
-		superGroupID,
-		chatID,
-		time.Now().Add(time.Second*30).Unix(),
-	)
+	ok, err := bot.KickChatMember(&telegram.KickChatMemberParameters{
+		ChatID:    superGroupID,
+		UserID:    chatID,
+		UntilDate: time.Now().Add(time.Second * 30).Unix(),
+	})
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,7 +102,11 @@ func TestSetChatDescription(t *testing.T) {
 }
 
 func TestPinChatMessage(t *testing.T) {
-	ok, err := bot.PinChatMessage(superGroupID, replyToMessageID, true)
+	ok, err := bot.PinChatMessage(&telegram.PinChatMessageParameters{
+		ChatID:              superGroupID,
+		MessageID:           replyToMessageID,
+		DisableNotification: true,
+	})
 	if err != nil {
 		t.Error(err.Error())
 	}

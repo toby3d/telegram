@@ -1,20 +1,21 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type GetChatMembersCountParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on
 // success.
 func (bot *Bot) GetChatMembersCount(chatID int64) (int, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+	dst, err := json.Marshal(&GetChatMembersCountParameters{ChatID: chatID})
+	if err != nil {
+		return 0, err
+	}
 
-	resp, err := bot.request(nil, "getChatMembersCount", args)
+	resp, err := bot.request(dst, "getChatMembersCount")
 	if err != nil {
 		return 0, err
 	}

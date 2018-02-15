@@ -1,19 +1,20 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type LeaveChatParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
-func (bot *Bot) LeaveChat(chat int64) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chat, 10))
+func (bot *Bot) LeaveChat(chatID int64) (bool, error) {
+	dst, err := json.Marshal(&LeaveChatParameters{ChatID: chatID})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "leaveChat", args)
+	resp, err := bot.request(dst, "leaveChat")
 	if err != nil {
 		return false, err
 	}

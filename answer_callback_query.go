@@ -30,9 +30,7 @@ type AnswerCallbackQueryParameters struct {
 }
 
 func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParameters {
-	return &AnswerCallbackQueryParameters{
-		CallbackQueryID: callbackQueryID,
-	}
+	return &AnswerCallbackQueryParameters{CallbackQueryID: callbackQueryID}
 }
 
 // AnswerCallbackQuery send answers to callback queries sent from inline

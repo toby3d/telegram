@@ -1,9 +1,10 @@
 package telegram
 
-import (
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
+
+type GetFileParameters struct {
+	FileID string `json:"file_id"`
+}
 
 // GetFile get basic info about a file and prepare it for downloading. For the
 // moment, bots can download files of up to 20MB in size. On success, a File
@@ -16,12 +17,13 @@ import (
 // Note: This function may not preserve the original file name and MIME type. You
 // should save the file's MIME type and name (if available) when the File object
 // is received.
-func (bot *Bot) GetFile(file string) (*File, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("file_id", file)
+func (bot *Bot) GetFile(fileID string) (*File, error) {
+	dst, err := json.Marshal(&GetFileParameters{FileID: fileID})
+	if err != nil {
+		return nil, err
+	}
 
-	resp, err := bot.request(nil, "getFile", args)
+	resp, err := bot.request(dst, "getFile")
 	if err != nil {
 		return nil, err
 	}

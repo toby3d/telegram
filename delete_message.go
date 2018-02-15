@@ -1,11 +1,13 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type DeleteMessageParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+
+	MessageID int `json:"message_id"`
+}
 
 // DeleteMessage delete a message, including service messages, with the following
 // limitations: A message can only be deleted if it was sent less than 48 hours
@@ -14,13 +16,16 @@ import (
 // bot is an administrator of a group, it can delete any message there; If the
 // bot has can_delete_messages permission in a supergroup or a channel, it can
 // delete any message there. Returns True on success.
-func (bot *Bot) DeleteMessage(chatID int64, message int) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("message_id", strconv.Itoa(message))
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+func (bot *Bot) DeleteMessage(chatID int64, messageID int) (bool, error) {
+	dst, err := json.Marshal(&DeleteMessageParameters{
+		ChatID:    chatID,
+		MessageID: messageID,
+	})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "deleteMessage", args)
+	resp, err := bot.request(dst, "deleteMessage")
 	if err != nil {
 		return false, err
 	}

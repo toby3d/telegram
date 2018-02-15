@@ -1,6 +1,10 @@
 package test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/toby3d/telegram"
+)
 
 func TestGetMe(t *testing.T) {
 	var err error
@@ -16,7 +20,11 @@ func TestGetMe(t *testing.T) {
 }
 
 func TestGetUserProfilePhotos(t *testing.T) {
-	photos, err := bot.GetUserProfilePhotos(chatID, 0, 100)
+	photos, err := bot.GetUserProfilePhotos(&telegram.GetUserProfilePhotosParameters{
+		UserID: chatID,
+		Offset: 0,
+		Limit:  100,
+	})
 	if err != nil {
 		t.Error(err.Error())
 	}

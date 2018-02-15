@@ -1,11 +1,14 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type KickChatMemberParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+
+	UserID    int   `json:"user_id"`
+	UntilDate int64 `json:"until_date"`
+}
 
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and
 // channels, the user will not be able to return to the group on their own using invite links, etc.,
@@ -15,14 +18,13 @@ import (
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are
 // Admins' setting is off in the target group. Otherwise members may only be removed by the group's
 // creator or by the member that added them.
-func (bot *Bot) KickChatMember(chatID int64, userID int, untilDate int64) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
-	args.Add("user_id", strconv.Itoa(userID))
-	args.Add("until_date", strconv.FormatInt(untilDate, 10))
+func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (bool, error) {
+	dst, err := json.Marshal(params)
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "kickChatMember", args)
+	resp, err := bot.request(dst, "kickChatMember")
 	if err != nil {
 		return false, err
 	}
