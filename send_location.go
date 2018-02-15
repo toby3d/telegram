@@ -39,12 +39,12 @@ func NewLocation(chatID int64, latitude, longitude float32) *SendLocationParamet
 
 // SendLocation send point on the map. On success, the sent Message is returned.
 func (bot *Bot) SendLocation(params *SendLocationParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendLocation", nil)
+	resp, err := bot.request(dst, "sendLocation")
 	if err != nil {
 		return nil, err
 	}

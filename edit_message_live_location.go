@@ -39,12 +39,12 @@ func NewLiveLocation(latitude, longitude float32) *EditMessageLiveLocationParame
 // success, if the edited message was sent by the bot, the edited Message is
 // returned, otherwise True is returned.
 func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageLiveLocation", nil)
+	resp, err := bot.request(dst, "editMessageLiveLocation")
 	if err != nil {
 		return nil, err
 	}

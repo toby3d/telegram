@@ -31,12 +31,12 @@ type EditMessageCaptionParameters struct {
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
 func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageCaption", nil)
+	resp, err := bot.request(dst, "editMessageCaption")
 	if err != nil {
 		return nil, err
 	}

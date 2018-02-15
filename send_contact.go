@@ -43,7 +43,7 @@ func (bot *Bot) SendContact(params *SendContactParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendContact", nil)
+	resp, err := bot.request(dst, "sendContact")
 	if err != nil {
 		return nil, err
 	}

@@ -93,12 +93,12 @@ func NewInvoice(chatID int64, title, description, payload, providerToken, startP
 
 // SendInvoice send invoices. On success, the sent Message is returned.
 func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendInvoice", nil)
+	resp, err := bot.request(dst, "sendInvoice")
 	if err != nil {
 		return nil, err
 	}

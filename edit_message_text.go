@@ -40,12 +40,12 @@ func NewMessageText(text string) *EditMessageTextParameters {
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
 func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageText", nil)
+	resp, err := bot.request(dst, "editMessageText")
 	if err != nil {
 		return nil, err
 	}

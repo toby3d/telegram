@@ -6,7 +6,7 @@ import json "github.com/pquerna/ffjson/ffjson"
 // returns a WebhookInfo object. If the bot is using getUpdates, will return an
 // object with the url field empty.
 func (bot *Bot) GetWebhookInfo() (*WebhookInfo, error) {
-	resp, err := bot.request(nil, "getWebhookInfo", nil)
+	resp, err := bot.request(nil, "getWebhookInfo")
 	if err != nil {
 		return nil, err
 	}

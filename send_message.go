@@ -39,12 +39,12 @@ func NewMessage(chatID int64, text string) *SendMessageParameters {
 
 // SendMessage send text messages. On success, the sent Message is returned.
 func (bot *Bot) SendMessage(params *SendMessageParameters) (*Message, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendMessage", nil)
+	resp, err := bot.request(dst, "sendMessage")
 	if err != nil {
 		return nil, err
 	}
