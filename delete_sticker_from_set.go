@@ -1,18 +1,20 @@
 package telegram
 
-import (
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
+
+type DeleteStickerFromSetParameters struct {
+	Sticker string `json:"sticker"`
+}
 
 // DeleteStickerFromSet delete a sticker from a set created by the bot. Returns
 // True on success.
 func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("sticker", sticker)
+	dst, err := json.Marshal(&DeleteStickerFromSetParameters{Sticker: sticker})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "deleteStickerFromSet", args)
+	resp, err := bot.request(dst, "deleteStickerFromSet")
 	if err != nil {
 		return false, err
 	}

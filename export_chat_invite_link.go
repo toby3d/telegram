@@ -1,21 +1,22 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type ExportChatInviteLinkParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // ExportChatInviteLink export an invite link to a supergroup or a channel. The
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns exported invite link as String on success.
 func (bot *Bot) ExportChatInviteLink(chatID int64) (string, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+	dst, err := json.Marshal(&ExportChatInviteLinkParameters{ChatID: chatID})
+	if err != nil {
+		return "", err
+	}
 
-	resp, err := bot.request(nil, "exportChatInviteLink", args)
+	resp, err := bot.request(dst, "exportChatInviteLink")
 	if err != nil {
 		return "", err
 	}

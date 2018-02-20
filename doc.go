@@ -1,2 +1,2 @@
-// Version of the bot API: 3.5 (November 17, 2017)
+// Version of the bot API: 3.6 (February 13, 2018)
 package telegram

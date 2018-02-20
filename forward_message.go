@@ -31,7 +31,7 @@ func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (*Message, erro
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "forwardMessage", nil)
+	resp, err := bot.request(dst, "forwardMessage")
 	if err != nil {
 		return nil, err
 	}

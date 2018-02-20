@@ -1,17 +1,19 @@
 package telegram
 
-import (
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+import json "github.com/pquerna/ffjson/ffjson"
+
+type GetStickerSetParameters struct {
+	Name string `json:"name"`
+}
 
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
 func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("name", name)
+	dst, err := json.Marshal(&GetStickerSetParameters{Name: name})
+	if err != nil {
+		return nil, err
+	}
 
-	resp, err := bot.request(nil, "getStickerSet", args)
+	resp, err := bot.request(dst, "getStickerSet")
 	if err != nil {
 		return nil, err
 	}

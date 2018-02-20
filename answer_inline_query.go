@@ -46,12 +46,12 @@ func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerI
 //
 // No more than 50 results per query are allowed.
 func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerInlineQuery", nil)
+	resp, err := bot.request(dst, "answerInlineQuery")
 	if err != nil {
 		return false, err
 	}

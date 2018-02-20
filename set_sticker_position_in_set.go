@@ -1,21 +1,24 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type SetStickerPositionInSetParameters struct {
+	Sticker  string `json:"sticker"`
+	Position int    `json:"position"`
+}
 
 // SetStickerPositionInSet move a sticker in a set created by the bot to a
 // specific position. Returns True on success.
 func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("sticker", sticker)
-	args.Add("position", strconv.Itoa(position))
+	dst, err := json.Marshal(&SetStickerPositionInSetParameters{
+		Sticker:  sticker,
+		Position: position,
+	})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "setStickerPositionInSet", args)
+	resp, err := bot.request(dst, "setStickerPositionInSet")
 	if err != nil {
 		return false, err
 	}

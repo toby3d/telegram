@@ -1,21 +1,22 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type UnpinChatMessageParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // UnpinChatMessage unpin a message in a supergroup chat. The bot must be an
 // administrator in the chat for this to work and must have the appropriate admin
 // rights. Returns True on success.
 func (bot *Bot) UnpinChatMessage(chatID int64) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+	dst, err := json.Marshal(&UnpinChatMessageParameters{ChatID: chatID})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "unpinChatMessage", args)
+	resp, err := bot.request(dst, "unpinChatMessage")
 	if err != nil {
 		return false, err
 	}

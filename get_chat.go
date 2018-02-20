@@ -1,21 +1,22 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type GetChatParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // GetChat get up to date information about the chat (current name of the user
 // for one-on-one conversations, current username of a user, group or channel,
 // etc.). Returns a Chat object on success.
 func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+	dst, err := json.Marshal(&GetChatParameters{ChatID: chatID})
+	if err != nil {
+		return nil, err
+	}
 
-	resp, err := bot.request(nil, "getChat", args)
+	resp, err := bot.request(dst, "getChat")
 	if err != nil {
 		return nil, err
 	}

@@ -30,9 +30,7 @@ type AnswerCallbackQueryParameters struct {
 }
 
 func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParameters {
-	return &AnswerCallbackQueryParameters{
-		CallbackQueryID: callbackQueryID,
-	}
+	return &AnswerCallbackQueryParameters{CallbackQueryID: callbackQueryID}
 }
 
 // AnswerCallbackQuery send answers to callback queries sent from inline
@@ -44,12 +42,12 @@ func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParamete
 // accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX
 // that open your bot with a parameter.
 func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (bool, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerCallbackQuery", nil)
+	resp, err := bot.request(dst, "answerCallbackQuery")
 	if err != nil {
 		return false, err
 	}

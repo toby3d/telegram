@@ -1,23 +1,28 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type UnbanChatMemberParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+
+	UserID int `json:"user_id"`
+}
 
 // UnbanChatMember unban a previously kicked user in a supergroup or channel. The
 // user will not return to the group or channel automatically, but will be able
 // to join via link, etc. The bot must be an administrator for this to work.
 // Returns True on success.
-func (bot *Bot) UnbanChatMember(chatID int64, user int) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("user_id", strconv.Itoa(user))
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+func (bot *Bot) UnbanChatMember(chatID int64, userID int) (bool, error) {
+	dst, err := json.Marshal(&UnbanChatMemberParameters{
+		ChatID: chatID,
+		UserID: userID,
+	})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "unbanChatMember", args)
+	resp, err := bot.request(dst, "unbanChatMember")
 	if err != nil {
 		return false, err
 	}

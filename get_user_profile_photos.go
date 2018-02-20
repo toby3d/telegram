@@ -1,24 +1,21 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type GetUserProfilePhotosParameters struct {
+	UserID int `json:"user_id"`
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
+}
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
-func (bot *Bot) GetUserProfilePhotos(userID, offset, limit int) (*UserProfilePhotos, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("user_id", strconv.Itoa(userID))
-	args.Add("offset", strconv.Itoa(offset))
-
-	if limit > 0 {
-		args.Add("limit", strconv.Itoa(limit))
+func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (*UserProfilePhotos, error) {
+	dst, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
 	}
 
-	resp, err := bot.request(nil, "getUserProfilePhotos", args)
+	resp, err := bot.request(dst, "getUserProfilePhotos")
 	if err != nil {
 		return nil, err
 	}

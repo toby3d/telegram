@@ -1,22 +1,23 @@
 package telegram
 
-import (
-	"strconv"
+import json "github.com/pquerna/ffjson/ffjson"
 
-	json "github.com/pquerna/ffjson/ffjson"
-	http "github.com/valyala/fasthttp"
-)
+type DeleteChatStickerSetParameters struct {
+	// Unique identifier for the target chat
+	ChatID int64 `json:"chat_id"`
+}
 
 // DeleteChatStickerSet delete a group sticker set from a supergroup. The bot must be an administrator
 // in the chat for this to work and must have the appropriate admin rights. Use the field
 // can_set_sticker_set optionally returned in getChat requests to check if the bot can use this
 // method. Returns True on success.
 func (bot *Bot) DeleteChatStickerSet(chatID int64) (bool, error) {
-	args := http.AcquireArgs()
-	defer http.ReleaseArgs(args)
-	args.Add("chat_id", strconv.FormatInt(chatID, 10))
+	dst, err := json.Marshal(&DeleteChatStickerSetParameters{ChatID: chatID})
+	if err != nil {
+		return false, err
+	}
 
-	resp, err := bot.request(nil, "deleteChatStickerSet", args)
+	resp, err := bot.request(dst, "deleteChatStickerSet")
 	if err != nil {
 		return false, err
 	}

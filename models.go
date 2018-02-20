@@ -320,7 +320,7 @@ type (
 
 		// New members that were added to the group or supergroup and information
 		// about them (the bot itself may be one of these members)
-		NewChatMembers []User `json:"new_chat_member,omitempty"`
+		NewChatMembers []User `json:"new_chat_members,omitempty"`
 
 		// A member was removed from the group, information about them (this
 		// member may be the bot itself)

@@ -29,12 +29,12 @@ func NewGameHighScores(userID int) *GetGameHighScoresParameters {
 // specified user and several of his neighbors in a game. On success, returns an
 // Array of GameHighScore objects.
 func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) ([]GameHighScore, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getGameHighScores", nil)
+	resp, err := bot.request(dst, "getGameHighScores")
 	if err != nil {
 		return nil, err
 	}

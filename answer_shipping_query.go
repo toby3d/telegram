@@ -35,12 +35,12 @@ func NewAnswerShippingQuery(shippingQueryID string, ok bool) *AnswerShippingQuer
 // is_flexible was specified, the Bot API will send an Update with a
 // shipping_query field to the bot. On success, True is returned.
 func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (bool, error) {
-	dst, err := json.Marshal(*params)
+	dst, err := json.Marshal(params)
 	if err != nil {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerShippingQuery", nil)
+	resp, err := bot.request(dst, "answerShippingQuery")
 	if err != nil {
 		return false, err
 	}
