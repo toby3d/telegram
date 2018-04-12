@@ -21,7 +21,7 @@ func (bot *Bot) SetChatDescription(chatID int64, description string) (bool, erro
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "setChatDescription")
+	resp, err := bot.request(dst, MethodSetChatDescription)
 	if err != nil {
 		return false, err
 	}

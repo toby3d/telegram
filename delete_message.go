@@ -25,7 +25,7 @@ func (bot *Bot) DeleteMessage(chatID int64, messageID int) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "deleteMessage")
+	resp, err := bot.request(dst, MethodDeleteMessage)
 	if err != nil {
 		return false, err
 	}

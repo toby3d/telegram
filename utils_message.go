@@ -15,7 +15,6 @@ func (msg *Message) IsCommand(command string) bool {
 	}
 
 	entity := msg.Entities[0]
-
 	isBotCommand := entity.IsBotCommand() && entity.Offset == 0
 	if command != "" {
 		return isBotCommand && strings.EqualFold(msg.Command(), command)
@@ -94,18 +93,23 @@ func (msg *Message) ForwardTime() time.Time {
 }
 
 func (msg *Message) EditTime() time.Time {
+	var t time.Time
 	if msg == nil {
-		return time.Time{}
+		return t
 	}
 
 	if !msg.HasBeenEdited() {
-		return time.Time{}
+		return t
 	}
 
 	return time.Unix(msg.EditDate, 0)
 }
 
 func (msg *Message) HasBeenEdited() bool {
+	if msg == nil {
+		return false
+	}
+
 	return msg.EditDate > 0
 }
 
@@ -140,6 +144,7 @@ func (msg *Message) IsSticker() bool {
 func (msg *Message) IsVideo() bool {
 	return !msg.IsText() && msg.Video != nil
 }
+
 func (msg *Message) IsVoice() bool {
 	return !msg.IsText() && msg.Voice != nil
 }

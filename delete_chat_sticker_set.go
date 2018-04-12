@@ -17,7 +17,7 @@ func (bot *Bot) DeleteChatStickerSet(chatID int64) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "deleteChatStickerSet")
+	resp, err := bot.request(dst, MethodDeleteChatStickerSet)
 	if err != nil {
 		return false, err
 	}

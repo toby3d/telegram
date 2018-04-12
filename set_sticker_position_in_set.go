@@ -18,7 +18,7 @@ func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, err
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "setStickerPositionInSet")
+	resp, err := bot.request(dst, MethodSetStickerPositionInSet)
 	if err != nil {
 		return false, err
 	}

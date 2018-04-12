@@ -23,7 +23,7 @@ func (bot *Bot) GetFile(fileID string) (*File, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getFile")
+	resp, err := bot.request(dst, MethodGetFile)
 	if err != nil {
 		return nil, err
 	}

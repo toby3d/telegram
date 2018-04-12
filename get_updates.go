@@ -42,7 +42,7 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getUpdates")
+	resp, err := bot.request(dst, MethodGetUpdates)
 	if err != nil {
 		return nil, err
 	}

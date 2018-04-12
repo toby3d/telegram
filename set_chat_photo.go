@@ -25,7 +25,7 @@ func (bot *Bot) SetChatPhoto(chatID int64, chatPhoto interface{}) (bool, error) 
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
-	resp, err := bot.upload(chatPhoto, TypePhoto, "chat_photo", "setChatPhoto", args)
+	resp, err := bot.Upload(MethodSetChatPhoto, TypePhoto, "chat_photo", chatPhoto, args)
 	if err != nil {
 		return false, err
 	}

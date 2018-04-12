@@ -10,28 +10,24 @@ func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
 		return nil
 	}
 
-	var err error
-	link := new(url.URL)
-	switch {
-	case entity.IsTextLink():
-		link, err = url.Parse(entity.URL)
-	case entity.IsURL():
-		if messageText == "" {
-			return nil
-		}
+	if !entity.IsURL() {
+		return nil
+	}
 
-		rawMessageText := []rune(messageText)
-		if len(rawMessageText) < (entity.Offset + entity.Length) {
-			return nil
-		}
+	if messageText == "" {
+		return nil
+	}
 
-		from := entity.Offset
-		to := from + entity.Length
-		rawURL := string([]rune(messageText)[from:to])
-		link, err = url.Parse(rawURL)
-		if err == nil && link.Scheme == "" {
-			link, err = url.Parse(fmt.Sprint("http://", link))
-		}
+	from := entity.Offset
+	to := from + entity.Length
+	text := []rune(messageText)
+	if len(text) < to {
+		return nil
+	}
+
+	link, err := url.Parse(string(text[from:to]))
+	if err == nil && link.Scheme == "" {
+		link, err = url.Parse(fmt.Sprint("http://", link))
 	}
 	if err != nil {
 		return nil
@@ -126,4 +122,17 @@ func (entity *MessageEntity) IsURL() bool {
 	}
 
 	return entity.Type == EntityURL
+}
+
+func (entity *MessageEntity) TextLink() *url.URL {
+	if entity == nil {
+		return nil
+	}
+
+	link, err := url.Parse(entity.URL)
+	if err != nil {
+		return nil
+	}
+
+	return link
 }

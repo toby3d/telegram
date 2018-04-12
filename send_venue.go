@@ -51,7 +51,7 @@ func (bot *Bot) SendVenue(params *SendVenueParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendVenue")
+	resp, err := bot.request(dst, MethodSendVenue)
 	if err != nil {
 		return nil, err
 	}

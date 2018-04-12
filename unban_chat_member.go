@@ -22,7 +22,7 @@ func (bot *Bot) UnbanChatMember(chatID int64, userID int) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "unbanChatMember")
+	resp, err := bot.request(dst, MethodUnbanChatMember)
 	if err != nil {
 		return false, err
 	}

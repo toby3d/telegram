@@ -6,18 +6,6 @@ type AnswerInlineQueryParameters struct {
 	// Unique identifier for the answered query
 	InlineQueryID string `json:"inline_query_id"`
 
-	// A JSON-serialized array of results for the inline query
-	Results []interface{} `json:"results"`
-
-	// The maximum amount of time in seconds that the result of the inline query
-	// may be cached on the server. Defaults to 300.
-	CacheTime int `json:"cache_time,omitempty"`
-
-	// Pass True, if results may be cached on the server side only for the user
-	// that sent the query. By default, results may be returned to any user who
-	// sends the same query
-	IsPersonal bool `json:"is_personal,omitempty"`
-
 	// Pass the offset that a client should send in the next query with the same
 	// text to receive more results. Pass an empty string if there are no more
 	// results or if you don‘t support pagination. Offset length can’t exceed 64
@@ -33,6 +21,18 @@ type AnswerInlineQueryParameters struct {
 	// presses the switch button. 1-64 characters, only A-Z, a-z, 0-9, _ and -
 	// are allowed.
 	SwitchPrivateMessageParameter string `json:"switch_pm_parameter,omitempty"`
+
+	// A JSON-serialized array of results for the inline query
+	Results []interface{} `json:"results"`
+
+	// The maximum amount of time in seconds that the result of the inline query
+	// may be cached on the server. Defaults to 300.
+	CacheTime int `json:"cache_time,omitempty"`
+
+	// Pass True, if results may be cached on the server side only for the user
+	// that sent the query. By default, results may be returned to any user who
+	// sends the same query
+	IsPersonal bool `json:"is_personal,omitempty"`
 }
 
 func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerInlineQueryParameters {
@@ -51,7 +51,7 @@ func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, er
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerInlineQuery")
+	resp, err := bot.request(dst, MethodAnswerInlineQuery)
 	if err != nil {
 		return false, err
 	}

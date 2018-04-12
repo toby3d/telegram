@@ -19,7 +19,7 @@ func (bot *Bot) PinChatMessage(params *PinChatMessageParameters) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "pinChatMessage")
+	resp, err := bot.request(dst, MethodPinChatMessage)
 	if err != nil {
 		return false, err
 	}

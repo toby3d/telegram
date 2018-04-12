@@ -8,12 +8,12 @@ import (
 
 func TestGetMe(t *testing.T) {
 	var err error
-	bot.Self, err = bot.GetMe()
+	bot.User, err = bot.GetMe()
 	if err != nil {
 		t.Error(err.Error())
 		t.FailNow()
 	}
-	if bot.Self == nil {
+	if bot.User == nil {
 		t.Error("unexpected result: bot user is nil")
 		t.FailNow()
 	}

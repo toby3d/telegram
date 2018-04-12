@@ -15,7 +15,7 @@ func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (*U
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getUserProfilePhotos")
+	resp, err := bot.request(dst, MethodGetUserProfilePhotos)
 	if err != nil {
 		return nil, err
 	}

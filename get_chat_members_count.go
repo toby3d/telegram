@@ -15,7 +15,7 @@ func (bot *Bot) GetChatMembersCount(chatID int64) (int, error) {
 		return 0, err
 	}
 
-	resp, err := bot.request(dst, "getChatMembersCount")
+	resp, err := bot.request(dst, MethodGetChatMembersCount)
 	if err != nil {
 		return 0, err
 	}

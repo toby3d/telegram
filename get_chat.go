@@ -16,7 +16,7 @@ func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getChat")
+	resp, err := bot.request(dst, MethodGetChat)
 	if err != nil {
 		return nil, err
 	}

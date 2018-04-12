@@ -29,7 +29,7 @@ func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters)
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageReplyMarkup")
+	resp, err := bot.request(dst, MethodEditMessageReplyMarkup)
 	if err != nil {
 		return nil, err
 	}

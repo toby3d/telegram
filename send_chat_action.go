@@ -24,7 +24,7 @@ func (bot *Bot) SendChatAction(chatID int64, action string) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "sendChatAction")
+	resp, err := bot.request(dst, MethodSendChatAction)
 	if err != nil {
 		return false, err
 	}

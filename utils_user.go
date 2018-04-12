@@ -25,7 +25,7 @@ func (user *User) FullName() string {
 	}
 
 	if user.LastName != "" {
-		return fmt.Sprint(user.FirstName, " ", user.LastName)
+		return fmt.Sprintln(user.FirstName, user.LastName)
 	}
 
 	return user.FirstName

@@ -9,6 +9,10 @@ type SetGameScoreParameters struct {
 	// New score, must be non-negative
 	Score int `json:"score"`
 
+	// Required if inline_message_id is not specified. Identifier of the sent
+	// message
+	MessageID int `json:"message_id,omitempty"`
+
 	// Pass True, if the high score is allowed to decrease. This can be useful
 	// when fixing mistakes or banning cheaters
 	Force bool `json:"force,omitempty"`
@@ -20,10 +24,6 @@ type SetGameScoreParameters struct {
 	// Required if inline_message_id is not specified. Unique identifier for the
 	// target chat
 	ChatID int64 `json:"chat_id,omitempty"`
-
-	// Required if inline_message_id is not specified. Identifier of the sent
-	// message
-	MessageID int `json:"message_id,omitempty"`
 
 	// Required if chat_id and message_id are not specified. Identifier of the
 	// inline message
@@ -47,7 +47,7 @@ func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "setGameScore")
+	resp, err := bot.request(dst, MethodSetGameScore)
 	if err != nil {
 		return nil, err
 	}

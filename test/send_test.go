@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	photoFileID     = "AgADAgADw6cxG4zHKAkr42N7RwEN3IFShCoABHQwXEtVks4EH2wBAAEC"
-	documentFileID  = "BQADAgADOQADjMcoCcioX1GrDvp3Ag"
-	audioFileID     = "BQADAgADRgADjMcoCdXg3lSIN49lAg"
-	voiceFileID     = "AwADAgADWQADjMcoCeul6r_q52IyAg"
-	videoFileID     = "BAADAgADZgADjMcoCav432kYe0FRAg"
-	videoNoteFileID = "DQADAgADdQAD70cQSUK41dLsRMqfAg"
-	stickerFileID   = "BQADAgADcwADjMcoCbdl-6eB--YPAg"
+	photoFileID    = "AgADAgADw6cxG4zHKAkr42N7RwEN3IFShCoABHQwXEtVks4EH2wBAAEC"
+	documentFileID = "BQADAgADOQADjMcoCcioX1GrDvp3Ag"
+	// audioFileID     = "BQADAgADRgADjMcoCdXg3lSIN49lAg"
+	// voiceFileID     = "AwADAgADWQADjMcoCeul6r_q52IyAg"
+	// videoFileID     = "BAADAgADZgADjMcoCav432kYe0FRAg"
+	// videoNoteFileID = "DQADAgADdQAD70cQSUK41dLsRMqfAg"
+	// stickerFileID   = "BQADAgADcwADjMcoCbdl-6eB--YPAg"
 )
 
 var (

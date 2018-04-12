@@ -6,8 +6,8 @@ type KickChatMemberParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
-	UserID    int   `json:"user_id"`
 	UntilDate int64 `json:"until_date"`
+	UserID    int   `json:"user_id"`
 }
 
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and
@@ -24,7 +24,7 @@ func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "kickChatMember")
+	resp, err := bot.request(dst, MethodKickChatMember)
 	if err != nil {
 		return false, err
 	}

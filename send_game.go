@@ -37,7 +37,7 @@ func (bot *Bot) SendGame(params *SendGameParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendGame")
+	resp, err := bot.request(dst, MethodSendGame)
 	if err != nil {
 		return nil, err
 	}

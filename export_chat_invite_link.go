@@ -16,7 +16,7 @@ func (bot *Bot) ExportChatInviteLink(chatID int64) (string, error) {
 		return "", err
 	}
 
-	resp, err := bot.request(dst, "exportChatInviteLink")
+	resp, err := bot.request(dst, MethodExportChatInviteLink)
 	if err != nil {
 		return "", err
 	}

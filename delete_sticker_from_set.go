@@ -14,7 +14,7 @@ func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "deleteStickerFromSet")
+	resp, err := bot.request(dst, MethodDeleteStickerFromSet)
 	if err != nil {
 		return false, err
 	}

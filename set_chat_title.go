@@ -24,7 +24,7 @@ func (bot *Bot) SetChatTitle(chatID int64, title string) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "setChatTitle")
+	resp, err := bot.request(dst, MethodSetChatTitle)
 	if err != nil {
 		return false, err
 	}
