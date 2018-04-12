@@ -17,7 +17,7 @@ func (bot *Bot) GetChatAdministrators(chatID int64) ([]ChatMember, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getChatAdministrators")
+	resp, err := bot.request(dst, MethodGetChatAdministrators)
 	if err != nil {
 		return nil, err
 	}

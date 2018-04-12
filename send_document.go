@@ -66,7 +66,7 @@ func (bot *Bot) SendDocument(params *SendDocumentParameters) (*Message, error) {
 
 	args.Add("disable_notification", strconv.FormatBool(params.DisableNotification))
 
-	resp, err := bot.upload(params.Document, "document", "", "sendDocument", args)
+	resp, err := bot.Upload(MethodSendDocument, "document", "", params.Document, args)
 	if err != nil {
 		return nil, err
 	}

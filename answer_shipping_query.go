@@ -40,7 +40,7 @@ func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (bool
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerShippingQuery")
+	resp, err := bot.request(dst, MethodAnswerShippingQuery)
 	if err != nil {
 		return false, err
 	}

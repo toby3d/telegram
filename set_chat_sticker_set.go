@@ -22,7 +22,7 @@ func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (bool, er
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "setChatStickerSet")
+	resp, err := bot.request(dst, MethodSetChatStickerSet)
 	if err != nil {
 		return false, err
 	}

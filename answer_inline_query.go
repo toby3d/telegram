@@ -51,7 +51,7 @@ func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, er
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerInlineQuery")
+	resp, err := bot.request(dst, MethodAnswerInlineQuery)
 	if err != nil {
 		return false, err
 	}

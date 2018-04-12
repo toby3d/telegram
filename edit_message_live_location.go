@@ -44,7 +44,7 @@ func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameter
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageLiveLocation")
+	resp, err := bot.request(dst, MethodEditMessageLiveLocation)
 	if err != nil {
 		return nil, err
 	}

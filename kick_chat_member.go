@@ -24,7 +24,7 @@ func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "kickChatMember")
+	resp, err := bot.request(dst, MethodKickChatMember)
 	if err != nil {
 		return false, err
 	}

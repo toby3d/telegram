@@ -34,7 +34,7 @@ func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) ([]GameHi
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getGameHighScores")
+	resp, err := bot.request(dst, MethodGetGameHighScores)
 	if err != nil {
 		return nil, err
 	}

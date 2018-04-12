@@ -41,7 +41,7 @@ func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (b
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerPreCheckoutQuery")
+	resp, err := bot.request(dst, MethodAnswerPreCheckoutQuery)
 	if err != nil {
 		return false, err
 	}

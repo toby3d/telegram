@@ -14,7 +14,7 @@ func (bot *Bot) LeaveChat(chatID int64) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "leaveChat")
+	resp, err := bot.request(dst, MethodLeaveChat)
 	if err != nil {
 		return false, err
 	}

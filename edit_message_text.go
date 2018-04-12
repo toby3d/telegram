@@ -45,7 +45,7 @@ func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (*Message, er
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "editMessageText")
+	resp, err := bot.request(dst, MethodEditMessageText)
 	if err != nil {
 		return nil, err
 	}

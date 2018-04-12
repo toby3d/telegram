@@ -72,7 +72,7 @@ func (bot *Bot) SendPhoto(params *SendPhotoParameters) (*Message, error) {
 
 	args.Add("disable_notification", strconv.FormatBool(params.DisableNotification))
 
-	resp, err := bot.upload(params.Photo, "photo", "", "sendPhoto", args)
+	resp, err := bot.Upload(MethodSendPhoto, "photo", "", params.Photo, args)
 	if err != nil {
 		return nil, err
 	}

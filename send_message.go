@@ -44,7 +44,7 @@ func (bot *Bot) SendMessage(params *SendMessageParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendMessage")
+	resp, err := bot.request(dst, MethodSendMessage)
 	if err != nil {
 		return nil, err
 	}

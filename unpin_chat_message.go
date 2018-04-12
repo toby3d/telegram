@@ -16,7 +16,7 @@ func (bot *Bot) UnpinChatMessage(chatID int64) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "unpinChatMessage")
+	resp, err := bot.request(dst, MethodUnpinChatMessage)
 	if err != nil {
 		return false, err
 	}

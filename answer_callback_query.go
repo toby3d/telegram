@@ -47,7 +47,7 @@ func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (bool
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "answerCallbackQuery")
+	resp, err := bot.request(dst, MethodAnswerCallbackQuery)
 	if err != nil {
 		return false, err
 	}

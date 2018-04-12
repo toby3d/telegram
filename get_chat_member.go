@@ -20,7 +20,7 @@ func (bot *Bot) GetChatMember(chatID int64, userID int) (*ChatMember, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getChatMember")
+	resp, err := bot.request(dst, MethodGetChatMember)
 	if err != nil {
 		return nil, err
 	}

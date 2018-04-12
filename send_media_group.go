@@ -33,7 +33,7 @@ func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) ([]Message, err
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendMediaGroup")
+	resp, err := bot.request(dst, MethodSendMediaGroup)
 	if err != nil {
 		return nil, err
 	}

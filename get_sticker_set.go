@@ -13,7 +13,7 @@ func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "getStickerSet")
+	resp, err := bot.request(dst, MethodGetStickerSet)
 	if err != nil {
 		return nil, err
 	}

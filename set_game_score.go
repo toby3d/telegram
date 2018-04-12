@@ -47,7 +47,7 @@ func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "setGameScore")
+	resp, err := bot.request(dst, MethodSetGameScore)
 	if err != nil {
 		return nil, err
 	}

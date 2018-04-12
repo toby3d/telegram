@@ -19,7 +19,7 @@ func (bot *Bot) DeleteChatPhoto(chatID int64) (bool, error) {
 		return false, err
 	}
 
-	resp, err := bot.request(dst, "deleteChatPhoto")
+	resp, err := bot.request(dst, MethodDeleteChatPhoto)
 	if err != nil {
 		return false, err
 	}

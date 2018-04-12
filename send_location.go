@@ -44,7 +44,7 @@ func (bot *Bot) SendLocation(params *SendLocationParameters) (*Message, error) {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, "sendLocation")
+	resp, err := bot.request(dst, MethodSendLocation)
 	if err != nil {
 		return nil, err
 	}

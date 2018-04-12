@@ -8,8 +8,6 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
-const setWebhook = "setWebhook"
-
 type SetWebhookParameters struct {
 	// HTTPS url to send updates to. Use an empty string to remove webhook
 	// integration
@@ -72,16 +70,14 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 		resp *Response
 	)
 	if params.Certificate != nil {
-		resp, err = bot.upload(
-			params.Certificate, "certificate", "cert.pem", setWebhook, args,
-		)
+		resp, err = bot.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
 	} else {
 		dst, err := json.Marshal(params)
 		if err != nil {
 			return false, err
 		}
 
-		resp, err = bot.request(dst, setWebhook)
+		resp, err = bot.request(dst, MethodSetWebhook)
 	}
 	if err != nil {
 		return false, err
