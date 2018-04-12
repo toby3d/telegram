@@ -8,14 +8,14 @@ import (
 
 type Bot struct {
 	AccessToken string
-	Self        *User
+	*User
 }
 
-func NewBot(accessToken string) (*Bot, error) {
+func New(accessToken string) (*Bot, error) {
 	var err error
 	bot := &Bot{AccessToken: accessToken}
 
-	bot.Self, err = bot.GetMe()
+	bot.User, err = bot.GetMe()
 	return bot, err
 }
 
@@ -24,11 +24,11 @@ func (bot *Bot) IsMessageFromMe(msg *Message) bool {
 		return false
 	}
 
-	if msg.From == nil || bot.Self == nil {
+	if msg.From == nil || bot.User == nil {
 		return false
 	}
 
-	return msg.From.ID == bot.Self.ID
+	return msg.From.ID == bot.User.ID
 }
 
 func (bot *Bot) IsForwardFromMe(msg *Message) bool {
@@ -40,11 +40,11 @@ func (bot *Bot) IsForwardFromMe(msg *Message) bool {
 		return false
 	}
 
-	if bot.Self == nil {
+	if bot.User == nil {
 		return false
 	}
 
-	return msg.ForwardFrom.ID == bot.Self.ID
+	return msg.ForwardFrom.ID == bot.User.ID
 }
 
 func (bot *Bot) IsReplyToMe(msg *Message) bool {
@@ -73,7 +73,7 @@ func (bot *Bot) IsCommandToMe(msg *Message) bool {
 		return false
 	}
 
-	return strings.ToLower(parts[1]) == strings.ToLower(bot.Self.Username)
+	return strings.ToLower(parts[1]) == strings.ToLower(bot.User.Username)
 }
 
 func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
@@ -81,7 +81,7 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 		return false
 	}
 
-	if bot.Self == nil {
+	if bot.User == nil {
 		return false
 	}
 
@@ -99,7 +99,7 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 
 	for _, entity := range entities {
 		if entity.IsMention() {
-			if bot.Self.ID == entity.User.ID {
+			if bot.User.ID == entity.User.ID {
 				return true
 			}
 		}
@@ -156,18 +156,18 @@ func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
 		return nil
 	}
 
-	if bot.Self == nil {
+	if bot.User == nil {
 		return nil
 	}
 
-	if bot.Self.Username == "" {
+	if bot.User.Username == "" {
 		return nil
 	}
 
 	link := &url.URL{
 		Scheme: "https",
 		Host:   "t.me",
-		Path:   bot.Self.Username,
+		Path:   bot.User.Username,
 	}
 
 	q := link.Query()
