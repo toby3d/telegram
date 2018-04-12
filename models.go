@@ -61,6 +61,10 @@ type (
 		// Webhook URL, may be empty if webhook is not set up
 		URL string `json:"url"`
 
+		// Error message in human-readable format for the most recent error that
+		// happened when trying to deliver an update via webhook
+		LastErrorMessage string `json:"last_error_message,omitempty"`
+
 		// True, if a custom certificate was provided for webhook certificate
 		// checks
 		HasCustomCertificate bool `json:"has_custom_certificate"`
@@ -68,17 +72,13 @@ type (
 		// Number of updates awaiting delivery
 		PendingUpdateCount int `json:"pending_update_count"`
 
-		// Unix time for the most recent error that happened when trying to
-		// deliver an update via webhook
-		LastErrorDate int64 `json:"last_error_date,omitempty"`
-
-		// Error message in human-readable format for the most recent error that
-		// happened when trying to deliver an update via webhook
-		LastErrorMessage string `json:"last_error_message,omitempty"`
-
 		// Maximum allowed number of simultaneous HTTPS connections to the
 		// webhook for update delivery
 		MaxConnections int `json:"max_connections,omitempty"`
+
+		// Unix time for the most recent error that happened when trying to
+		// deliver an update via webhook
+		LastErrorDate int64 `json:"last_error_date,omitempty"`
 
 		// A list of update types the bot is subscribed to. Defaults to all
 		// update types
@@ -127,12 +127,6 @@ type (
 		// Last name of the other party in a private chat
 		LastName string `json:"last_name,omitempty"`
 
-		// True if a group has ‘All Members Are Admins’ enabled.
-		AllMembersAreAdministrators bool `json:"all_members_are_administrators,omitempty"`
-
-		// Chat photo. Returned only in getChat.
-		Photo *ChatPhoto `json:"photo,omitempty"`
-
 		// Description, for supergroups and channel chats. Returned only in
 		// getChat.
 		Description string `json:"description,omitempty"`
@@ -141,15 +135,21 @@ type (
 		// getChat.
 		InviteLink string `json:"invite_link,omitempty"`
 
-		// Pinned message, for supergroups. Returned only in getChat.
-		PinnedMessage *Message `json:"pinned_message,omitempty"`
-
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
+
+		// True if a group has ‘All Members Are Admins’ enabled.
+		AllMembersAreAdministrators bool `json:"all_members_are_administrators,omitempty"`
 
 		// True, if the bot can change group the sticker set. Returned only in
 		// getChat.
 		CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
+
+		// Chat photo. Returned only in getChat.
+		Photo *ChatPhoto `json:"photo,omitempty"`
+
+		// Pinned message, for supergroups. Returned only in getChat.
+		PinnedMessage *Message `json:"pinned_message,omitempty"`
 	}
 
 	// Message represents a message.
@@ -157,41 +157,48 @@ type (
 		// Unique message identifier inside this chat
 		ID int `json:"message_id"`
 
-		// Sender, empty for messages sent to channels
-		From *User `json:"from,omitempty"`
-
-		// Date the message was sent in Unix time
-		Date int64 `json:"date"`
-
-		// Conversation the message belongs to
-		Chat *Chat `json:"chat"`
-
-		// For forwarded messages, sender of the original message
-		ForwardFrom *User `json:"forward_from,omitempty"`
-
-		// For messages forwarded from channels, information about the original
-		// channel
-		ForwardFromChat *Chat `json:"forward_from_chat,omitempty"`
-
 		// For messages forwarded from channels, identifier of the original
 		// message in the channel
 		ForwardFromMessageID int `json:"forward_from_message_id,omitempty"`
 
-		// For messages forwarded from channels, signature of the post author if
-		// present
-		ForwardSignature string `json:"forward_signature,omitempty"`
+		// Sender, empty for messages sent to channels
+		From *User `json:"from,omitempty"`
+
+		// For forwarded messages, sender of the original message
+		ForwardFrom *User `json:"forward_from,omitempty"`
+
+		// A member was removed from the group, information about them (this
+		// member may be the bot itself)
+		LeftChatMember *User `json:"left_chat_member,omitempty"`
+
+		// Date the message was sent in Unix time
+		Date int64 `json:"date"`
 
 		// For forwarded messages, date the original message was sent in Unix
 		// time
 		ForwardDate int64 `json:"forward_date,omitempty"`
 
-		// For replies, the original message. Note that the Message object in
-		// this field will not contain further reply_to_message fields even if it
-		// itself is a reply.
-		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
-
 		// Date the message was last edited in Unix time
 		EditDate int64 `json:"edit_date,omitempty"`
+
+		// The group has been migrated to a supergroup with the specified
+		// identifier.
+		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
+
+		// The supergroup has been migrated from a group with the specified
+		// identifier.
+		MigrateFromChatID int64 `json:"migrate_from_chat_id,omitempty"`
+
+		// Conversation the message belongs to
+		Chat *Chat `json:"chat"`
+
+		// For messages forwarded from channels, information about the original
+		// channel
+		ForwardFromChat *Chat `json:"forward_from_chat,omitempty"`
+
+		// For messages forwarded from channels, signature of the post author if
+		// present
+		ForwardSignature string `json:"forward_signature,omitempty"`
 
 		// The unique identifier of a media message group this message belongs to
 		MediaGroupID string `json:"media_group_id,omitempty"`
@@ -202,6 +209,25 @@ type (
 		// For text messages, the actual UTF-8 text of the message, 0-4096
 		// characters.
 		Text string `json:"text,omitempty"`
+
+		// Caption for the document, photo or video, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
+		// A chat title was changed to this value
+		NewChatTitle string `json:"new_chat_title,omitempty"`
+
+		// The domain name of the website on which the user has logged in.
+		ConnectedWebsite string `json:"connected_website,omitempty"`
+
+		// For replies, the original message. Note that the Message object in
+		// this field will not contain further reply_to_message fields even if it
+		// itself is a reply.
+		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
+
+		// Specified message was pinned. Note that the Message object in this
+		// field will not contain further reply_to_message fields even if it is
+		// itself a reply.
+		PinnedMessage *Message `json:"pinned_message,omitempty"`
 
 		// For text messages, special entities like usernames, URLs, bot
 		// commands, etc. that appear in the text
@@ -223,6 +249,9 @@ type (
 		// Message is a photo, available sizes of the photo
 		Photo []PhotoSize `json:"photo,omitempty"`
 
+		// A chat photo was change to this value
+		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
+
 		// Message is a sticker, information about the sticker
 		Sticker *Sticker `json:"sticker,omitempty"`
 
@@ -234,9 +263,6 @@ type (
 
 		// Message is a video note, information about the video message
 		VideoNote *VideoNote `json:"video_note,omitempty"`
-
-		// Caption for the document, photo or video, 0-200 characters
-		Caption string `json:"caption,omitempty"`
 
 		// Message is a shared contact, information about the contact
 		Contact *Contact `json:"contact,omitempty"`
@@ -250,16 +276,6 @@ type (
 		// New members that were added to the group or supergroup and information
 		// about them (the bot itself may be one of these members)
 		NewChatMembers []User `json:"new_chat_members,omitempty"`
-
-		// A member was removed from the group, information about them (this
-		// member may be the bot itself)
-		LeftChatMember *User `json:"left_chat_member,omitempty"`
-
-		// A chat title was changed to this value
-		NewChatTitle string `json:"new_chat_title,omitempty"`
-
-		// A chat photo was change to this value
-		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
 
 		// Service message: the chat photo was deleted
 		DeleteChatPhoto bool `json:"delete_chat_photo,omitempty"`
@@ -281,28 +297,12 @@ type (
 		// channel.
 		ChannelChatCreated bool `json:"channel_chat_created,omitempty"`
 
-		// The group has been migrated to a supergroup with the specified
-		// identifier.
-		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
-
-		// The supergroup has been migrated from a group with the specified
-		// identifier.
-		MigrateFromChatID int64 `json:"migrate_from_chat_id,omitempty"`
-
-		// Specified message was pinned. Note that the Message object in this
-		// field will not contain further reply_to_message fields even if it is
-		// itself a reply.
-		PinnedMessage *Message `json:"pinned_message,omitempty"`
-
 		// Message is an invoice for a payment, information about the invoice.
 		Invoice *Invoice `json:"invoice,omitempty"`
 
 		// Message is a service message about a successful payment, information
 		// about the payment.
 		SuccessfulPayment *SuccessfulPayment `json:"successful_payment,omitempty"`
-
-		// The domain name of the website on which the user has logged in.
-		ConnectedWebsite string `json:"connected_website,omitempty"`
 	}
 
 	// MessageEntity represents one special entity in a text message. For
@@ -314,15 +314,15 @@ type (
 		// text_mention (for users without usernames)
 		Type string `json:"type"`
 
+		// For "text_link" only, url that will be opened after user taps on the
+		// text
+		URL string `json:"url,omitempty"`
+
 		// Offset in UTF-16 code units to the start of the entity
 		Offset int `json:"offset"`
 
 		// Length of the entity in UTF-16 code units
 		Length int `json:"length"`
-
-		// For "text_link" only, url that will be opened after user taps on the
-		// text
-		URL string `json:"url,omitempty"`
 
 		// For "text_mention" only, the mentioned user
 		User *User `json:"user,omitempty"`
@@ -349,9 +349,6 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
-		// Duration of the audio in seconds as defined by sender
-		Duration int `json:"duration"`
-
 		// Performer of the audio as defined by sender or by audio tags
 		Performer string `json:"performer,omitempty"`
 
@@ -360,6 +357,9 @@ type (
 
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
+
+		// Duration of the audio in seconds as defined by sender
+		Duration int `json:"duration"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -371,14 +371,14 @@ type (
 		// Unique file identifier
 		FileID string `json:"file_id"`
 
-		// Document thumbnail as defined by sender
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
 		// Original filename as defined by sender
 		FileName string `json:"file_name,omitempty"`
 
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
+
+		// Document thumbnail as defined by sender
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -389,6 +389,9 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
+		// Mime type of a file as defined by sender
+		MimeType string `json:"mime_type,omitempty"`
+
 		// Video width as defined by sender
 		Width int `json:"width"`
 
@@ -398,14 +401,11 @@ type (
 		// Duration of the video in seconds as defined by sender
 		Duration int `json:"duration"`
 
-		// Video thumbnail
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
-		// Mime type of a file as defined by sender
-		MimeType string `json:"mime_type,omitempty"`
-
 		// File size
 		FileSize int `json:"file_size,omitempty"`
+
+		// Video thumbnail
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 	}
 
 	// Voice represents a voice note.
@@ -413,11 +413,11 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
-		// Duration of the audio in seconds as defined by sender
-		Duration int `json:"duration"`
-
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
+
+		// Duration of the audio in seconds as defined by sender
+		Duration int `json:"duration"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -435,11 +435,11 @@ type (
 		// Duration of the video in seconds as defined by sender
 		Duration int `json:"duration"`
 
-		// Video thumbnail
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
 		// File size
 		FileSize int `json:"file_size,omitempty"`
+
+		// Video thumbnail
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 	}
 
 	// Contact represents a phone contact.
@@ -500,12 +500,12 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
-		// File size, if known
-		FileSize int `json:"file_size,omitempty"`
-
 		// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to
 		// get the file.
 		FilePath string `json:"file_path,omitempty"`
+
+		// File size, if known
+		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// ReplyKeyboardMarkup represents a custom keyboard with reply options (see
@@ -649,14 +649,6 @@ type (
 		// Unique identifier for this query
 		ID string `json:"id"`
 
-		// Sender
-		From *User `json:"from"`
-
-		// Message with the callback button that originated the query. Note that
-		// message content and message date will not be available if the message
-		// is too old
-		Message *Message `json:"message,omitempty"`
-
 		// Identifier of the message sent via the bot in inline mode, that
 		// originated the query.
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -673,6 +665,14 @@ type (
 		// Short name of a Game to be returned, serves as the unique identifier
 		// for the game
 		GameShortName string `json:"game_short_name,omitempty"`
+
+		// Sender
+		From *User `json:"from"`
+
+		// Message with the callback button that originated the query. Note that
+		// message content and message date will not be available if the message
+		// is too old
+		Message *Message `json:"message,omitempty"`
 	}
 
 	// ForceReply display a reply interface to the user (act as if the user has
@@ -851,26 +851,26 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
-		// Sticker width
-		Width int `json:"width"`
-
-		// Sticker height
-		Height int `json:"height"`
-
-		// Sticker thumbnail in the .webp or .jpg format
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
 		// Emoji associated with the sticker
 		Emoji string `json:"emoji,omitempty"`
 
 		// Name of the sticker set to which the sticker belongs
 		SetName string `json:"set_name,omitempty"`
 
-		// For mask stickers, the position where the mask should be placed
-		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
+		// Sticker width
+		Width int `json:"width"`
+
+		// Sticker height
+		Height int `json:"height"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
+
+		// Sticker thumbnail in the .webp or .jpg format
+		Thumb *PhotoSize `json:"thumb,omitempty"`
+
+		// For mask stickers, the position where the mask should be placed
+		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 	}
 
 	// StickerSet represents a sticker set.
@@ -915,17 +915,17 @@ type (
 		// Unique identifier for this query
 		ID string `json:"id"`
 
-		// Sender
-		From *User `json:"from"`
-
-		// Sender location, only for bots that request user location
-		Location *Location `json:"location,omitempty"`
-
 		// Text of the query (up to 512 characters)
 		Query string `json:"query"`
 
 		// Offset of the results to be returned, can be controlled by the bot
 		Offset string `json:"offset"`
+
+		// Sender
+		From *User `json:"from"`
+
+		// Sender location, only for bots that request user location
+		Location *Location `json:"location,omitempty"`
 	}
 
 	// InlineQueryResult represents one result of an inline query.
@@ -963,23 +963,23 @@ type (
 		//Title of the result
 		Title string `json:"title"`
 
-		// Content of the message to be sent
-		InputMessageContent interface{} `json:"input_message_content"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
 		// URL of the result
 		URL string `json:"url,omitempty"`
-
-		// Pass True, if you don't want the URL to be shown in the message
-		HideURL bool `json:"hide_url,omitempty"`
 
 		// Short description of the result
 		Description string `json:"description,omitempty"`
 
 		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
+
+		// Content of the message to be sent
+		InputMessageContent interface{} `json:"input_message_content"`
+
+		// Inline keyboard attached to the message
+		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+
+		// Pass True, if you don't want the URL to be shown in the message
+		HideURL bool `json:"hide_url,omitempty"`
 
 		// Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
@@ -1006,12 +1006,6 @@ type (
 		// URL of the thumbnail for the photo
 		ThumbURL string `json:"thumb_url"`
 
-		// Width of the photo
-		PhotoWidth int `json:"photo_width,omitempty"`
-
-		// Height of the photo
-		PhotoHeight int `json:"photo_height,omitempty"`
-
 		// Title for the result
 		Title string `json:"title,omitempty"`
 
@@ -1024,6 +1018,12 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
 		// fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
+
+		// Width of the photo
+		PhotoWidth int `json:"photo_width,omitempty"`
+
+		// Height of the photo
+		PhotoHeight int `json:"photo_height,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1046,15 +1046,6 @@ type (
 		// A valid URL for the GIF file. File size must not exceed 1MB
 		GifURL string `json:"gif_url"`
 
-		// Width of the GIF
-		GifWidth int `json:"gif_width,omitempty"`
-
-		// Height of the GIF
-		GifHeight int `json:"gif_height,omitempty"`
-
-		// Duration of the GIF
-		GifDuration int `json:"gif_duration,omitempty"`
-
 		// URL of the static thumbnail for the result (jpeg or gif)
 		ThumbURL string `json:"thumb_url"`
 
@@ -1067,6 +1058,15 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
 		// fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
+
+		// Width of the GIF
+		GifWidth int `json:"gif_width,omitempty"`
+
+		// Height of the GIF
+		GifHeight int `json:"gif_height,omitempty"`
+
+		// Duration of the GIF
+		GifDuration int `json:"gif_duration,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1090,15 +1090,6 @@ type (
 		// A valid URL for the MP4 file. File size must not exceed 1MB
 		Mpeg4URL string `json:"mpeg4_url"`
 
-		// Video width
-		Mpeg4Width int `json:"mpeg4_width,omitempty"`
-
-		// Video height
-		Mpeg4Height int `json:"mpeg4_height,omitempty"`
-
-		// Video duration
-		Mpeg4Duration int `json:"mpeg4_duration,omitempty"`
-
 		// URL of the static thumbnail (jpeg or gif) for the result
 		ThumbURL string `json:"thumb_url"`
 
@@ -1107,6 +1098,15 @@ type (
 
 		// Caption of the MPEG-4 file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
+
+		// Video width
+		Mpeg4Width int `json:"mpeg4_width,omitempty"`
+
+		// Video height
+		Mpeg4Height int `json:"mpeg4_height,omitempty"`
+
+		// Video duration
+		Mpeg4Duration int `json:"mpeg4_duration,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1149,6 +1149,9 @@ type (
 		// fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// Short description of the result
+		Description string `json:"description,omitempty"`
+
 		// Video width
 		VideoWidth int `json:"video_width,omitempty"`
 
@@ -1157,9 +1160,6 @@ type (
 
 		// Video duration in seconds
 		VideoDuration int `json:"video_duration,omitempty"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -1273,14 +1273,14 @@ type (
 		// Short description of the result
 		Description string `json:"description,omitempty"`
 
+		// URL of the thumbnail (jpeg only) for the file
+		ThumbURL string `json:"thumb_url,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the file
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// URL of the thumbnail (jpeg only) for the file
-		ThumbURL string `json:"thumb_url,omitempty"`
 
 		// Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
@@ -1300,23 +1300,23 @@ type (
 		// Unique identifier for this result, 1-64 Bytes
 		ID string `json:"id"`
 
+		// Location title
+		Title string `json:"title"`
+
+		//Url of the thumbnail for the result
+		ThumbURL string `json:"thumb_url,omitempty"`
+
 		// Location latitude in degrees
 		Latitude float32 `json:"latitude"`
 
 		// Location longitude in degrees
 		Longitude float32 `json:"longitude"`
 
-		// Location title
-		Title string `json:"title"`
-
 		//Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		//Content of the message to be sent instead of the location
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		//Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
 
 		//Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
@@ -1335,12 +1335,6 @@ type (
 		// Unique identifier for this result, 1-64 Bytes
 		ID string `json:"id"`
 
-		// Latitude of the venue location in degrees
-		Latitude float32 `json:"latitude"`
-
-		// Longitude of the venue location in degrees
-		Longitude float32 `json:"longitude"`
-
 		// Title of the venue
 		Title string `json:"title"`
 
@@ -1350,14 +1344,20 @@ type (
 		// Foursquare identifier of the venue if known
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
+		// Url of the thumbnail for the result
+		ThumbURL string `json:"thumb_url,omitempty"`
+
+		// Latitude of the venue location in degrees
+		Latitude float32 `json:"latitude"`
+
+		// Longitude of the venue location in degrees
+		Longitude float32 `json:"longitude"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the venue
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
 
 		// Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
@@ -1386,14 +1386,14 @@ type (
 		// Contact's last name
 		LastName string `json:"last_name,omitempty"`
 
+		// Url of the thumbnail for the result
+		ThumbURL string `json:"thumb_url,omitempty"`
+
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
 		// Content of the message to be sent instead of the contact
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
 
 		// Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
@@ -1735,12 +1735,6 @@ type (
 		// The unique identifier for the result that was chosen
 		ResultID string `json:"result_id"`
 
-		// The user that chose the result
-		From *User `json:"from"`
-
-		// Sender location, only for bots that require user location
-		Location *Location `json:"location,omitempty"`
-
 		// Identifier of the sent inline message. Available only if there is an
 		// inline keyboard attached to the message. Will be also received in
 		// callback queries and can be used to edit the message.
@@ -1748,6 +1742,12 @@ type (
 
 		// The query that was used to obtain the result
 		Query string `json:"query"`
+
+		// The user that chose the result
+		From *User `json:"from"`
+
+		// Sender location, only for bots that require user location
+		Location *Location `json:"location,omitempty"`
 	}
 
 	// LabeledPrice represents a portion of the price for goods or services.
@@ -1839,6 +1839,18 @@ type (
 		// Three-letter ISO 4217 currency code
 		Currency string `json:"currency"`
 
+		// Bot specified invoice payload
+		InvoicePayload string `json:"invoice_payload"`
+
+		// Identifier of the shipping option chosen by the user
+		ShippingOptionID string `json:"shipping_option_id,omitempty"`
+
+		// Telegram payment identifier
+		TelegramPaymentChargeID string `json:"telegram_payment_charge_id"`
+
+		// Provider payment identifier
+		ProviderPaymentChargeID string `json:"provider_payment_charge_id"`
+
 		// Total price in the smallest units of the currency (integer, not
 		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
 		// See the exp parameter in currencies.json, it shows the number of
@@ -1846,20 +1858,8 @@ type (
 		// of currencies).
 		TotalAmount int `json:"total_amount"`
 
-		// Bot specified invoice payload
-		InvoicePayload string `json:"invoice_payload"`
-
-		// Identifier of the shipping option chosen by the user
-		ShippingOptionID string `json:"shipping_option_id,omitempty"`
-
 		// Order info provided by the user
 		OrderInfo *OrderInfo `json:"order_info,omitempty"`
-
-		// Telegram payment identifier
-		TelegramPaymentChargeID string `json:"telegram_payment_charge_id"`
-
-		// Provider payment identifier
-		ProviderPaymentChargeID string `json:"provider_payment_charge_id"`
 	}
 
 	// ShippingQuery contains information about an incoming shipping query.
@@ -1867,11 +1867,11 @@ type (
 		// Unique query identifier
 		ID string `json:"id"`
 
-		// User who sent the query
-		From *User `json:"from"`
-
 		// Bot specified invoice payload
 		InvoicePayload string `json:"invoice_payload"`
+
+		// User who sent the query
+		From *User `json:"from"`
 
 		// User specified shipping address
 		ShippingAddress *ShippingAddress `json:"shipping_address"`
@@ -1882,11 +1882,17 @@ type (
 		// Unique query identifier
 		ID string `json:"id"`
 
-		// User who sent the query
-		From *User `json:"from"`
-
 		// Three-letter ISO 4217 currency code
 		Currency string `json:"currency"`
+
+		// Bot specified invoice payload
+		InvoicePayload string `json:"invoice_payload"`
+
+		// Identifier of the shipping option chosen by the user
+		ShippingOptionID string `json:"shipping_option_id,omitempty"`
+
+		// User who sent the query
+		From *User `json:"from"`
 
 		// Total price in the smallest units of the currency (integer, not
 		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
@@ -1894,12 +1900,6 @@ type (
 		// digits past the decimal point for each currency (2 for the majority of
 		// currencies).
 		TotalAmount int `json:"total_amount"`
-
-		// Bot specified invoice payload
-		InvoicePayload string `json:"invoice_payload"`
-
-		// Identifier of the shipping option chosen by the user
-		ShippingOptionID string `json:"shipping_option_id,omitempty"`
 
 		// Order info provided by the user
 		OrderInfo *OrderInfo `json:"order_info,omitempty"`
@@ -1914,14 +1914,14 @@ type (
 		// Description of the game
 		Description string `json:"description"`
 
-		// Photo that will be displayed in the game message in chats.
-		Photo []PhotoSize `json:"photo"`
-
 		// Brief description of the game or high scores included in the game
 		// message. Can be automatically edited to include current high scores
 		// for the game when the bot calls setGameScore, or manually edited
 		// using editMessageText. 0-4096 characters.
 		Text string `json:"text,omitempty"`
+
+		// Photo that will be displayed in the game message in chats.
+		Photo []PhotoSize `json:"photo"`
 
 		// Special entities that appear in text, such as usernames, URLs, bot
 		// commands, etc.
@@ -1939,14 +1939,14 @@ type (
 		// Unique file identifier
 		FileID string `json:"file_id"`
 
-		// Animation thumbnail as defined by sender
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
 		// Original animation filename as defined by sender
 		FileName string `json:"file_name,omitempty"`
 
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
+
+		// Animation thumbnail as defined by sender
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -1961,11 +1961,11 @@ type (
 		// Position in high score table for the game
 		Position int `json:"position"`
 
-		// User
-		User *User `json:"user"`
-
 		// Score
 		Score int `json:"score"`
+
+		// User
+		User *User `json:"user"`
 	}
 
 	// ReplyMarkup is a JSON-serialized object for an inline keyboard, custom

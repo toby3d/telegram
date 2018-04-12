@@ -6,13 +6,13 @@ type GetGameHighScoresParameters struct {
 	// Target user id
 	UserID int `json:"user_id"`
 
-	// Required if inline_message_id is not specified. Unique identifier for the
-	// target chat
-	ChatID int64 `json:"chat_id,omitempty"`
-
 	// Required if inline_message_id is not specified. Identifier of the sent
 	// message
 	MessageID int `json:"message_id,omitempty"`
+
+	// Required if inline_message_id is not specified. Unique identifier for the
+	// target chat
+	ChatID int64 `json:"chat_id,omitempty"`
 
 	// Required if chat_id and message_id are not specified. Identifier of the
 	// inline message

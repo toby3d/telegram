@@ -45,7 +45,7 @@ sendAudio, etc.).
 voice notes will be sent as files.
 - Other configurations may work but we can't guarantee that they will.
 */
-func (bot *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (*Response, error) {
+func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.Stringer) (*Response, error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
@@ -142,7 +142,9 @@ func uploadFromDisk(w *multipart.Writer, key, src string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	var formFile io.Writer
 	formFile, err = w.CreateFormFile(key, file.Name())

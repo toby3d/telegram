@@ -26,10 +26,6 @@ type SendInvoiceParameters struct {
 	// Three-letter ISO 4217 currency code, see more on currencies
 	Currency string `json:"currency"`
 
-	// Price breakdown, a list of components (e.g. product price, tax, discount,
-	// delivery cost, delivery tax, bonus, etc.)
-	Prices []LabeledPrice `json:"prices"`
-
 	// JSON-encoded data about the invoice, which will be shared with the payment
 	// provider. A detailed description of required fields should be provided by
 	// the payment provider.
@@ -40,6 +36,10 @@ type SendInvoiceParameters struct {
 	// they are paying for.
 	PhotoURL string `json:"photo_url,omitempty"`
 
+	// Price breakdown, a list of components (e.g. product price, tax, discount,
+	// delivery cost, delivery tax, bonus, etc.)
+	Prices []LabeledPrice `json:"prices"`
+
 	// Photo size
 	PhotoSize int `json:"photo_size,omitempty"`
 
@@ -48,6 +48,9 @@ type SendInvoiceParameters struct {
 
 	// Photo height
 	PhotoHeight int `json:"photo_height,omitempty"`
+
+	// If the message is a reply, ID of the original message
+	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
 	// Pass True, if you require the user's full name to complete the order
 	NeedName bool `json:"need_name,omitempty"`
@@ -68,9 +71,6 @@ type SendInvoiceParameters struct {
 	// Sends the message silently. Users will receive a notification with no
 	// sound.
 	DisableNotification bool `json:"disable_notification,omitempty"`
-
-	// If the message is a reply, ID of the original message
-	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
 	// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total
 	// price' button will be shown. If not empty, the first button must be a Pay
