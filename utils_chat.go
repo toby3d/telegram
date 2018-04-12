@@ -1,5 +1,7 @@
 package telegram
 
+import "fmt"
+
 func (chat *Chat) IsPrivate() bool {
 	if chat == nil {
 		return false
@@ -38,4 +40,41 @@ func (chat *Chat) HasPinnedMessage() bool {
 	}
 
 	return chat.PinnedMessage != nil
+}
+
+func (chat *Chat) HasStickerSet() bool {
+	if chat == nil {
+		return false
+	}
+
+	return chat.StickerSetName != ""
+}
+
+func (chat *Chat) StickerSet(bot *Bot) *StickerSet {
+	if !chat.HasStickerSet() {
+		return nil
+	}
+
+	if bot == nil {
+		return nil
+	}
+
+	set, err := bot.GetStickerSet(chat.StickerSetName)
+	if err != nil {
+		return nil
+	}
+
+	return set
+}
+
+func (chat *Chat) FullName() string {
+	if chat == nil {
+		return ""
+	}
+
+	if chat.LastName != "" {
+		return fmt.Sprintln(chat.FirstName, chat.LastName)
+	}
+
+	return chat.FirstName
 }

@@ -5,21 +5,18 @@ import (
 	"strconv"
 )
 
-func NewForceReply(selective bool) *ForceReply {
-	return &ForceReply{
-		ForceReply: true,
-		Selective:  selective,
-	}
+func NewForceReply() *ForceReply {
+	return &ForceReply{ForceReply: true}
 }
 
-func NewInlineMentionURL(id int) *url.URL {
+func NewInlineMentionURL(userID int) *url.URL {
 	link := &url.URL{
-		Scheme: "tg",
+		Scheme: SchemeTelegram,
 		Path:   "user",
 	}
 
 	q := link.Query()
-	q.Add("id", strconv.Itoa(id))
+	q.Add("id", strconv.Itoa(userID))
 	link.RawQuery = q.Encode()
 
 	return link

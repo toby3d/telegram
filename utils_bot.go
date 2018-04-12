@@ -28,7 +28,7 @@ func (bot *Bot) IsMessageFromMe(msg *Message) bool {
 		return false
 	}
 
-	return msg.From.ID == bot.User.ID
+	return msg.From.ID == bot.ID
 }
 
 func (bot *Bot) IsForwardFromMe(msg *Message) bool {
@@ -44,7 +44,7 @@ func (bot *Bot) IsForwardFromMe(msg *Message) bool {
 		return false
 	}
 
-	return msg.ForwardFrom.ID == bot.User.ID
+	return msg.ForwardFrom.ID == bot.ID
 }
 
 func (bot *Bot) IsReplyToMe(msg *Message) bool {
@@ -99,7 +99,7 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 
 	for _, entity := range entities {
 		if entity.IsMention() {
-			if bot.User.ID == entity.User.ID {
+			if bot.ID == entity.User.ID {
 				return true
 			}
 		}

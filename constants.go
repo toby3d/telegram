@@ -35,10 +35,12 @@ const (
 )
 
 const (
+	MethodAddStickerToSet         = "addStickerToSet"
 	MethodAnswerCallbackQuery     = "answerCallbackQuery"
 	MethodAnswerInlineQuery       = "answerInlineQuery"
 	MethodAnswerPreCheckoutQuery  = "answerPreCheckoutQuery"
 	MethodAnswerShippingQuery     = "answerShippingQuery"
+	MethodCreateNewStickerSet     = "createNewStickerSet"
 	MethodDeleteChatPhoto         = "deleteChatPhoto"
 	MethodDeleteChatStickerSet    = "deleteChatStickerSet"
 	MethodDeleteMessage           = "deleteMessage"
@@ -64,6 +66,9 @@ const (
 	MethodKickChatMember          = "kickChatMember"
 	MethodLeaveChat               = "leaveChat"
 	MethodPinChatMessage          = "pinChatMessage"
+	MethodPromoteChatMember       = "promoteChatMember"
+	MethodRestrictChatMember      = "restrictChatMember"
+	MethodSendAudio               = "sendAudio"
 	MethodSendChatAction          = "sendChatAction"
 	MethodSendContact             = "sendContact"
 	MethodSendDocument            = "sendDocument"
@@ -73,7 +78,11 @@ const (
 	MethodSendMediaGroup          = "sendMediaGroup"
 	MethodSendMessage             = "sendMessage"
 	MethodSendPhoto               = "sendPhoto"
+	MethodSendSticker             = "sendSticker"
 	MethodSendVenue               = "sendVenue"
+	MethodSendVideo               = "sendVideo"
+	MethodSendVideoNote           = "sendVideoNote"
+	MethodSendVoice               = "sendVoice"
 	MethodSetChatDescription      = "setChatDescription"
 	MethodSetChatPhoto            = "setChatPhoto"
 	MethodSetChatStickerSet       = "setChatStickerSet"
@@ -81,8 +90,10 @@ const (
 	MethodSetGameScore            = "setGameScore"
 	MethodSetStickerPositionInSet = "setStickerPositionInSet"
 	MethodSetWebhook              = "setWebhook"
+	MethodStopMessageLiveLocation = "stopMessageLiveLocation"
 	MethodUnbanChatMember         = "unbanChatMember"
 	MethodUnpinChatMessage        = "unpinChatMessage"
+	MethodUploadStickerFile       = "uploadStickerFile"
 )
 
 const (
@@ -97,7 +108,10 @@ const (
 	MimeZIP  = "application/zip"
 )
 
-const PrefixAttach = "attach://"
+const (
+	SchemeAttach   = "attach"
+	SchemeTelegram = "tg"
+)
 
 const (
 	StatusAdministrator = "administrator"

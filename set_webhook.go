@@ -72,7 +72,8 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	if params.Certificate != nil {
 		resp, err = bot.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
 	} else {
-		dst, err := json.Marshal(params)
+		var dst []byte
+		dst, err = json.Marshal(params)
 		if err != nil {
 			return false, err
 		}
