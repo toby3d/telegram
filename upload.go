@@ -17,7 +17,7 @@ import (
 var ErrBadFileType = errors.New("bad file type")
 
 /*
-upload is a helper method which provide are three ways to send files (photos, stickers, audio,
+Upload is a helper method which provide are three ways to send files (photos, stickers, audio,
 media, etc.):
 
 1. If the file is already stored somewhere on the Telegram servers, you don't need to reupload it:
@@ -45,7 +45,7 @@ sendAudio, etc.).
 voice notes will be sent as files.
 - Other configurations may work but we can't guarantee that they will.
 */
-func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args *http.Args) (*Response, error) {
+func (bot *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (*Response, error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
@@ -66,48 +66,20 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 		}
 	}
 
-	switch f := file.(type) {
+	switch src := file.(type) {
 	case string:
-		if _, err = os.Stat(f); os.IsNotExist(err) {
-			// Send by 'file_id'
-			if err = multi.WriteField(fieldName, f); err != nil {
-				return nil, err
-			}
-		} else {
-			// Upload new
-			src, err := os.Open(f)
-			if err != nil {
-				return nil, err
-			}
-			defer src.Close()
-
-			formFile, err := multi.CreateFormFile(fieldName, src.Name())
-			if err != nil {
-				return nil, err
-			}
-			if _, err = io.Copy(formFile, src); err != nil {
-				return nil, err
-			}
-		}
-	case []byte: // Upload new
-		formFile, err := multi.CreateFormFile(fieldName, fileName)
-		if err != nil {
-			return nil, err
-		}
-
-		if _, err = io.Copy(formFile, bytes.NewReader(f)); err != nil {
-			return nil, err
-		}
+		err = uploadByString(multi, key, src)
 	case *url.URL: // Send by URL
-		if err = multi.WriteField(fieldName, f.String()); err != nil {
-			return nil, err
-		}
+		err = uploadFromURL(multi, key, src)
+	case []byte: // Upload new
+		err = uploadFromMemory(multi, key, name, bytes.NewReader(src))
 	case io.Reader: // Upload new
-		if _, err = multi.CreateFormFile(fieldName, fileName); err != nil {
-			return nil, err
-		}
+		err = uploadFromMemory(multi, key, name, src)
 	default:
 		return nil, ErrBadFileType
+	}
+	if err != nil {
+		return nil, err
 	}
 
 	if err = multi.Close(); err != nil {
@@ -148,4 +120,50 @@ func (bot *Bot) upload(file InputFile, fieldName, fileName, method string, args 
 	}
 
 	return &data, nil
+}
+
+func uploadByString(w *multipart.Writer, key, src string) error {
+	_, err := os.Stat(src)
+	switch {
+	case os.IsNotExist(err):
+		err = uploadFromFileID(w, key, src)
+	case os.IsExist(err):
+		err = uploadFromDisk(w, key, src)
+	}
+	return err
+}
+
+func uploadFromFileID(w *multipart.Writer, key, src string) error {
+	return w.WriteField(key, src)
+}
+
+func uploadFromDisk(w *multipart.Writer, key, src string) error {
+	file, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	var formFile io.Writer
+	formFile, err = w.CreateFormFile(key, file.Name())
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(formFile, file)
+	return err
+}
+
+func uploadFromURL(w *multipart.Writer, key string, src *url.URL) error {
+	return w.WriteField(key, src.String())
+}
+
+func uploadFromMemory(w *multipart.Writer, key, value string, src io.Reader) error {
+	field, err := w.CreateFormFile(key, value)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(field, src)
+	return err
 }
