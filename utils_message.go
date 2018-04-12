@@ -94,12 +94,13 @@ func (msg *Message) ForwardTime() time.Time {
 }
 
 func (msg *Message) EditTime() time.Time {
+	var t time.Time
 	if msg == nil {
-		return time.Time{}
+		return t
 	}
 
 	if !msg.HasBeenEdited() {
-		return time.Time{}
+		return t
 	}
 
 	return time.Unix(msg.EditDate, 0)

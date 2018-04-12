@@ -6,6 +6,19 @@ import (
 	"strings"
 )
 
+type Bot struct {
+	AccessToken string
+	Self        *User
+}
+
+func NewBot(accessToken string) (*Bot, error) {
+	var err error
+	bot := &Bot{AccessToken: accessToken}
+
+	bot.Self, err = bot.GetMe()
+	return bot, err
+}
+
 func (bot *Bot) IsMessageFromMe(msg *Message) bool {
 	if msg == nil || bot == nil {
 		return false
