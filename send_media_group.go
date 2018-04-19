@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendMediaGroupParameters represents data for SendMediaGroup method.
 type SendMediaGroupParameters struct {
 	// Unique identifier for the target chat.
 	ChatID int64 `json:"chat_id"`
@@ -18,6 +19,7 @@ type SendMediaGroupParameters struct {
 	ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 }
 
+// NewMediaGroup creates SendMediaGroupParameters only with required parameters.
 func NewMediaGroup(chatID int64, media ...interface{}) *SendMediaGroupParameters {
 	return &SendMediaGroupParameters{
 		ChatID: chatID,

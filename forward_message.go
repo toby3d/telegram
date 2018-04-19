@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// ForwardMessageParameters represents data for ForwardMessage method.
 type ForwardMessageParameters struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID int64 `json:"chat_id"`
@@ -16,6 +17,7 @@ type ForwardMessageParameters struct {
 	MessageID int `json:"message_id"`
 }
 
+// NewForwardMessage creates ForwardMessageParameters only with reqired parameters.
 func NewForwardMessage(from, to int64, messageID int) *ForwardMessageParameters {
 	return &ForwardMessageParameters{
 		FromChatID: from,

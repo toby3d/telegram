@@ -14,6 +14,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// ErrBadFileType describes error of the unsupported file data type for uploading
 var ErrBadFileType = errors.New("bad file type")
 
 /*
@@ -23,8 +24,10 @@ media, etc.):
 1. If the file is already stored somewhere on the Telegram servers, you don't need to reupload it:
 each file object has a file_id field, simply pass this file_id as a parameter instead of uploading.
 There are no limits for files sent this way.
+
 2. Provide Telegram with an *url.URL for the file to be sent. Telegram will download and send the
 file. 5 MB max size for photos and 20 MB max for other types of content.
+
 3. Post the file using multipart/form-data in the usual way that files are uploaded via the
 browser. Use []byte or io.Reader for this. 10 MB max size for photos, 50 MB for other files.
 
@@ -49,11 +52,8 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
-	requestURI := &url.URL{
-		Scheme: "https",
-		Host:   "api.telegram.org",
-		Path:   fmt.Sprint("/bot", bot.AccessToken, "/", method),
-	}
+	requestURI := defaultURI
+	requestURI.Path = fmt.Sprint("/bot", bot.AccessToken, "/", method)
 
 	query, err := url.ParseQuery(args.String())
 	if err != nil {
@@ -66,19 +66,7 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 		}
 	}
 
-	switch src := file.(type) {
-	case string:
-		err = uploadByString(multi, key, src)
-	case *url.URL: // Send by URL
-		err = uploadFromURL(multi, key, src)
-	case []byte: // Upload new
-		err = uploadFromMemory(multi, key, name, bytes.NewReader(src))
-	case io.Reader: // Upload new
-		err = uploadFromMemory(multi, key, name, src)
-	default:
-		return nil, ErrBadFileType
-	}
-	if err != nil {
+	if err = createFileField(multi, file, key, name); err != nil {
 		return nil, err
 	}
 
@@ -92,23 +80,21 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	req.Header.SetContentType(multi.FormDataContentType())
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
-	req.Header.SetUserAgent("go-telegram/3.5")
-	req.Header.SetHost("api.telegram.org")
+	req.Header.SetUserAgent(fmt.Sprint("telegram/", Version))
+	req.Header.SetHost(requestURI.Hostname())
 
 	log.Ln("Request:")
 	log.D(req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
-	if err = http.Do(req, resp); err != nil {
-		log.Ln("Resp:")
-		log.D(resp)
 
-		return nil, err
-	}
-
+	err = http.Do(req, resp)
 	log.Ln("Resp:")
 	log.D(resp)
+	if err != nil {
+		return nil, err
+	}
 
 	var data Response
 	if err = json.Unmarshal(resp.Body(), &data); err != nil {
@@ -122,19 +108,34 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	return &data, nil
 }
 
-func uploadByString(w *multipart.Writer, key, src string) error {
-	_, err := os.Stat(src)
-	switch {
-	case os.IsNotExist(err):
-		err = uploadFromFileID(w, key, src)
-	case os.IsExist(err):
-		err = uploadFromDisk(w, key, src)
+func createFileField(w *multipart.Writer, file interface{}, key, val string) error {
+	var err error
+	switch src := file.(type) {
+	case string: // Send FileID of file on disk path
+		err = createFileFieldString(w, key, src)
+	case *url.URL: // Send by URL
+		err = w.WriteField(key, src.String())
+	case []byte: // Upload new
+		err = createFileFieldRaw(w, key, val, bytes.NewReader(src))
+	case io.Reader: // Upload new
+		err = createFileFieldRaw(w, key, val, src)
+	default:
+		return ErrBadFileType
 	}
 	return err
 }
 
-func uploadFromFileID(w *multipart.Writer, key, src string) error {
-	return w.WriteField(key, src)
+func createFileFieldString(w *multipart.Writer, key, src string) error {
+	_, err := os.Stat(src)
+
+	switch {
+	case os.IsNotExist(err):
+		err = w.WriteField(key, src)
+	case os.IsExist(err):
+		err = uploadFromDisk(w, key, src)
+	}
+
+	return err
 }
 
 func uploadFromDisk(w *multipart.Writer, key, src string) error {
@@ -156,11 +157,7 @@ func uploadFromDisk(w *multipart.Writer, key, src string) error {
 	return err
 }
 
-func uploadFromURL(w *multipart.Writer, key string, src *url.URL) error {
-	return w.WriteField(key, src.String())
-}
-
-func uploadFromMemory(w *multipart.Writer, key, value string, src io.Reader) error {
+func createFileFieldRaw(w *multipart.Writer, key, value string, src io.Reader) error {
 	field, err := w.CreateFormFile(key, value)
 	if err != nil {
 		return err

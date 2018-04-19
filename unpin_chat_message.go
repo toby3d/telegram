@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// UnpinChatMessageParameters represents data for UnpinChatMessage method.
 type UnpinChatMessageParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

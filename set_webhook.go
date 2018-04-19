@@ -8,6 +8,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// SetWebhookParameters represents data for SetWebhook method.
 type SetWebhookParameters struct {
 	// HTTPS url to send updates to. Use an empty string to remove webhook
 	// integration
@@ -36,6 +37,7 @@ type SetWebhookParameters struct {
 	AllowedUpdates []string `json:"allowed_updates,omitempty"`
 }
 
+// NewWebhook creates new SetWebhookParameters only with required parameters.
 func NewWebhook(url string, file interface{}) *SetWebhookParameters {
 	return &SetWebhookParameters{
 		URL:         url,

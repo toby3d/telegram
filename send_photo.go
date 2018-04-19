@@ -7,6 +7,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// SendPhotoParameters represents data for SendPhoto method.
 type SendPhotoParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
@@ -41,6 +42,7 @@ type SendPhotoParameters struct {
 	ReplyMarkup interface{} `json:"reply_markup,omitempty"`
 }
 
+// NewPhoto creates SendPhotoParameters only with required parameters.
 func NewPhoto(chatID int64, photo interface{}) *SendPhotoParameters {
 	return &SendPhotoParameters{
 		ChatID: chatID,

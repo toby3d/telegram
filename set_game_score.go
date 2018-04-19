@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SetGameScoreParameters represents data for SetGameScore method.
 type SetGameScoreParameters struct {
 	// User identifier
 	UserID int `json:"user_id"`
@@ -30,6 +31,7 @@ type SetGameScoreParameters struct {
 	InlineMessageID string `json:"inline_message_id,omitempty"`
 }
 
+// NewGameScore creates SetGameScoreParameters only with required parameters.
 func NewGameScore(userID, score int) *SetGameScoreParameters {
 	return &SetGameScoreParameters{
 		UserID: userID,

@@ -1,5 +1,6 @@
 package login
 
+// Key... represents available and supported data keys
 const (
 	KeyAuthDate  = "auth_date"
 	KeyFirstName = "first_name"

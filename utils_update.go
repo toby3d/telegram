@@ -10,8 +10,11 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// UpdatesChannel is a channel for reading updates of bot.
 type UpdatesChannel <-chan Update
 
+// NewLongPollingChannel creates channel for receive incoming updates using long
+// polling.
 func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{
@@ -44,6 +47,8 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 	return channel
 }
 
+// NewWebhookChannel creates channel for receive incoming updates via an outgoing
+// webhook.
 func (bot *Bot) NewWebhookChannel(params *SetWebhookParameters, certFile, keyFile, set, listen, serve string) (updates UpdatesChannel) {
 	if params == nil {
 		params = &SetWebhookParameters{
@@ -92,74 +97,50 @@ func (bot *Bot) NewWebhookChannel(params *SetWebhookParameters, certFile, keyFil
 	return channel
 }
 
+// IsMessage checks that the current update is a message creation event.
 func (upd *Update) IsMessage() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.Message != nil
+	return upd != nil && upd.Message != nil
 }
 
+// IsEditedMessage checks that the current update is a editing message event.
 func (upd *Update) IsEditedMessage() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.EditedMessage != nil
+	return upd != nil && upd.EditedMessage != nil
 }
 
+// IsChannelPost checks that the current update is a post channel creation event.
 func (upd *Update) IsChannelPost() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.ChannelPost != nil
+	return upd != nil && upd.ChannelPost != nil
 }
 
+// IsEditedChannelPost checks that the current update is a editing post channel
+// event.
 func (upd *Update) IsEditedChannelPost() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.EditedChannelPost != nil
+	return upd != nil && upd.EditedChannelPost != nil
 }
 
+// IsInlineQuery checks that the current update is a inline query update.
 func (upd *Update) IsInlineQuery() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.InlineQuery != nil
+	return upd != nil && upd.InlineQuery != nil
 }
 
+// IsChosenInlineResult checks that the current update is a chosen inline result
+// update.
 func (upd *Update) IsChosenInlineResult() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.ChosenInlineResult != nil
+	return upd != nil && upd.ChosenInlineResult != nil
 }
 
+// IsCallbackQuery checks that the current update is a callback query update.
 func (upd *Update) IsCallbackQuery() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.CallbackQuery != nil
+	return upd != nil && upd.CallbackQuery != nil
 }
 
+// IsShippingQuery checks that the current update is a shipping query update.
 func (upd *Update) IsShippingQuery() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.ShippingQuery != nil
+	return upd != nil && upd.ShippingQuery != nil
 }
 
+// IsPreCheckoutQuery checks that the current update is a pre checkout query
+// update.
 func (upd *Update) IsPreCheckoutQuery() bool {
-	if upd == nil {
-		return false
-	}
-
-	return upd.PreCheckoutQuery != nil
+	return upd != nil && upd.PreCheckoutQuery != nil
 }

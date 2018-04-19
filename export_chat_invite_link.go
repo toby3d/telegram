@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// ExportChatInviteLinkParameters represents data for ExportChatInviteLink method.
 type ExportChatInviteLinkParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
