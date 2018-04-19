@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendVenueParameters represents data for SendVenue method.
 type SendVenueParameters struct {
 	// Unique identifier for the target private chat
 	ChatID int64 `json:"chat_id"`
@@ -34,6 +35,7 @@ type SendVenueParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewVenue creates SendVenueParameters only with required parameters.
 func NewVenue(chatID int64, latitude, longitude float32, title, address string) *SendVenueParameters {
 	return &SendVenueParameters{
 		ChatID:    chatID,

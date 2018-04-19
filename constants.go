@@ -1,5 +1,9 @@
 package telegram
 
+// Version represents current version of Telegram API supported by this package
+const Version = 3.6
+
+// Action... represents available and supported status actions of bot
 const (
 	ActionFindLocation    = "find_location"
 	ActionRecordAudio     = "record_audio"
@@ -13,6 +17,7 @@ const (
 	ActionUploadVideoNote = "upload_video_note"
 )
 
+// Chat... represents available and supported chat types
 const (
 	ChatChannel    = "channel"
 	ChatGroup      = "group"
@@ -20,6 +25,7 @@ const (
 	ChatSuperGroup = "supergroup"
 )
 
+// Entity... represents available and supported entity types
 const (
 	EntityBold        = "bold"
 	EntityBotCommand  = "bot_command"
@@ -34,6 +40,7 @@ const (
 	EntityURL         = "url"
 )
 
+// Method... represents available and supported Telegram API methods
 const (
 	MethodAddStickerToSet         = "addStickerToSet"
 	MethodAnswerCallbackQuery     = "answerCallbackQuery"
@@ -96,11 +103,13 @@ const (
 	MethodUploadStickerFile       = "uploadStickerFile"
 )
 
+// Mode... represents available and supported parsing modes of messages
 const (
 	ModeHTML     = "html"
 	ModeMarkdown = "markdown"
 )
 
+// Mime... represents available and supported MIME types of data
 const (
 	MimeHTML = "text/html"
 	MimeMP4  = "video/mp4"
@@ -108,11 +117,13 @@ const (
 	MimeZIP  = "application/zip"
 )
 
+// Scheme... represents optional schemes for URLs
 const (
 	SchemeAttach   = "attach"
 	SchemeTelegram = "tg"
 )
 
+// Status... represents available and supported statuses of ID
 const (
 	StatusAdministrator = "administrator"
 	StatusCreator       = "creator"
@@ -122,6 +133,7 @@ const (
 	StatusRestricted    = "restricted"
 )
 
+// Type... represents available and supported types of data
 const (
 	TypeArticle  = "article"
 	TypeAudio    = "audio"
@@ -138,6 +150,7 @@ const (
 	TypeVoice    = "voice"
 )
 
+// Update... represents available and supported types of updates
 const (
 	UpdateCallbackQuery      = "callback_query"
 	UpdateChannelPost        = "channel_post"

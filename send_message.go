@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendMessageParameters represents data for SendMessage method.
 type SendMessageParameters struct {
 	// Unique identifier for the target chat or username of the target channel
 	// (in the format @channelusername)
@@ -30,6 +31,7 @@ type SendMessageParameters struct {
 	ReplyMarkup interface{} `json:"reply_markup,omitempty"`
 }
 
+// NewMessage creates SendMessageParameters only with required parameters.
 func NewMessage(chatID int64, text string) *SendMessageParameters {
 	return &SendMessageParameters{
 		ChatID: chatID,

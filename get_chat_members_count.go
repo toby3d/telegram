@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetChatMembersCountParameters represents data for GetChatMembersCount method.
 type GetChatMembersCountParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

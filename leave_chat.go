@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// LeaveChatParameters represents data for LeaveChat method.
 type LeaveChatParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

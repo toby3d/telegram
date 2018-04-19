@@ -1,2 +1,2 @@
-// Version of the bot API: 3.6 (February 13, 2018)
+// Package telegram contains bindings for the Telegram API
 package telegram

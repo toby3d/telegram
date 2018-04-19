@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// AnswerShippingQueryParameters represents data for AnswerShippingQuery method.
 type AnswerShippingQueryParameters struct {
 	// Unique identifier for the query to be answered
 	ShippingQueryID string `json:"shipping_query_id"`
@@ -22,6 +23,8 @@ type AnswerShippingQueryParameters struct {
 	ShippingOptions []ShippingOption `json:"shipping_options,omitempty"`
 }
 
+// NewAnswerShippingQuery creates AnswerShippingQueryParameters only with
+// required parameters.
 func NewAnswerShippingQuery(shippingQueryID string, ok bool) *AnswerShippingQueryParameters {
 	return &AnswerShippingQueryParameters{
 		ShippingQueryID: shippingQueryID,

@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendGameParameters represents data for SendGame method.
 type SendGameParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
@@ -23,6 +24,7 @@ type SendGameParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewGame creates SendGameParameters only with required parameters.
 func NewGame(chatID int64, gameShortName string) *SendGameParameters {
 	return &SendGameParameters{
 		ChatID:        chatID,

@@ -2,6 +2,8 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SetStickerPositionInSetParameters represents data for SetStickerPositionInSet
+// method.
 type SetStickerPositionInSetParameters struct {
 	Sticker  string `json:"sticker"`
 	Position int    `json:"position"`

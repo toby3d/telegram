@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetFileParameters represents data for GetFile method.
 type GetFileParameters struct {
 	FileID string `json:"file_id"`
 }

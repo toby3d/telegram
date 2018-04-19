@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// AnswerCallbackQueryParameters represents data for AnswerCallbackQuery method.
 type AnswerCallbackQueryParameters struct {
 	// Unique identifier for the query to be answered
 	CallbackQueryID string `json:"callback_query_id"`
@@ -29,6 +30,8 @@ type AnswerCallbackQueryParameters struct {
 	CacheTime int `json:"cache_time,omitempty"`
 }
 
+// NewAnswerCallbackQuery creates AnswerCallbackQueryParameters only with
+// required parameters.
 func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParameters {
 	return &AnswerCallbackQueryParameters{CallbackQueryID: callbackQueryID}
 }

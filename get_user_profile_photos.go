@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetUserProfilePhotosParameters represents data for GetUserProfilePhotos method.
 type GetUserProfilePhotosParameters struct {
 	UserID int `json:"user_id"`
 	Offset int `json:"offset"`

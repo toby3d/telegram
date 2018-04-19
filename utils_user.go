@@ -6,6 +6,7 @@ import (
 	"golang.org/x/text/language"
 )
 
+// Language parse LanguageCode of current user and returns language.Tag.
 func (user *User) Language() *language.Tag {
 	if user == nil {
 		return nil
@@ -19,6 +20,8 @@ func (user *User) Language() *language.Tag {
 	return &tag
 }
 
+// FullName returns the full name of user or FirstName if LastName is not
+// available.
 func (user *User) FullName() string {
 	if user == nil {
 		return ""

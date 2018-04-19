@@ -6,61 +6,42 @@ import (
 	"strings"
 )
 
+// Bot represents a bot user with access token getted from @BotFather.
 type Bot struct {
 	AccessToken string
 	*User
 }
 
+// New creates a new Bot structure based on the input access token.
 func New(accessToken string) (*Bot, error) {
 	var err error
-	bot := &Bot{AccessToken: accessToken}
+	bot := new(Bot)
+	bot.AccessToken = accessToken
 
 	bot.User, err = bot.GetMe()
 	return bot, err
 }
 
+// IsMessageFromMe checks that the input message is a message from the current
+// bot.
 func (bot *Bot) IsMessageFromMe(msg *Message) bool {
-	if msg == nil || bot == nil {
-		return false
-	}
-
-	if msg.From == nil || bot.User == nil {
-		return false
-	}
-
-	return msg.From.ID == bot.ID
+	return msg != nil && bot != nil && msg.From != nil && bot.User != nil && msg.From.ID == bot.ID
 }
 
+// IsForwardFromMe checks that the input message is a forwarded message from the
+// current bot.
 func (bot *Bot) IsForwardFromMe(msg *Message) bool {
-	if !msg.IsForward() {
-		return false
-	}
-
-	if bot == nil {
-		return false
-	}
-
-	if bot.User == nil {
-		return false
-	}
-
-	return msg.ForwardFrom.ID == bot.ID
+	return msg.IsForward() && bot != nil && bot.User != nil && msg.ForwardFrom.ID == bot.ID
 }
 
+// IsReplyToMe checks that the input message is a reply to the current bot.
 func (bot *Bot) IsReplyToMe(msg *Message) bool {
-	if msg.Chat.IsPrivate() {
-		return true
-	}
-
-	if !msg.IsReply() {
-		return false
-	}
-
-	return bot.IsMessageFromMe(msg.ReplyToMessage)
+	return msg.Chat.IsPrivate() || (msg.IsReply() && bot.IsMessageFromMe(msg.ReplyToMessage))
 }
 
+// IsCommandToMe checks that the input message is a command for the current bot.
 func (bot *Bot) IsCommandToMe(msg *Message) bool {
-	if !msg.IsCommand("") {
+	if !msg.IsCommand() {
 		return false
 	}
 
@@ -76,12 +57,9 @@ func (bot *Bot) IsCommandToMe(msg *Message) bool {
 	return strings.ToLower(parts[1]) == strings.ToLower(bot.User.Username)
 }
 
+// IsMessageMentionsMe checks that the input message mentions the current bot.
 func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
-	if msg == nil || bot == nil {
-		return false
-	}
-
-	if bot.User == nil {
+	if msg == nil || bot == nil || bot.User == nil {
 		return false
 	}
 
@@ -108,59 +86,45 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 	return false
 }
 
+// IsForwardMentionsMe checks that the input forwarded message mentions the
+// current bot.
 func (bot *Bot) IsForwardMentionsMe(msg *Message) bool {
 	return msg.IsForward() && bot.IsMessageMentionsMe(msg)
 }
 
+// IsReplyMentionsMe checks that the input message mentions the current bot.
 func (bot *Bot) IsReplyMentionsMe(msg *Message) bool {
 	return msg.IsReply() && bot.IsMessageMentionsMe(msg.ReplyToMessage)
 }
 
+// IsMessageToMe checks that the input message is addressed to the current bot.
 func (bot *Bot) IsMessageToMe(msg *Message) bool {
-	if msg == nil {
+	if msg == nil || msg.Chat == nil {
 		return false
 	}
 
-	if msg.Chat == nil {
-		return false
-	}
-
-	if msg.Chat.IsPrivate() ||
-		bot.IsCommandToMe(msg) ||
-		bot.IsReplyToMe(msg) ||
-		bot.IsMessageMentionsMe(msg) {
+	if msg.Chat.IsPrivate() || bot.IsCommandToMe(msg) || bot.IsReplyToMe(msg) || bot.IsMessageMentionsMe(msg) {
 		return true
 	}
 
 	return false
 }
 
+// NewFileURL creates a url.URL to file with path getted from GetFile method.
 func (bot *Bot) NewFileURL(filePath string) *url.URL {
-	if bot == nil {
+	if bot == nil || bot.AccessToken == "" || filePath == "" {
 		return nil
 	}
 
-	if bot.AccessToken == "" || filePath == "" {
-		return nil
-	}
+	result := defaultURI
+	result.Path = fmt.Sprint("/file/bot", bot.AccessToken, "/", filePath)
 
-	return &url.URL{
-		Scheme: "https",
-		Host:   "api.telegram.org",
-		Path:   fmt.Sprint("/file/bot", bot.AccessToken, "/", filePath),
-	}
+	return result
 }
 
-func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
-	if bot == nil {
-		return nil
-	}
-
-	if bot.User == nil {
-		return nil
-	}
-
-	if bot.User.Username == "" {
+// NewRedirectURL creates new url.URL for redirecting from one chat to another.
+func (bot *Bot) NewRedirectURL(param string, group bool) *url.URL {
+	if bot == nil || bot.User == nil || bot.User.Username == "" {
 		return nil
 	}
 
@@ -171,11 +135,11 @@ func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
 	}
 
 	q := link.Query()
+	key := "start"
 	if group {
-		q.Add("startgroup", param)
-	} else {
-		q.Add("start", param)
+		key += "group"
 	}
+	q.Add(key, param)
 
 	link.RawQuery = q.Encode()
 

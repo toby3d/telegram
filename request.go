@@ -3,7 +3,6 @@ package telegram
 import (
 	"errors"
 	"fmt"
-	"net/url"
 
 	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
@@ -11,18 +10,18 @@ import (
 )
 
 func (bot *Bot) request(dst []byte, method string) (*Response, error) {
-	requestURI := &url.URL{
-		Scheme: "https",
-		Host:   "api.telegram.org",
-		Path:   fmt.Sprint("/bot", bot.AccessToken, "/", method),
-	}
+	requestURI := defaultURI
+	requestURI.Path = fmt.Sprint("/bot", bot.AccessToken, "/", method)
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
 	req.Header.SetContentType("application/json; charset=utf-8")
 	req.Header.SetMethod("POST")
+	if dst == nil {
+		req.Header.SetMethod("GET")
+	}
 	req.Header.SetRequestURI(requestURI.String())
-	req.Header.SetUserAgent("go-telegram/3.5")
+	req.Header.SetUserAgent(fmt.Sprint("telegram/", Version))
 	req.Header.SetHost(requestURI.Hostname())
 	req.SetBody(dst)
 

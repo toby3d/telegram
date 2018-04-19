@@ -2,6 +2,8 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetChatAdministratorsParameters represents data for GetChatAdministrators
+// method.
 type GetChatAdministratorsParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

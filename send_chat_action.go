@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendChatActionParameters represents data for SendChatAction method.
 type SendChatActionParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

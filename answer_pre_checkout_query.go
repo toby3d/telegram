@@ -2,6 +2,8 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// AnswerPreCheckoutQueryParameters represents data for AnswerPreCheckoutQuery
+// method.
 type AnswerPreCheckoutQueryParameters struct {
 	// Unique identifier for the query to be answered
 	PreCheckoutQueryID string `json:"pre_checkout_query_id"`
@@ -19,6 +21,8 @@ type AnswerPreCheckoutQueryParameters struct {
 	Ok bool `json:"ok"`
 }
 
+// NewAnswerPreCheckoutQuery creates AnswerPreCheckoutQueryParameters only with
+// required parameters.
 func NewAnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool) *AnswerPreCheckoutQueryParameters {
 	return &AnswerPreCheckoutQueryParameters{
 		PreCheckoutQueryID: preCheckoutQueryID,

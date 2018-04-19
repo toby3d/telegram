@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// DeleteStickerFromSetParameters represents data for DeleteStickerFromSet method.
 type DeleteStickerFromSetParameters struct {
 	Sticker string `json:"sticker"`
 }

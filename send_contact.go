@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendContactParameters represents data for SendContact method.
 type SendContactParameters struct {
 	// Unique identifier for the target private chat
 	ChatID int64 `json:"chat_id"`
@@ -28,6 +29,7 @@ type SendContactParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewContact creates SendContactParameters only with required parameters.
 func NewContact(chatID int64, phoneNumber, firstName string) *SendContactParameters {
 	return &SendContactParameters{
 		ChatID:      chatID,

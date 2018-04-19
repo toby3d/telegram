@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetStickerSetParameters represents data for GetStickerSet method.
 type GetStickerSetParameters struct {
 	Name string `json:"name"`
 }

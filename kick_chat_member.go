@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// KickChatMemberParameters represents data for KickChatMember method.
 type KickChatMemberParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

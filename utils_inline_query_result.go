@@ -1,5 +1,7 @@
 package telegram
 
+// NewInlineQueryResultCachedAudio creates a new inline query result with cached
+// audio.
 func NewInlineQueryResultCachedAudio(resultID, fileID string) *InlineQueryResultCachedAudio {
 	return &InlineQueryResultCachedAudio{
 		Type:        TypeAudio,
@@ -8,6 +10,8 @@ func NewInlineQueryResultCachedAudio(resultID, fileID string) *InlineQueryResult
 	}
 }
 
+// NewInlineQueryResultCachedDocument creates a new inline query result with
+// cached document.
 func NewInlineQueryResultCachedDocument(resultID, fileID, title string) *InlineQueryResultCachedDocument {
 	return &InlineQueryResultCachedDocument{
 		Type:           TypeDocument,
@@ -17,6 +21,8 @@ func NewInlineQueryResultCachedDocument(resultID, fileID, title string) *InlineQ
 	}
 }
 
+// NewInlineQueryResultCachedGif creates a new inline query result with cached
+// GIF.
 func NewInlineQueryResultCachedGif(resultID, fileID string) *InlineQueryResultCachedGif {
 	return &InlineQueryResultCachedGif{
 		Type:      TypeGIF,
@@ -25,6 +31,8 @@ func NewInlineQueryResultCachedGif(resultID, fileID string) *InlineQueryResultCa
 	}
 }
 
+// NewInlineQueryResultCachedMpeg4Gif creates a new inline query result with
+// cached MPEG GIF.
 func NewInlineQueryResultCachedMpeg4Gif(resultID, fileID string) *InlineQueryResultCachedMpeg4Gif {
 	return &InlineQueryResultCachedMpeg4Gif{
 		Type:        TypeMpeg4Gif,
@@ -33,6 +41,8 @@ func NewInlineQueryResultCachedMpeg4Gif(resultID, fileID string) *InlineQueryRes
 	}
 }
 
+// NewInlineQueryResultCachedPhoto creates a new inline query result with cached
+// photo.
 func NewInlineQueryResultCachedPhoto(resultID, fileID string) *InlineQueryResultCachedPhoto {
 	return &InlineQueryResultCachedPhoto{
 		Type:        TypePhoto,
@@ -41,6 +51,8 @@ func NewInlineQueryResultCachedPhoto(resultID, fileID string) *InlineQueryResult
 	}
 }
 
+// NewInlineQueryResultCachedSticker creates a new inline query result with
+// cached sticker.
 func NewInlineQueryResultCachedSticker(resultID, fileID string) *InlineQueryResultCachedSticker {
 	return &InlineQueryResultCachedSticker{
 		Type:          TypeSticker,
@@ -49,6 +61,8 @@ func NewInlineQueryResultCachedSticker(resultID, fileID string) *InlineQueryResu
 	}
 }
 
+// NewInlineQueryResultCachedVideo creates a new inline query result with cached
+// video.
 func NewInlineQueryResultCachedVideo(resultID, fileID, title string) *InlineQueryResultCachedVideo {
 	return &InlineQueryResultCachedVideo{
 		Type:        TypeVideo,
@@ -58,6 +72,8 @@ func NewInlineQueryResultCachedVideo(resultID, fileID, title string) *InlineQuer
 	}
 }
 
+// NewInlineQueryResultCachedVoice creates a new inline query result with cached
+// voice.
 func NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQueryResultCachedVoice {
 	return &InlineQueryResultCachedVoice{
 		Type:        TypeVoice,
@@ -67,6 +83,7 @@ func NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQuer
 	}
 }
 
+// NewInlineQueryResultArticle creates a new inline query result with article.
 func NewInlineQueryResultArticle(resultID, title string, content *InputMessageContent) *InlineQueryResultArticle {
 	return &InlineQueryResultArticle{
 		Type:                TypeArticle,
@@ -76,6 +93,7 @@ func NewInlineQueryResultArticle(resultID, title string, content *InputMessageCo
 	}
 }
 
+// NewInlineQueryResultAudio creates a new inline query result with audio.
 func NewInlineQueryResultAudio(resultID, audioURL, title string) *InlineQueryResultAudio {
 	return &InlineQueryResultAudio{
 		Type:     TypeAudio,
@@ -85,6 +103,7 @@ func NewInlineQueryResultAudio(resultID, audioURL, title string) *InlineQueryRes
 	}
 }
 
+// NewInlineQueryResultContact creates a new inline query result with contact.
 func NewInlineQueryResultContact(resultID, phoneNumber, firstName string) *InlineQueryResultContact {
 	return &InlineQueryResultContact{
 		Type:        TypeContact,
@@ -94,6 +113,7 @@ func NewInlineQueryResultContact(resultID, phoneNumber, firstName string) *Inlin
 	}
 }
 
+// NewInlineQueryResultGame creates a new inline query result with game.
 func NewInlineQueryResultGame(resultID, gameShortName string) *InlineQueryResultGame {
 	return &InlineQueryResultGame{
 		Type:          TypeGame,
@@ -102,6 +122,7 @@ func NewInlineQueryResultGame(resultID, gameShortName string) *InlineQueryResult
 	}
 }
 
+// NewInlineQueryResultDocument creates a new inline query result with document.
 func NewInlineQueryResultDocument(resultID, title, documentURL, mimeType string) *InlineQueryResultDocument {
 	return &InlineQueryResultDocument{
 		Type:        TypeDocument,
@@ -112,6 +133,7 @@ func NewInlineQueryResultDocument(resultID, title, documentURL, mimeType string)
 	}
 }
 
+// NewInlineQueryResultGif creates a new inline query result with GIF.
 func NewInlineQueryResultGif(resultID, gifURL, thumbURL string) *InlineQueryResultGif {
 	return &InlineQueryResultGif{
 		Type:     TypeGIF,
@@ -121,6 +143,7 @@ func NewInlineQueryResultGif(resultID, gifURL, thumbURL string) *InlineQueryResu
 	}
 }
 
+// NewInlineQueryResultLocation creates a new inline query result with location.
 func NewInlineQueryResultLocation(resultID, title string, latitude, longitude float32) *InlineQueryResultLocation {
 	return &InlineQueryResultLocation{
 		Type:      TypeLocation,
@@ -131,6 +154,7 @@ func NewInlineQueryResultLocation(resultID, title string, latitude, longitude fl
 	}
 }
 
+// NewInlineQueryResultMpeg4Gif creates a new inline query result with MPEG GIF.
 func NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQueryResultMpeg4Gif {
 	return &InlineQueryResultMpeg4Gif{
 		Type:     TypeMpeg4Gif,
@@ -140,6 +164,7 @@ func NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQu
 	}
 }
 
+// NewInlineQueryResultPhoto creates a new inline query result with photo.
 func NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQueryResultPhoto {
 	return &InlineQueryResultPhoto{
 		Type:     TypePhoto,
@@ -149,6 +174,7 @@ func NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQuery
 	}
 }
 
+// NewInlineQueryResultVenue creates a new inline query result with venue.
 func NewInlineQueryResultVenue(resultID, title, address string, latitude, longitude float32) *InlineQueryResultVenue {
 	return &InlineQueryResultVenue{
 		Type:      TypeVenue,
@@ -160,6 +186,7 @@ func NewInlineQueryResultVenue(resultID, title, address string, latitude, longit
 	}
 }
 
+// NewInlineQueryResultVideo creates a new inline query result with video.
 func NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title string) *InlineQueryResultVideo {
 	return &InlineQueryResultVideo{
 		Type:     TypeVideo,
@@ -171,6 +198,7 @@ func NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title str
 	}
 }
 
+// NewInlineQueryResultVoice creates a new inline query result with voice.
 func NewInlineQueryResultVoice(resultID, voiceURL, title string) *InlineQueryResultVoice {
 	return &InlineQueryResultVoice{
 		Type:     TypeVoice,

@@ -7,6 +7,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// SendDocumentParameters represents data for SendDocument method.
 type SendDocumentParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
@@ -34,6 +35,7 @@ type SendDocumentParameters struct {
 	ReplyMarkup interface{} `json:"reply_markup,omitempty"`
 }
 
+// NewDocument creates SendDocumentParameters only with required parameters.
 func NewDocument(chatID int64, document interface{}) *SendDocumentParameters {
 	return &SendDocumentParameters{
 		ChatID:   chatID,
