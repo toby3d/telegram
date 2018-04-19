@@ -3,51 +3,27 @@ package telegram
 import "time"
 
 func (member *ChatMember) IsCreator() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusCreator
+	return member != nil && member.Status == StatusCreator
 }
 
 func (member *ChatMember) IsAdministrator() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusAdministrator
+	return member != nil && member.Status == StatusAdministrator
 }
 
 func (member *ChatMember) IsMember() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusMember
+	return member != nil && member.Status == StatusMember
 }
 
 func (member *ChatMember) IsRestricted() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusRestricted
+	return member != nil && member.Status == StatusRestricted
 }
 
 func (member *ChatMember) IsLeft() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusLeft
+	return member != nil && member.Status == StatusLeft
 }
 
 func (member *ChatMember) IsKicked() bool {
-	if member == nil {
-		return false
-	}
-
-	return member.Status == StatusKicked
+	return member != nil && member.Status == StatusKicked
 }
 
 func (member *ChatMember) UntilTime() time.Time {

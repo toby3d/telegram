@@ -6,15 +6,7 @@ import (
 )
 
 func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
-	if entity == nil {
-		return nil
-	}
-
-	if !entity.IsURL() {
-		return nil
-	}
-
-	if messageText == "" {
+	if entity == nil || !entity.IsURL() || messageText == "" {
 		return nil
 	}
 
@@ -37,91 +29,47 @@ func (entity *MessageEntity) ParseURL(messageText string) *url.URL {
 }
 
 func (entity *MessageEntity) IsBold() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityBold
+	return entity != nil && entity.Type == EntityBold
 }
 
 func (entity *MessageEntity) IsBotCommand() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityBotCommand
+	return entity != nil && entity.Type == EntityBotCommand
 }
 
 func (entity *MessageEntity) IsCode() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityCode
+	return entity != nil && entity.Type == EntityCode
 }
 
 func (entity *MessageEntity) IsEmail() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityEmail
+	return entity != nil && entity.Type == EntityEmail
 }
 
 func (entity *MessageEntity) IsHashtag() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityHashtag
+	return entity != nil && entity.Type == EntityHashtag
 }
 
 func (entity *MessageEntity) IsItalic() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityItalic
+	return entity != nil && entity.Type == EntityItalic
 }
 
 func (entity *MessageEntity) IsMention() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityMention
+	return entity != nil && entity.Type == EntityMention
 }
 
 func (entity *MessageEntity) IsPre() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityPre
+	return entity != nil && entity.Type == EntityPre
 }
 
 func (entity *MessageEntity) IsTextLink() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityTextLink
+	return entity != nil && entity.Type == EntityTextLink
 }
 
 func (entity *MessageEntity) IsTextMention() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityTextMention
+	return entity != nil && entity.Type == EntityTextMention
 }
 
 func (entity *MessageEntity) IsURL() bool {
-	if entity == nil {
-		return false
-	}
-
-	return entity.Type == EntityURL
+	return entity != nil && entity.Type == EntityURL
 }
 
 func (entity *MessageEntity) TextLink() *url.URL {

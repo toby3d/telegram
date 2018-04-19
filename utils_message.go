@@ -5,26 +5,21 @@ import (
 	"time"
 )
 
-func (msg *Message) IsCommand(command string) bool {
-	if !msg.IsText() {
-		return false
-	}
-
-	if !msg.HasEntities() {
+func (msg *Message) IsCommand() bool {
+	if !msg.IsText() || !msg.HasEntities() {
 		return false
 	}
 
 	entity := msg.Entities[0]
-	isBotCommand := entity.IsBotCommand() && entity.Offset == 0
-	if command != "" {
-		return isBotCommand && strings.EqualFold(msg.Command(), command)
-	}
+	return entity.IsBotCommand() && entity.Offset == 0
+}
 
-	return isBotCommand
+func (msg *Message) IsCommandEqual(command string) bool {
+	return msg.IsCommand() && strings.EqualFold(msg.Command(), command)
 }
 
 func (msg *Message) Command() string {
-	if !msg.IsCommand("") {
+	if !msg.IsCommand() {
 		return ""
 	}
 
@@ -32,7 +27,7 @@ func (msg *Message) Command() string {
 }
 
 func (msg *Message) RawCommand() string {
-	if !msg.IsCommand("") {
+	if !msg.IsCommand() {
 		return ""
 	}
 
@@ -40,7 +35,7 @@ func (msg *Message) RawCommand() string {
 }
 
 func (msg *Message) HasCommandArgument() bool {
-	if !msg.IsCommand("") {
+	if !msg.IsCommand() {
 		return false
 	}
 
@@ -61,19 +56,11 @@ func (msg *Message) CommandArgument() string {
 }
 
 func (msg *Message) IsReply() bool {
-	if msg == nil {
-		return false
-	}
-
-	return msg.ReplyToMessage != nil
+	return msg != nil && msg.ReplyToMessage != nil
 }
 
 func (msg *Message) IsForward() bool {
-	if msg == nil {
-		return false
-	}
-
-	return msg.ForwardFrom != nil
+	return msg != nil && msg.ForwardFrom != nil
 }
 
 func (msg *Message) Time() time.Time {
@@ -94,11 +81,7 @@ func (msg *Message) ForwardTime() time.Time {
 
 func (msg *Message) EditTime() time.Time {
 	var t time.Time
-	if msg == nil {
-		return t
-	}
-
-	if !msg.HasBeenEdited() {
+	if msg == nil || !msg.HasBeenEdited() {
 		return t
 	}
 
@@ -106,19 +89,11 @@ func (msg *Message) EditTime() time.Time {
 }
 
 func (msg *Message) HasBeenEdited() bool {
-	if msg == nil {
-		return false
-	}
-
-	return msg.EditDate > 0
+	return msg != nil && msg.EditDate > 0
 }
 
 func (msg *Message) IsText() bool {
-	if msg == nil {
-		return false
-	}
-
-	return msg.Text != ""
+	return msg != nil && msg.Text != ""
 }
 
 func (msg *Message) IsAudio() bool {
@@ -250,9 +225,5 @@ func (msg *Message) HasCaption() bool {
 }
 
 func (msg *Message) HasAuthorSignature() bool {
-	if msg == nil {
-		return false
-	}
-
-	return msg.AuthorSignature != ""
+	return msg != nil && msg.AuthorSignature != ""
 }

@@ -3,59 +3,31 @@ package telegram
 import "fmt"
 
 func (chat *Chat) IsPrivate() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.Type == ChatPrivate
+	return chat != nil && chat.Type == ChatPrivate
 }
 
 func (chat *Chat) IsGroup() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.Type == ChatGroup
+	return chat != nil && chat.Type == ChatGroup
 }
 
 func (chat *Chat) IsSuperGroup() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.Type == ChatSuperGroup
+	return chat != nil && chat.Type == ChatSuperGroup
 }
 
 func (chat *Chat) IsChannel() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.Type == ChatChannel
+	return chat != nil && chat.Type == ChatChannel
 }
 
 func (chat *Chat) HasPinnedMessage() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.PinnedMessage != nil
+	return chat != nil && chat.PinnedMessage != nil
 }
 
 func (chat *Chat) HasStickerSet() bool {
-	if chat == nil {
-		return false
-	}
-
-	return chat.StickerSetName != ""
+	return chat != nil && chat.StickerSetName != ""
 }
 
 func (chat *Chat) StickerSet(bot *Bot) *StickerSet {
-	if !chat.HasStickerSet() {
-		return nil
-	}
-
-	if bot == nil {
+	if !chat.HasStickerSet() || bot == nil {
 		return nil
 	}
 

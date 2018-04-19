@@ -13,54 +13,27 @@ type Bot struct {
 
 func New(accessToken string) (*Bot, error) {
 	var err error
-	bot := &Bot{AccessToken: accessToken}
+	bot := new(Bot)
+	bot.AccessToken = accessToken
 
 	bot.User, err = bot.GetMe()
 	return bot, err
 }
 
 func (bot *Bot) IsMessageFromMe(msg *Message) bool {
-	if msg == nil || bot == nil {
-		return false
-	}
-
-	if msg.From == nil || bot.User == nil {
-		return false
-	}
-
-	return msg.From.ID == bot.ID
+	return msg != nil && bot != nil && msg.From != nil && bot.User != nil && msg.From.ID == bot.ID
 }
 
 func (bot *Bot) IsForwardFromMe(msg *Message) bool {
-	if !msg.IsForward() {
-		return false
-	}
-
-	if bot == nil {
-		return false
-	}
-
-	if bot.User == nil {
-		return false
-	}
-
-	return msg.ForwardFrom.ID == bot.ID
+	return msg.IsForward() && bot != nil && bot.User != nil && msg.ForwardFrom.ID == bot.ID
 }
 
 func (bot *Bot) IsReplyToMe(msg *Message) bool {
-	if msg.Chat.IsPrivate() {
-		return true
-	}
-
-	if !msg.IsReply() {
-		return false
-	}
-
-	return bot.IsMessageFromMe(msg.ReplyToMessage)
+	return msg.Chat.IsPrivate() || (msg.IsReply() && bot.IsMessageFromMe(msg.ReplyToMessage))
 }
 
 func (bot *Bot) IsCommandToMe(msg *Message) bool {
-	if !msg.IsCommand("") {
+	if !msg.IsCommand() {
 		return false
 	}
 
@@ -77,11 +50,7 @@ func (bot *Bot) IsCommandToMe(msg *Message) bool {
 }
 
 func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
-	if msg == nil || bot == nil {
-		return false
-	}
-
-	if bot.User == nil {
+	if msg == nil || bot == nil || bot.User == nil {
 		return false
 	}
 
@@ -117,18 +86,11 @@ func (bot *Bot) IsReplyMentionsMe(msg *Message) bool {
 }
 
 func (bot *Bot) IsMessageToMe(msg *Message) bool {
-	if msg == nil {
+	if msg == nil || msg.Chat == nil {
 		return false
 	}
 
-	if msg.Chat == nil {
-		return false
-	}
-
-	if msg.Chat.IsPrivate() ||
-		bot.IsCommandToMe(msg) ||
-		bot.IsReplyToMe(msg) ||
-		bot.IsMessageMentionsMe(msg) {
+	if msg.Chat.IsPrivate() || bot.IsCommandToMe(msg) || bot.IsReplyToMe(msg) || bot.IsMessageMentionsMe(msg) {
 		return true
 	}
 
@@ -136,11 +98,7 @@ func (bot *Bot) IsMessageToMe(msg *Message) bool {
 }
 
 func (bot *Bot) NewFileURL(filePath string) *url.URL {
-	if bot == nil {
-		return nil
-	}
-
-	if bot.AccessToken == "" || filePath == "" {
+	if bot == nil || bot.AccessToken == "" || filePath == "" {
 		return nil
 	}
 
@@ -151,16 +109,8 @@ func (bot *Bot) NewFileURL(filePath string) *url.URL {
 	}
 }
 
-func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
-	if bot == nil {
-		return nil
-	}
-
-	if bot.User == nil {
-		return nil
-	}
-
-	if bot.User.Username == "" {
+func (bot *Bot) NewRedirectURL(param string, group bool) *url.URL {
+	if bot == nil || bot.User == nil || bot.User.Username == "" {
 		return nil
 	}
 
@@ -171,11 +121,11 @@ func (bot *Bot) NewRedirectURL(group bool, param string) *url.URL {
 	}
 
 	q := link.Query()
+	key := "start"
 	if group {
-		q.Add("startgroup", param)
-	} else {
-		q.Add("start", param)
+		key += "group"
 	}
+	q.Add(key, param)
 
 	link.RawQuery = q.Encode()
 
