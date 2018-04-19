@@ -144,3 +144,29 @@ func (upd *Update) IsShippingQuery() bool {
 func (upd *Update) IsPreCheckoutQuery() bool {
 	return upd != nil && upd.PreCheckoutQuery != nil
 }
+
+// Type return update type for current update.
+func (upd *Update) Type() string {
+	switch {
+	case upd.IsCallbackQuery():
+		return UpdateCallbackQuery
+	case upd.IsChannelPost():
+		return UpdateChannelPost
+	case upd.IsChosenInlineResult():
+		return UpdateChosenInlineResult
+	case upd.IsEditedChannelPost():
+		return UpdateEditedChannelPost
+	case upd.IsEditedMessage():
+		return UpdateEditedMessage
+	case upd.IsInlineQuery():
+		return UpdateInlineQuery
+	case upd.IsMessage():
+		return UpdateMessage
+	case upd.IsPreCheckoutQuery():
+		return UpdatePreCheckoutQuery
+	case upd.IsShippingQuery():
+		return UpdateShippingQuery
+	default:
+		return ""
+	}
+}
