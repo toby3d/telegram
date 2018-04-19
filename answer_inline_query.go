@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// AnswerInlineQueryParameters represents data for AnswerInlineQuery method.
 type AnswerInlineQueryParameters struct {
 	// Unique identifier for the answered query
 	InlineQueryID string `json:"inline_query_id"`
@@ -35,6 +36,8 @@ type AnswerInlineQueryParameters struct {
 	IsPersonal bool `json:"is_personal,omitempty"`
 }
 
+// NewAnswerInlineQuery creates AnswerInlineQueryParameters only with required
+// parameters.
 func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerInlineQueryParameters {
 	return &AnswerInlineQueryParameters{
 		InlineQueryID: inlineQueryID,

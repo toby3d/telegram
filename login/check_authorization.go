@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// ErrUserNotDefined describes error of an unassigned structure of user
 var ErrUserNotDefined = errors.New("user is not defined")
 
 // CheckAuthorization verify the authentication and the integrity of the data

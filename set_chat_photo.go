@@ -7,6 +7,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// SetChatPhotoParameters represents data for SetChatPhoto method.
 type SetChatPhotoParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

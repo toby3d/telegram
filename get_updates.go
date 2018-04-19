@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetUpdatesParameters represents data for GetUpdates method.
 type GetUpdatesParameters struct {
 	// Identifier of the first update to be returned. Must be greater by one than
 	// the highest among the identifiers of previously received updates. By

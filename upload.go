@@ -14,6 +14,7 @@ import (
 	http "github.com/valyala/fasthttp"
 )
 
+// ErrBadFileType describes error of the unsupported file data type for uploading
 var ErrBadFileType = errors.New("bad file type")
 
 /*
@@ -23,8 +24,10 @@ media, etc.):
 1. If the file is already stored somewhere on the Telegram servers, you don't need to reupload it:
 each file object has a file_id field, simply pass this file_id as a parameter instead of uploading.
 There are no limits for files sent this way.
+
 2. Provide Telegram with an *url.URL for the file to be sent. Telegram will download and send the
 file. 5 MB max size for photos and 20 MB max for other types of content.
+
 3. Post the file using multipart/form-data in the usual way that files are uploaded via the
 browser. Use []byte or io.Reader for this. 10 MB max size for photos, 50 MB for other files.
 

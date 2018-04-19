@@ -2,6 +2,8 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// EditMessageLiveLocationParameters represents data for EditMessageLiveLocation
+// method.
 type EditMessageLiveLocationParameters struct {
 	// Required if inline_message_id is not specified. Unique identifier for the
 	// target chat or username of the target channel (in the format
@@ -26,6 +28,8 @@ type EditMessageLiveLocationParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewLiveLocation creates EditMessageLiveLocationParameters only with required
+// parameters.
 func NewLiveLocation(latitude, longitude float32) *EditMessageLiveLocationParameters {
 	return &EditMessageLiveLocationParameters{
 		Latitude:  latitude,

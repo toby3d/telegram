@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// EditMessageReplyMarkupParameters represents data for EditMessageReplyMarkup method.
 type EditMessageReplyMarkupParameters struct {
 	// Required if inline_message_id is not specified. Unique identifier for the
 	// target chat or username of the target channel (in the format

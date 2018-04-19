@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// DeleteChatPhotoParameters represents data for DeleteChatPhoto method.
 type DeleteChatPhotoParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`

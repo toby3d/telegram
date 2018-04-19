@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendInvoiceParameters represents data for SendInvoice method.
 type SendInvoiceParameters struct {
 	// Unique identifier for the target private chat
 	ChatID int64 `json:"chat_id"`
@@ -78,6 +79,7 @@ type SendInvoiceParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewInvoice creates SendInvoiceParameters only with required parameters.
 func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices ...LabeledPrice) *SendInvoiceParameters {
 	return &SendInvoiceParameters{
 		ChatID:         chatID,

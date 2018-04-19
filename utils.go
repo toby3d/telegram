@@ -5,10 +5,12 @@ import (
 	"strconv"
 )
 
+// NewForceReply calls the response interface to the message.
 func NewForceReply() *ForceReply {
 	return &ForceReply{ForceReply: true}
 }
 
+// NewInlineMentionURL creates a url.URL for the mention user without username.
 func NewInlineMentionURL(userID int) *url.URL {
 	link := &url.URL{
 		Scheme: SchemeTelegram,

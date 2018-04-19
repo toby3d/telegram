@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// SendLocationParameters represents data for SendLocation method.
 type SendLocationParameters struct {
 	// Unique identifier for the target private chat
 	ChatID int64 `json:"chat_id"`
@@ -29,6 +30,7 @@ type SendLocationParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewLocation creates SendLocationParameters only with required parameters.
 func NewLocation(chatID int64, latitude, longitude float32) *SendLocationParameters {
 	return &SendLocationParameters{
 		ChatID:    chatID,

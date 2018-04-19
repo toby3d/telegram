@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// EditMessageTextParameters represents data for EditMessageText method.
 type EditMessageTextParameters struct {
 	// Required if inline_message_id is not specified. Unique identifier for the
 	// target chat or username of the target channel (in the format
@@ -30,6 +31,7 @@ type EditMessageTextParameters struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
+// NewMessageText creates EditMessageTextParameters only with required parameters.
 func NewMessageText(text string) *EditMessageTextParameters {
 	return &EditMessageTextParameters{
 		Text: text,

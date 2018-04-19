@@ -2,6 +2,7 @@ package telegram
 
 import json "github.com/pquerna/ffjson/ffjson"
 
+// GetGameHighScoresParameters represents data for GetGameHighScores method.
 type GetGameHighScoresParameters struct {
 	// Target user id
 	UserID int `json:"user_id"`
@@ -19,6 +20,7 @@ type GetGameHighScoresParameters struct {
 	InlineMessageID string `json:"inline_message_id,omitempty"`
 }
 
+// NewGameHighScores creates GetGameHighScoresParameters only with required parameters.
 func NewGameHighScores(userID int) *GetGameHighScoresParameters {
 	return &GetGameHighScoresParameters{
 		UserID: userID,
