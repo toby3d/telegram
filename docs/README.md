@@ -2,6 +2,7 @@
 > This package is in active development and **not recommended for use in production for now**. Use [go dep](https://golang.github.io/dep/) to freeze the state of the package in your projects!
 
 [![License](https://img.shields.io/npm/l/express.svg?maxAge=2592000)](LICENSE.md)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftoby3d%2Ftelegram.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftoby3d%2Ftelegram?ref=badge_shield)
 [![Build Status](https://travis-ci.org/toby3d/telegram.svg)](https://travis-ci.org/toby3d/telegram)
 [![GoDoc](https://godoc.org/github.com/toby3d/telegram?status.svg)](https://godoc.org/github.com/toby3d/telegram)
 [![Go Report](https://goreportcard.com/badge/github.com/toby3d/telegram)](https://goreportcard.com/report/github.com/toby3d/telegram)
@@ -18,3 +19,6 @@ Import it in your code:
 ## Need help?
 - [Open new issue](https://github.com/toby3d/telegram/issues/new)
 - [Discuss in Discord](https://discord.gg/dCWkgSS)
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftoby3d%2Ftelegram.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftoby3d%2Ftelegram?ref=badge_large)
