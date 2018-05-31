@@ -35,7 +35,7 @@ type GetUpdatesParameters struct {
 	AllowedUpdates []string `json:"allowed_updates,omitempty"`
 }
 
-// GetUpdates receive incoming updates using long polling (wiki). An Array of
+// GetUpdates receive incoming updates using long polling. An Array of
 // Update objects is returned.
 func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 	dst, err := json.Marshal(params)
