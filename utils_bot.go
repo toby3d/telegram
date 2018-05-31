@@ -4,18 +4,28 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	http "github.com/valyala/fasthttp"
 )
 
-// Bot represents a bot user with access token getted from @BotFather.
+// Bot represents a bot user with access token getted from @BotFather and
+// fasthttp.Client for requests.
 type Bot struct {
 	AccessToken string
+	Client      *http.Client
 	*User
 }
 
-// New creates a new Bot structure based on the input access token.
+// SetClient allow set custom fasthttp.Client (for proxy traffic, for example).
+func (bot *Bot) SetClient(newClient *http.Client) {
+	bot.Client = newClient
+}
+
+// New creates a new default Bot structure based on the input access token.
 func New(accessToken string) (*Bot, error) {
 	var err error
 	bot := new(Bot)
+	bot.SetClient(defaultClient)
 	bot.AccessToken = accessToken
 
 	bot.User, err = bot.GetMe()

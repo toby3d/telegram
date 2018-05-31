@@ -1,8 +1,15 @@
 package telegram
 
-import "net/url"
+import (
+	"net/url"
 
-var defaultURI = &url.URL{
-	Scheme: "https",
-	Host:   "api.telegram.org",
-}
+	http "github.com/valyala/fasthttp"
+)
+
+var (
+	defaultClient = new(http.Client)
+	defaultURI    = &url.URL{
+		Scheme: "https",
+		Host:   "api.telegram.org",
+	}
+)

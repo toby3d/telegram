@@ -10,6 +10,10 @@ import (
 )
 
 func (bot *Bot) request(dst []byte, method string) (*Response, error) {
+	if bot.Client == nil {
+		bot.SetClient(defaultClient)
+	}
+
 	requestURI := defaultURI
 	requestURI.Path = fmt.Sprint("/bot", bot.AccessToken, "/", method)
 
@@ -27,7 +31,8 @@ func (bot *Bot) request(dst []byte, method string) (*Response, error) {
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
-	err := http.Do(req, resp)
+
+	err := bot.Client.Do(req, resp)
 	log.Ln("Request:")
 	log.D(req)
 	log.Ln("Response:")
