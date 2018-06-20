@@ -25,6 +25,16 @@ const (
 	ChatSuperGroup = "supergroup"
 )
 
+// Command... represents global commands which should be supported by any bot.
+// You can user IsCommandEqual method of Message for checking.
+//
+// See: https://core.telegram.org/bots#global-commands
+const (
+	CommandStart    = "start"
+	CommandHelp     = "help"
+	CommandSettings = "settings"
+)
+
 // Entity... represents available and supported entity types
 const (
 	EntityBold        = "bold"
@@ -105,8 +115,8 @@ const (
 
 // Mode... represents available and supported parsing modes of messages
 const (
-	ModeHTML     = "html"
-	ModeMarkdown = "markdown"
+	StyleHTML     = "html"
+	StyleMarkdown = "markdown"
 )
 
 // Mime... represents available and supported MIME types of data
