@@ -3,12 +3,12 @@ package test
 import (
 	"testing"
 
-	"github.com/toby3d/telegram"
+	"gitlab.com/toby3d/telegram"
 )
 
 func TestSetWebhook(t *testing.T) {
 	ok, err := bot.SetWebhook(
-		telegram.NewWebhook("https://toby3d.github.io/telegram", nil),
+		telegram.NewWebhook("https://toby3d.ru/telegram", nil),
 	)
 	if err != nil {
 		t.Error(err.Error())

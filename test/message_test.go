@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/toby3d/telegram"
+	"gitlab.com/toby3d/telegram"
 )
 
 const replyToMessageID = 35

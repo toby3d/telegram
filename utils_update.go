@@ -3,6 +3,7 @@ package telegram
 import (
 	"bytes"
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/kirillDanshin/dlog"
@@ -49,17 +50,17 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 
 // NewWebhookChannel creates channel for receive incoming updates via an outgoing
 // webhook.
-func (bot *Bot) NewWebhookChannel(params *SetWebhookParameters, certFile, keyFile, set, listen, serve string) (updates UpdatesChannel) {
+func (bot *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters, certFile, keyFile, serveAddr string) (updates UpdatesChannel) {
 	if params == nil {
 		params = &SetWebhookParameters{
-			URL:            set,
+			URL:            setURL.String(),
 			MaxConnections: 40,
 		}
 	}
 
 	var err error
 	channel := make(chan Update, 100)
-	requiredPath := []byte(listen)
+	requiredPath := []byte(setURL.Path)
 	dlog.Ln("requiredPath:", string(requiredPath))
 	handleFunc := func(ctx *http.RequestCtx) {
 		dlog.Ln("Request path:", string(ctx.Path()))
@@ -80,10 +81,10 @@ func (bot *Bot) NewWebhookChannel(params *SetWebhookParameters, certFile, keyFil
 	go func() {
 		if certFile != "" && keyFile != "" {
 			dlog.Ln("Creating TLS router...")
-			err = http.ListenAndServeTLS(serve, certFile, keyFile, handleFunc)
+			err = http.ListenAndServeTLS(serveAddr, certFile, keyFile, handleFunc)
 		} else {
 			dlog.Ln("Creating simple router...")
-			err = http.ListenAndServe(serve, handleFunc)
+			err = http.ListenAndServe(serveAddr, handleFunc)
 		}
 		if err != nil {
 			log.Fatalln(err.Error())

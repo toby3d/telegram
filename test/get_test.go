@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/toby3d/telegram"
+	"gitlab.com/toby3d/telegram"
 )
 
 func TestGetMe(t *testing.T) {
