@@ -38,7 +38,8 @@ func NewMarkdownURL(text string, link *url.URL) string {
 }
 
 func NewMarkdownMention(text string, id int) string {
-	return fmt.Sprint("[", text, "](tg://user?id=", id, ")")
+	link := NewInlineMentionURL(id)
+	return NewMarkdownURL(text, link)
 }
 
 func NewMarkdownCode(text string) string {
@@ -62,7 +63,8 @@ func NewHtmlURL(text string, link *url.URL) string {
 }
 
 func NewHtmlMention(text string, id int) string {
-	return fmt.Sprint(`<a href="tg://user?id=`, id, `">`, text, `</a>`)
+	link := NewInlineMentionURL(id)
+	return NewHtmlURL(text, link)
 }
 
 func NewHtmlCode(text string) string {
