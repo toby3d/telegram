@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/toby3d/telegram"
+	"gitlab.com/toby3d/telegram"
 )
 
 const accessToken = "153667468:AAHlSHlMqSt1f_uFmVRJbm5gntu2HI4WW8I"
