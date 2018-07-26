@@ -243,7 +243,9 @@ type (
 		// Message is a general file, information about the file
 		Document *Document `json:"document,omitempty"`
 
-		// Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
+		// Message is an animation, information about the animation. For backward
+		// compatibility, when this field is set, the document field will also be
+		// set
 		Animation *Animation `json:"animation,omitempty"`
 
 		// Message is a game, information about the game.
