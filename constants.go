@@ -109,6 +109,7 @@ const (
 	MethodSetChatStickerSet       = "setChatStickerSet"
 	MethodSetChatTitle            = "setChatTitle"
 	MethodSetGameScore            = "setGameScore"
+	MethodSetPassportDataErrors   = "setPassportDataErrors"
 	MethodSetStickerPositionInSet = "setStickerPositionInSet"
 	MethodSetWebhook              = "setWebhook"
 	MethodStopMessageLiveLocation = "stopMessageLiveLocation"
