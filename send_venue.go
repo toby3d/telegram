@@ -22,6 +22,11 @@ type SendVenueParameters struct {
 	// Foursquare identifier of the venue
 	FoursquareID string `json:"foursquare_id,omitempty"`
 
+	// Foursquare type of the venue, if known. (For example,
+	// "arts_entertainment/default", "arts_entertainment/aquarium" or
+	// "food/icecream".)
+	FoursquareType string `json:"foursquare_type,omitempty"`
+
 	// Sends the message silently. Users will receive a notification with no
 	// sound.
 	DisableNotification bool `json:"disable_notification,omitempty"`

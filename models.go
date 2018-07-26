@@ -243,6 +243,9 @@ type (
 		// Message is a general file, information about the file
 		Document *Document `json:"document,omitempty"`
 
+		// Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
+		Animation *Animation `json:"animation,omitempty"`
+
 		// Message is a game, information about the game.
 		Game *Game `json:"game,omitempty"`
 
@@ -363,6 +366,9 @@ type (
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
+
+		// Thumbnail of the album cover to which the music file belongs
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 	}
 
 	// Document represents a general file (as opposed to photos, voice messages
@@ -455,6 +461,9 @@ type (
 
 		// Contact's user identifier in Telegram
 		UserID int `json:"user_id,omitempty"`
+
+		// Additional data about the contact in the form of a vCard
+		VCard string `json:"vcard,omitempty"`
 	}
 
 	// Location represents a point on the map.
@@ -479,6 +488,11 @@ type (
 
 		// Foursquare identifier of the venue
 		FoursquareID string `json:"foursquare_id,omitempty"`
+
+		// Foursquare type of the venue. (For example,
+		// "arts_entertainment/default", "arts_entertainment/aquarium" or
+		// "food/icecream".)
+		FoursquareType string `json:"foursquare_type,omitempty"`
 	}
 
 	// UserProfilePhotos represent a user's profile pictures.
@@ -839,6 +853,112 @@ type (
 
 		// Pass true, if the uploaded video is suitable for streaming
 		SupportsStreaming bool `json:"supports_streaming,omitempty"`
+	}
+
+	// InputMediaAnimation represents an animation file (GIF or H.264/MPEG-4 AVC
+	// video without sound) to be sent.
+	InputMediaAnimation struct {
+		// Type of the result, must be animation
+		Type string `json:"type"`
+
+		// File to send. Pass a file_id to send a file that exists on the
+		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
+		// a file from the Internet, or pass "attach://<file_attach_name>" to
+		// upload a new one using multipart/form-data under <file_attach_name
+		// name.
+		Media string `json:"media"`
+
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
+		// less than 200 kB in size. A thumbnail‘s width and height should not
+		// exceed 90. Ignored if the file is not uploaded using
+		// multipart/form-data. Thumbnails can’t be reused and can be only
+		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
+		// if the thumbnail was uploaded using multipart/form-data under
+		// <file_attach_name>.
+		Thumb InputFile `json:"thumb,omitempty"`
+
+		// Caption of the animation to be sent, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
+		// Animation width
+		Width int `json:"width,omitempty"`
+
+		// Animation height
+		Height int `json:"height,omitempty"`
+
+		// Animation duration
+		Duration int `json:"duration,omitempty"`
+	}
+
+	// InputMediaAudio represents an audio file to be treated as music to be sent.
+	InputMediaAudio struct {
+		// Type of the result, must be audio
+		Type string `json:"type"`
+
+		// File to send. Pass a file_id to send a file that exists on the
+		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
+		// a file from the Internet, or pass "attach://<file_attach_name>" to
+		// upload a new one using multipart/form-data under <file_attach_name>
+		// name.
+		Media string `json:"media"`
+
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
+		// less than 200 kB in size. A thumbnail‘s width and height should not
+		// exceed 90. Ignored if the file is not uploaded using
+		// multipart/form-data. Thumbnails can’t be reused and can be only
+		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
+		// if the thumbnail was uploaded using multipart/form-data under
+		// <file_attach_name>.
+		Thumb InputFile `json:"thumb,omitempty"`
+
+		// Caption of the audio to be sent, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
+
+		// Duration of the audio in seconds
+		Duration int `json:"duration,omitempty"`
+
+		// Performer of the audio
+		Performer string `json:"performer,omitempty"`
+
+		// Title of the audio
+		Title string `json:"title,omitempty"`
+	}
+
+	// InputMediaDocument represents a general file to be sent.
+	InputMediaDocument struct {
+		// Type of the result, must be document
+		Type string `json:"type"`
+
+		// File to send. Pass a file_id to send a file that exists on the
+		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
+		// a file from the Internet, or pass "attach://<file_attach_name>" to
+		// upload a new one using multipart/form-data under <file_attach_name>
+		// name.
+		Media string `json:"media"`
+
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
+		// less than 200 kB in size. A thumbnail‘s width and height should not
+		// exceed 90. Ignored if the file is not uploaded using
+		// multipart/form-data. Thumbnails can’t be reused and can be only
+		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
+		// if the thumbnail was uploaded using multipart/form-data under
+		// <file_attach_name>.
+		Thumb InputFile `json:"thumb,omitempty"`
+
+		// Caption of the document to be sent, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+		// fixed-width text or inline URLs in the media caption.
+		ParseMode string `json:"parse_mode,omitempty"`
 	}
 
 	// InputFile represents the contents of a file to be uploaded. Must be posted
@@ -1344,6 +1464,11 @@ type (
 		// Foursquare identifier of the venue if known
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
+		// Foursquare type of the venue, if known. (For example,
+		// "arts_entertainment/default", "arts_entertainment/aquarium" or
+		// "food/icecream".)
+		FoursquareType string `json:"foursquare_type,omitempty"`
+
 		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
 
@@ -1385,6 +1510,9 @@ type (
 
 		// Contact's last name
 		LastName string `json:"last_name,omitempty"`
+
+		// Additional data about the contact in the form of a vCard, 0-2048 bytes
+		VCard string `json:"vcard,omitempty"`
 
 		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
@@ -1714,6 +1842,11 @@ type (
 
 		// Foursquare identifier of the venue, if known
 		FoursquareID string `json:"foursquare_id,omitempty"`
+
+		// Foursquare type of the venue, if known. (For example,
+		// "arts_entertainment/default", "arts_entertainment/aquarium" or
+		// "food/icecream".)
+		FoursquareType string `json:"foursquare_type,omitempty"`
 	}
 
 	// InputContactMessageContent represents the content of a contact message to
@@ -1727,6 +1860,9 @@ type (
 
 		// Contact's last name
 		LastName string `json:"last_name,omitempty"`
+
+		// Additional data about the contact in the form of a vCard, 0-2048 bytes
+		VCard string `json:"vcard,omitempty"`
 	}
 
 	// ChosenInlineResult represents a result of an inline query that was chosen

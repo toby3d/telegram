@@ -16,6 +16,9 @@ type SendContactParameters struct {
 	// Contact's last name
 	LastName string `json:"last_name"`
 
+	// Additional data about the contact in the form of a vCard, 0-2048 bytes
+	VCard string `json:"vcard,omitempty"`
+
 	// Sends the message silently. Users will receive a notification with no
 	// sound.
 	DisableNotification bool `json:"disable_notification,omitempty"`
