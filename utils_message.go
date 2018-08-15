@@ -280,3 +280,15 @@ func (msg *Message) HasCaption() bool {
 func (msg *Message) HasAuthorSignature() bool {
 	return msg != nil && msg.AuthorSignature != ""
 }
+
+// IsEvent checks what current message is a any chat event.
+func (m *Message) IsEvent() bool {
+	return m.IsChannelChatCreatedEvent() ||
+		m.IsDeleteChatPhotoEvent() ||
+		m.IsGroupChatCreatedEvent() ||
+		m.IsLeftChatMemberEvent() ||
+		m.IsNewChatMembersEvent() ||
+		m.IsNewChatTitleEvent() ||
+		m.IsSupergroupChatCreatedEvent() ||
+		m.IsNewChatPhotoEvent()
+}
