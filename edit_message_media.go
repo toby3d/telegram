@@ -32,8 +32,7 @@ func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (m *Message, er
 		return nil, err
 	}
 
-	resp := new(Response)
-	resp, err = b.request(src, MethodEditMessageMedia)
+	resp, err := b.request(src, MethodEditMessageMedia)
 	if err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package telegram
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"strings"
 
 	http "github.com/valyala/fasthttp"
@@ -24,12 +25,12 @@ func (b *Bot) SetClient(newClient *http.Client) {
 // New creates a new default Bot structure based on the input access token.
 func New(accessToken string) (*Bot, error) {
 	var err error
-	bot := new(Bot)
-	bot.SetClient(defaultClient)
-	bot.AccessToken = accessToken
+	b := new(Bot)
+	b.SetClient(defaultClient)
+	b.AccessToken = accessToken
 
-	bot.User, err = b.GetMe()
-	return bot, err
+	b.User, err = b.GetMe()
+	return b, err
 }
 
 // IsMessageFromMe checks that the input message is a message from the current
@@ -109,14 +110,12 @@ func (b *Bot) IsMessageMentionsMe(m *Message) bool {
 // IsForwardMentionsMe checks that the input forwarded message mentions the
 // current bot.
 func (b *Bot) IsForwardMentionsMe(m *Message) bool {
-	return m.IsForward() &&
-		b.IsMessageMentionsMe(m)
+	return m.IsForward() && b.IsMessageMentionsMe(m)
 }
 
 // IsReplyMentionsMe checks that the input message mentions the current bot.
 func (b *Bot) IsReplyMentionsMe(m *Message) bool {
-	return m.IsReply() &&
-		b.IsMessageMentionsMe(m.ReplyToMessage)
+	return m.IsReply() && b.IsMessageMentionsMe(m.ReplyToMessage)
 }
 
 // IsMessageToMe checks that the input message is addressed to the current bot.
@@ -138,13 +137,13 @@ func (b *Bot) IsMessageToMe(m *Message) bool {
 // NewFileURL creates a url.URL to file with path getted from GetFile method.
 func (b *Bot) NewFileURL(filePath string) *url.URL {
 	if b == nil ||
-		b.AccessToken == "" ||
-		filePath == "" {
+		strings.EqualFold(b.AccessToken, "") ||
+		strings.EqualFold(filePath, "") {
 		return nil
 	}
 
 	result := defaultURI
-	result.Path = fmt.Sprint("/file/bot", b.AccessToken, "/", filePath)
+	result.Path = path.Join("file", fmt.Sprint("bot", b.AccessToken), filePath)
 
 	return result
 }

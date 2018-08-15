@@ -1,10 +1,12 @@
 package telegram
 
+import "strings"
+
 // InSet checks that the current sticker in the stickers set.
 //
 // For uploaded WebP files this return false.
 func (s *Sticker) InSet() bool {
-	return s != nil && s.SetName != ""
+	return s != nil && !strings.EqualFold(s.SetName, "")
 }
 
 // Set use bot for getting parent StickerSet if SetName is present.
@@ -21,4 +23,12 @@ func (s *Sticker) Set(bot *Bot) *StickerSet {
 	}
 
 	return set
+}
+
+func (s *Sticker) HasThumb() bool {
+	return s != nil && s.Thumb != nil
+}
+
+func (s *Sticker) IsMask() bool {
+	return s != nil && s.MaskPosition != nil
 }

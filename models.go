@@ -440,7 +440,7 @@ type (
 		// Unique identifier for this file
 		FileID string `json:"file_id"`
 
-		// Video width and height as defined by sender
+		// Video width and height (diameter of the video message) as defined by sender
 		Length int `json:"length"`
 
 		// Duration of the video in seconds as defined by sender

@@ -1,25 +1,28 @@
 package telegram
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // IsPrivate checks that the current chat is a private chat with single user.
 func (c *Chat) IsPrivate() bool {
-	return c != nil && c.Type == ChatPrivate
+	return c != nil && strings.EqualFold(c.Type, ChatPrivate)
 }
 
 // IsGroup checks that the current chat is a group.
 func (c *Chat) IsGroup() bool {
-	return c != nil && c.Type == ChatGroup
+	return c != nil && strings.EqualFold(c.Type, ChatGroup)
 }
 
 // IsSuperGroup checks that the current chat is a supergroup.
 func (c *Chat) IsSuperGroup() bool {
-	return c != nil && c.Type == ChatSuperGroup
+	return c != nil && strings.EqualFold(c.Type, ChatSuperGroup)
 }
 
 // IsChannel checks that the current chat is a channel.
 func (c *Chat) IsChannel() bool {
-	return c != nil && c.Type == ChatChannel
+	return c != nil && strings.EqualFold(c.Type, ChatChannel)
 }
 
 // HasPinnedMessage checks that the current chat has a pinned message.
@@ -29,7 +32,7 @@ func (c *Chat) HasPinnedMessage() bool {
 
 // HasStickerSet checks that the current chat has a sticker set.
 func (c *Chat) HasStickerSet() bool {
-	return c != nil && c.StickerSetName != ""
+	return c != nil && !strings.EqualFold(c.StickerSetName, "")
 }
 
 // StickerSet return StickerSet structure if StickerSetName is available.
@@ -52,9 +55,27 @@ func (c *Chat) FullName() string {
 		return ""
 	}
 
-	if c.LastName != "" {
+	if c.HasLastName() {
 		return fmt.Sprintln(c.FirstName, c.LastName)
 	}
 
 	return c.FirstName
+}
+
+// HaveLastName checks what the current user has a LastName.
+func (c *Chat) HasLastName() bool {
+	return c != nil && !strings.EqualFold(c.LastName, "")
+}
+
+// HaveUsername checks what the current user has a username.
+func (c *Chat) HasUsername() bool {
+	return c != nil && !strings.EqualFold(c.Username, "")
+}
+
+func (c *Chat) HasDescription() bool {
+	return c != nil && !strings.EqualFold(c.Description, "")
+}
+
+func (c *Chat) HasInviteLink() bool {
+	return c != nil && !strings.EqualFold(c.InviteLink, "")
 }

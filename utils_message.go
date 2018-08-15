@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"sort"
 	"strings"
 	"time"
 )
@@ -12,14 +13,12 @@ func (m *Message) IsCommand() bool {
 	}
 
 	entity := m.Entities[0]
-	return entity.IsBotCommand() &&
-		entity.Offset == 0
+	return entity.IsBotCommand() && entity.Offset == 0
 }
 
 // IsCommandEqual checks that the current message is a specific bot command.
 func (m *Message) IsCommandEqual(command string) bool {
-	return m.IsCommand() &&
-		strings.EqualFold(m.Command(), command)
+	return m.IsCommand() && strings.EqualFold(m.Command(), command)
 }
 
 // Command returns identifier of the bot command without bot username, if it was
@@ -67,32 +66,32 @@ func (m *Message) CommandArgument() string {
 
 // IsReply checks that the current message is a reply on other message.
 func (m *Message) IsReply() bool {
-	return m != nil &&
-		m.ReplyToMessage != nil
+	return m != nil && m.ReplyToMessage != nil
 }
 
 // IsForward checks that the current message is a forward of other message.
 func (m *Message) IsForward() bool {
-	return m != nil &&
-		m.ForwardFrom != nil
+	return m != nil && m.ForwardFrom != nil
 }
 
 // Time parse current message Date and returns time.Time.
-func (m *Message) Time() time.Time {
+func (m *Message) Time() *time.Time {
 	if m == nil {
-		return time.Time{}
+		return nil
 	}
 
-	return time.Unix(m.Date, 0)
+	t := time.Unix(m.Date, 0)
+	return &t
 }
 
 // ForwardTime parse current message ForwardDate and returns time.Time.
-func (m *Message) ForwardTime() time.Time {
+func (m *Message) ForwardTime() *time.Time {
 	if m == nil {
-		return time.Time{}
+		return nil
 	}
 
-	return time.Unix(m.ForwardDate, 0)
+	ft := time.Unix(m.ForwardDate, 0)
+	return &ft
 }
 
 // EditTime parse current message EditDate and returns time.Time.
@@ -107,168 +106,142 @@ func (m *Message) EditTime() time.Time {
 
 // HasBeenEdited checks that the current message has been edited.
 func (m *Message) HasBeenEdited() bool {
-	return m != nil &&
-		m.EditDate > 0
+	return m != nil && m.EditDate > 0
 }
 
 // IsText checks that the current message is just a text message.
 func (m *Message) IsText() bool {
-	return m != nil &&
-		m.Text != ""
+	return m != nil && !strings.EqualFold(m.Text, "")
 }
 
 // IsAudio checks that the current message is a audio.
 func (m *Message) IsAudio() bool {
-	return !m.IsText() &&
-		m.Audio != nil
+	return !m.IsText() && m.Audio != nil
 }
 
 // IsDocument checks that the current message is a document.
 func (m *Message) IsDocument() bool {
-	return !m.IsText() &&
-		m.Document != nil
+	return !m.IsText() && m.Document != nil
 }
 
 // IsGame checks that the current message is a game.
 func (m *Message) IsGame() bool {
-	return !m.IsText() &&
-		m.Game != nil
+	return !m.IsText() && m.Game != nil
 }
 
 // IsPhoto checks that the current message is a photo.
 func (m *Message) IsPhoto() bool {
-	return !m.IsText() &&
-		len(m.Photo) > 0
+	return !m.IsText() && len(m.Photo) > 0
 }
 
 // IsSticker checks that the current message is a sticker.
 func (m *Message) IsSticker() bool {
-	return !m.IsText() &&
-		m.Sticker != nil
+	return !m.IsText() && m.Sticker != nil
 }
 
 // IsVideo checks that the current message is a video.
 func (m *Message) IsVideo() bool {
-	return !m.IsText() &&
-		m.Video != nil
+	return !m.IsText() && m.Video != nil
 }
 
 // IsVoice checks that the current message is a voice.
 func (m *Message) IsVoice() bool {
-	return !m.IsText() &&
-		m.Voice != nil
+	return !m.IsText() && m.Voice != nil
 }
 
 // IsVideoNote checks that the current message is a video note.
 func (m *Message) IsVideoNote() bool {
-	return !m.IsText() &&
-		m.VideoNote != nil
+	return !m.IsText() && m.VideoNote != nil
 }
 
 // IsContact checks that the current message is a contact.
 func (m *Message) IsContact() bool {
-	return !m.IsText() &&
-		m.Contact != nil
+	return !m.IsText() && m.Contact != nil
 }
 
 // IsLocation checks that the current message is a location.
 func (m *Message) IsLocation() bool {
-	return !m.IsText() &&
-		m.Location != nil
+	return !m.IsText() && m.Location != nil
 }
 
 // IsVenue checks that the current message is a venue.
 func (m *Message) IsVenue() bool {
-	return !m.IsText() &&
-		m.Venue != nil
+	return !m.IsText() && m.Venue != nil
 }
 
 // IsNewChatMembersEvent checks that the current message is a event of entry of
 // new members.
 func (m *Message) IsNewChatMembersEvent() bool {
-	return !m.IsText() &&
-		len(m.NewChatMembers) > 0
+	return !m.IsText() && len(m.NewChatMembers) > 0
 }
 
 // IsLeftChatMemberEvent checks that the current message is a event of members
 // exit.
 func (m *Message) IsLeftChatMemberEvent() bool {
-	return !m.IsText() &&
-		m.LeftChatMember != nil
+	return !m.IsText() && m.LeftChatMember != nil
 }
 
 // IsNewChatTitleEvent checks that the current message is a event of setting a
 // new chat title.
 func (m *Message) IsNewChatTitleEvent() bool {
-	return !m.IsText() &&
-		m.NewChatTitle != ""
+	return !m.IsText() && !strings.EqualFold(m.NewChatTitle, "")
 }
 
 // IsNewChatPhotoEvent checks that the current message is a event of setting a
 // new chat avatar.
 func (m *Message) IsNewChatPhotoEvent() bool {
-	return !m.IsText() &&
-		len(m.NewChatPhoto) > 0
+	return !m.IsText() && len(m.NewChatPhoto) > 0
 }
 
 // IsDeleteChatPhotoEvent checks that the current message is a event of deleting
 // a chat avatar.
 func (m *Message) IsDeleteChatPhotoEvent() bool {
-	return !m.IsText() &&
-		m.DeleteChatPhoto
+	return !m.IsText() && m.DeleteChatPhoto
 }
 
 // IsGroupChatCreatedEvent checks that the current message is a event of creating
 // a new group.
 func (m *Message) IsGroupChatCreatedEvent() bool {
-	return !m.IsText() &&
-		m.GroupChatCreated
+	return !m.IsText() && m.GroupChatCreated
 }
 
 // IsSupergroupChatCreatedEvent checks that the current message is a event of
 // creating a new supergroup.
 func (m *Message) IsSupergroupChatCreatedEvent() bool {
-	return !m.IsText() &&
-		m.SupergroupChatCreated
+	return !m.IsText() && m.SupergroupChatCreated
 }
 
 // IsChannelChatCreatedEvent checks that the current message is a event of
 // creating a new channel.
 func (m *Message) IsChannelChatCreatedEvent() bool {
-	return !m.IsText() &&
-		m.ChannelChatCreated
+	return !m.IsText() && m.ChannelChatCreated
 }
 
 // IsPinnedMessage checks that the current message is a event of pinning another
 // message.
 func (m *Message) IsPinnedMessage() bool {
-	return !m.IsText() &&
-		m.PinnedMessage != nil
+	return !m.IsText() && m.PinnedMessage != nil
 }
 
 // IsInvoice checks that the current message is a invoice.
 func (m *Message) IsInvoice() bool {
-	return !m.IsText() &&
-		m.Invoice != nil
+	return !m.IsText() && m.Invoice != nil
 }
 
 // IsSuccessfulPayment checks that the current message is a event of successful
 // payment.
 func (m *Message) IsSuccessfulPayment() bool {
-	return !m.IsText() &&
-		m.SuccessfulPayment != nil
+	return !m.IsText() && m.SuccessfulPayment != nil
 }
 
 // HasEntities checks that the current message contains entities.
 func (m *Message) HasEntities() bool {
-	return m.IsText() &&
-		len(m.Entities) > 0
+	return m.IsText() && len(m.Entities) > 0
 }
 
 // HasCaptionEntities checks that the current media contains entities in caption.
 func (m *Message) HasCaptionEntities() bool {
-	return !m.IsText() &&
-		len(m.CaptionEntities) > 0
+	return !m.IsText() && len(m.CaptionEntities) > 0
 }
 
 // HasMentions checks that the current message contains mentions.
@@ -303,14 +276,12 @@ func (m *Message) HasCaptionMentions() bool {
 
 // HasCaption checks that the current media has caption.
 func (m *Message) HasCaption() bool {
-	return !m.IsText() &&
-		m.Caption != ""
+	return !m.IsText() && !strings.EqualFold(m.Caption, "")
 }
 
 // HasAuthorSignature checks that the current channel post has author signature.
 func (m *Message) HasAuthorSignature() bool {
-	return m != nil &&
-		m.AuthorSignature != ""
+	return m != nil && !strings.EqualFold(m.AuthorSignature, "")
 }
 
 // IsEvent checks what current message is a any chat event.
@@ -323,4 +294,73 @@ func (m *Message) IsEvent() bool {
 		m.IsNewChatTitleEvent() ||
 		m.IsSupergroupChatCreatedEvent() ||
 		m.IsNewChatPhotoEvent()
+}
+
+func sortPhotos(ps []PhotoSize, reverse bool) []PhotoSize {
+	buf := make([]PhotoSize, len(ps))
+	copy(buf, ps)
+
+	sort.Slice(buf, func(i, j int) bool {
+		if reverse {
+			return buf[i].Width > buf[j].Width &&
+				buf[i].Height > buf[j].Height
+		}
+
+		return buf[i].Width < buf[j].Width &&
+			buf[i].Height < buf[j].Height
+	})
+
+	return buf
+}
+
+func (m *Message) BigPhoto() *PhotoSize {
+	if m == nil || !m.IsPhoto() {
+		return nil
+	}
+
+	if len(m.Photo) == 1 {
+		return &m.Photo[0]
+	}
+
+	sp := sortPhotos(m.Photo, true)
+	return &sp[0]
+}
+
+func (m *Message) SmallPhoto() *PhotoSize {
+	if m == nil || !m.IsPhoto() {
+		return nil
+	}
+
+	if len(m.Photo) == 1 {
+		return &m.Photo[0]
+	}
+
+	sp := sortPhotos(m.Photo, false)
+	return &sp[0]
+}
+
+func (m *Message) BigChatPhoto() *PhotoSize {
+	if m == nil || !m.IsNewChatPhotoEvent() {
+		return nil
+	}
+
+	if len(m.NewChatPhoto) == 1 {
+		return &m.NewChatPhoto[0]
+	}
+
+	sp := sortPhotos(m.NewChatPhoto, true)
+	return &sp[0]
+}
+
+func (m *Message) SmallChatPhoto() *PhotoSize {
+	if m == nil || !m.IsNewChatPhotoEvent() {
+		return nil
+	}
+
+	if len(m.NewChatPhoto) == 1 {
+		return &m.NewChatPhoto[0]
+	}
+
+	sp := sortPhotos(m.NewChatPhoto, false)
+	return &sp[0]
 }

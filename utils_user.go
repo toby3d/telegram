@@ -2,6 +2,7 @@ package telegram
 
 import (
 	"fmt"
+	"strings"
 
 	"golang.org/x/text/language"
 )
@@ -27,9 +28,19 @@ func (u *User) FullName() string {
 		return ""
 	}
 
-	if u.LastName != "" {
-		return fmt.Sprintln(u.FirstName, u.LastName)
+	if u.HasLastName() {
+		return fmt.Sprint(u.FirstName, " ", u.LastName)
 	}
 
 	return u.FirstName
+}
+
+// HaveLastName checks what the current user has a LastName.
+func (u *User) HasLastName() bool {
+	return u != nil && !strings.EqualFold(u.LastName, "")
+}
+
+// HaveUsername checks what the current user has a username.
+func (u *User) HasUsername() bool {
+	return u != nil && !strings.EqualFold(u.Username, "")
 }
