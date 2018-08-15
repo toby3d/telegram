@@ -169,6 +169,11 @@ func (m *Message) IsVenue() bool {
 	return !m.IsText() && m.Venue != nil
 }
 
+// IsAnimation checks that the current message is a animation.
+func (m *Message) IsAnimation() bool {
+	return !m.IsText() && m.Animation != nil
+}
+
 // IsNewChatMembersEvent checks that the current message is a event of entry of
 // new members.
 func (m *Message) IsNewChatMembersEvent() bool {
