@@ -7,12 +7,12 @@ import (
 )
 
 // Language parse LanguageCode of current user and returns language.Tag.
-func (user *User) Language() *language.Tag {
-	if user == nil {
+func (u *User) Language() *language.Tag {
+	if u == nil {
 		return nil
 	}
 
-	tag, err := language.Parse(user.LanguageCode)
+	tag, err := language.Parse(u.LanguageCode)
 	if err != nil {
 		return nil
 	}
@@ -22,14 +22,14 @@ func (user *User) Language() *language.Tag {
 
 // FullName returns the full name of user or FirstName if LastName is not
 // available.
-func (user *User) FullName() string {
-	if user == nil {
+func (u *User) FullName() string {
+	if u == nil {
 		return ""
 	}
 
-	if user.LastName != "" {
-		return fmt.Sprintln(user.FirstName, user.LastName)
+	if u.LastName != "" {
+		return fmt.Sprintln(u.FirstName, u.LastName)
 	}
 
-	return user.FirstName
+	return u.FirstName
 }

@@ -16,7 +16,7 @@ type UpdatesChannel <-chan Update
 
 // NewLongPollingChannel creates channel for receive incoming updates using long
 // polling.
-func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
+func (b *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdatesParameters{
 			Offset:  0,
@@ -28,7 +28,7 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 	channel := make(chan Update, params.Limit)
 	go func() {
 		for {
-			updates, err := bot.GetUpdates(params)
+			updates, err := b.GetUpdates(params)
 			if err != nil {
 				dlog.Ln(err.Error())
 				dlog.Ln("Failed to get updates, retrying in 3 seconds...")
@@ -50,7 +50,7 @@ func (bot *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChann
 
 // NewWebhookChannel creates channel for receive incoming updates via an outgoing
 // webhook.
-func (bot *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters, certFile, keyFile, serveAddr string) (updates UpdatesChannel) {
+func (b *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters, certFile, keyFile, serveAddr string) (updates UpdatesChannel) {
 	if params == nil {
 		params = &SetWebhookParameters{
 			URL:            setURL.String(),
@@ -91,7 +91,7 @@ func (bot *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters,
 		}
 	}()
 
-	if _, err = bot.SetWebhook(params); err != nil {
+	if _, err = b.SetWebhook(params); err != nil {
 		log.Fatalln(err.Error())
 	}
 
@@ -99,73 +99,73 @@ func (bot *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters,
 }
 
 // IsMessage checks that the current update is a message creation event.
-func (upd *Update) IsMessage() bool {
-	return upd != nil && upd.Message != nil
+func (u *Update) IsMessage() bool {
+	return u != nil && u.Message != nil
 }
 
 // IsEditedMessage checks that the current update is a editing message event.
-func (upd *Update) IsEditedMessage() bool {
-	return upd != nil && upd.EditedMessage != nil
+func (u *Update) IsEditedMessage() bool {
+	return u != nil && u.EditedMessage != nil
 }
 
 // IsChannelPost checks that the current update is a post channel creation event.
-func (upd *Update) IsChannelPost() bool {
-	return upd != nil && upd.ChannelPost != nil
+func (u *Update) IsChannelPost() bool {
+	return u != nil && u.ChannelPost != nil
 }
 
 // IsEditedChannelPost checks that the current update is a editing post channel
 // event.
-func (upd *Update) IsEditedChannelPost() bool {
-	return upd != nil && upd.EditedChannelPost != nil
+func (u *Update) IsEditedChannelPost() bool {
+	return u != nil && u.EditedChannelPost != nil
 }
 
 // IsInlineQuery checks that the current update is a inline query update.
-func (upd *Update) IsInlineQuery() bool {
-	return upd != nil && upd.InlineQuery != nil
+func (u *Update) IsInlineQuery() bool {
+	return u != nil && u.InlineQuery != nil
 }
 
 // IsChosenInlineResult checks that the current update is a chosen inline result
 // update.
-func (upd *Update) IsChosenInlineResult() bool {
-	return upd != nil && upd.ChosenInlineResult != nil
+func (u *Update) IsChosenInlineResult() bool {
+	return u != nil && u.ChosenInlineResult != nil
 }
 
 // IsCallbackQuery checks that the current update is a callback query update.
-func (upd *Update) IsCallbackQuery() bool {
-	return upd != nil && upd.CallbackQuery != nil
+func (u *Update) IsCallbackQuery() bool {
+	return u != nil && u.CallbackQuery != nil
 }
 
 // IsShippingQuery checks that the current update is a shipping query update.
-func (upd *Update) IsShippingQuery() bool {
-	return upd != nil && upd.ShippingQuery != nil
+func (u *Update) IsShippingQuery() bool {
+	return u != nil && u.ShippingQuery != nil
 }
 
 // IsPreCheckoutQuery checks that the current update is a pre checkout query
 // update.
-func (upd *Update) IsPreCheckoutQuery() bool {
-	return upd != nil && upd.PreCheckoutQuery != nil
+func (u *Update) IsPreCheckoutQuery() bool {
+	return u != nil && u.PreCheckoutQuery != nil
 }
 
 // Type return update type for current update.
-func (upd *Update) Type() string {
+func (u *Update) Type() string {
 	switch {
-	case upd.IsCallbackQuery():
+	case u.IsCallbackQuery():
 		return UpdateCallbackQuery
-	case upd.IsChannelPost():
+	case u.IsChannelPost():
 		return UpdateChannelPost
-	case upd.IsChosenInlineResult():
+	case u.IsChosenInlineResult():
 		return UpdateChosenInlineResult
-	case upd.IsEditedChannelPost():
+	case u.IsEditedChannelPost():
 		return UpdateEditedChannelPost
-	case upd.IsEditedMessage():
+	case u.IsEditedMessage():
 		return UpdateEditedMessage
-	case upd.IsInlineQuery():
+	case u.IsInlineQuery():
 		return UpdateInlineQuery
-	case upd.IsMessage():
+	case u.IsMessage():
 		return UpdateMessage
-	case upd.IsPreCheckoutQuery():
+	case u.IsPreCheckoutQuery():
 		return UpdatePreCheckoutQuery
-	case upd.IsShippingQuery():
+	case u.IsShippingQuery():
 		return UpdateShippingQuery
 	default:
 		return ""

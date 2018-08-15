@@ -11,14 +11,14 @@ import (
 // Bot represents a bot user with access token getted from @BotFather and
 // fasthttp.Client for requests.
 type Bot struct {
+	*User
 	AccessToken string
 	Client      *http.Client
-	*User
 }
 
 // SetClient allow set custom fasthttp.Client (for proxy traffic, for example).
-func (bot *Bot) SetClient(newClient *http.Client) {
-	bot.Client = newClient
+func (b *Bot) SetClient(newClient *http.Client) {
+	b.Client = newClient
 }
 
 // New creates a new default Bot structure based on the input access token.
@@ -28,66 +28,76 @@ func New(accessToken string) (*Bot, error) {
 	bot.SetClient(defaultClient)
 	bot.AccessToken = accessToken
 
-	bot.User, err = bot.GetMe()
+	bot.User, err = b.GetMe()
 	return bot, err
 }
 
 // IsMessageFromMe checks that the input message is a message from the current
 // bot.
-func (bot *Bot) IsMessageFromMe(msg *Message) bool {
-	return msg != nil && bot != nil && msg.From != nil && bot.User != nil && msg.From.ID == bot.ID
+func (b *Bot) IsMessageFromMe(m *Message) bool {
+	return m != nil &&
+		b != nil &&
+		m.From != nil &&
+		b.User != nil &&
+		m.From.ID == b.ID
 }
 
 // IsForwardFromMe checks that the input message is a forwarded message from the
 // current bot.
-func (bot *Bot) IsForwardFromMe(msg *Message) bool {
-	return msg.IsForward() && bot != nil && bot.User != nil && msg.ForwardFrom.ID == bot.ID
+func (b *Bot) IsForwardFromMe(m *Message) bool {
+	return m.IsForward() &&
+		b != nil &&
+		b.User != nil &&
+		m.ForwardFrom.ID == b.ID
 }
 
 // IsReplyToMe checks that the input message is a reply to the current bot.
-func (bot *Bot) IsReplyToMe(msg *Message) bool {
-	return msg.Chat.IsPrivate() || (msg.IsReply() && bot.IsMessageFromMe(msg.ReplyToMessage))
+func (b *Bot) IsReplyToMe(m *Message) bool {
+	return m.Chat.IsPrivate() ||
+		(m.IsReply() && b.IsMessageFromMe(m.ReplyToMessage))
 }
 
 // IsCommandToMe checks that the input message is a command for the current bot.
-func (bot *Bot) IsCommandToMe(msg *Message) bool {
-	if !msg.IsCommand() {
+func (b *Bot) IsCommandToMe(m *Message) bool {
+	if !m.IsCommand() {
 		return false
 	}
 
-	if msg.Chat.IsPrivate() {
+	if m.Chat.IsPrivate() {
 		return true
 	}
 
-	parts := strings.Split(msg.RawCommand(), "@")
+	parts := strings.Split(m.RawCommand(), "@")
 	if len(parts) <= 1 {
 		return false
 	}
 
-	return strings.ToLower(parts[1]) == strings.ToLower(bot.User.Username)
+	return strings.EqualFold(parts[1], b.User.Username)
 }
 
 // IsMessageMentionsMe checks that the input message mentions the current bot.
-func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
-	if msg == nil || bot == nil || bot.User == nil {
+func (b *Bot) IsMessageMentionsMe(m *Message) bool {
+	if m == nil ||
+		b == nil ||
+		b.User == nil {
 		return false
 	}
 
-	if bot.IsCommandToMe(msg) {
+	if b.IsCommandToMe(m) {
 		return true
 	}
 
 	var entities []MessageEntity
 	switch {
-	case msg.HasMentions():
-		entities = msg.Entities
-	case msg.HasCaptionMentions():
-		entities = msg.CaptionEntities
+	case m.HasMentions():
+		entities = m.Entities
+	case m.HasCaptionMentions():
+		entities = m.CaptionEntities
 	}
 
 	for _, entity := range entities {
 		if entity.IsMention() {
-			if bot.ID == entity.User.ID {
+			if b.ID == entity.User.ID {
 				return true
 			}
 		}
@@ -98,22 +108,27 @@ func (bot *Bot) IsMessageMentionsMe(msg *Message) bool {
 
 // IsForwardMentionsMe checks that the input forwarded message mentions the
 // current bot.
-func (bot *Bot) IsForwardMentionsMe(msg *Message) bool {
-	return msg.IsForward() && bot.IsMessageMentionsMe(msg)
+func (b *Bot) IsForwardMentionsMe(m *Message) bool {
+	return m.IsForward() &&
+		b.IsMessageMentionsMe(m)
 }
 
 // IsReplyMentionsMe checks that the input message mentions the current bot.
-func (bot *Bot) IsReplyMentionsMe(msg *Message) bool {
-	return msg.IsReply() && bot.IsMessageMentionsMe(msg.ReplyToMessage)
+func (b *Bot) IsReplyMentionsMe(m *Message) bool {
+	return m.IsReply() &&
+		b.IsMessageMentionsMe(m.ReplyToMessage)
 }
 
 // IsMessageToMe checks that the input message is addressed to the current bot.
-func (bot *Bot) IsMessageToMe(msg *Message) bool {
-	if msg == nil || msg.Chat == nil {
+func (b *Bot) IsMessageToMe(m *Message) bool {
+	if m == nil || m.Chat == nil {
 		return false
 	}
 
-	if msg.Chat.IsPrivate() || bot.IsCommandToMe(msg) || bot.IsReplyToMe(msg) || bot.IsMessageMentionsMe(msg) {
+	if m.Chat.IsPrivate() ||
+		b.IsCommandToMe(m) ||
+		b.IsReplyToMe(m) ||
+		b.IsMessageMentionsMe(m) {
 		return true
 	}
 
@@ -121,27 +136,31 @@ func (bot *Bot) IsMessageToMe(msg *Message) bool {
 }
 
 // NewFileURL creates a url.URL to file with path getted from GetFile method.
-func (bot *Bot) NewFileURL(filePath string) *url.URL {
-	if bot == nil || bot.AccessToken == "" || filePath == "" {
+func (b *Bot) NewFileURL(filePath string) *url.URL {
+	if b == nil ||
+		b.AccessToken == "" ||
+		filePath == "" {
 		return nil
 	}
 
 	result := defaultURI
-	result.Path = fmt.Sprint("/file/bot", bot.AccessToken, "/", filePath)
+	result.Path = fmt.Sprint("/file/bot", b.AccessToken, "/", filePath)
 
 	return result
 }
 
 // NewRedirectURL creates new url.URL for redirecting from one chat to another.
-func (bot *Bot) NewRedirectURL(param string, group bool) *url.URL {
-	if bot == nil || bot.User == nil || bot.User.Username == "" {
+func (b *Bot) NewRedirectURL(param string, group bool) *url.URL {
+	if b == nil ||
+		b.User == nil ||
+		b.User.Username == "" {
 		return nil
 	}
 
 	link := &url.URL{
 		Scheme: "https",
 		Host:   "t.me",
-		Path:   bot.User.Username,
+		Path:   b.User.Username,
 	}
 
 	q := link.Query()

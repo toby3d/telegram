@@ -6,248 +6,278 @@ import (
 )
 
 // IsCommand checks that the current message is a bot command.
-func (msg *Message) IsCommand() bool {
-	if !msg.IsText() || !msg.HasEntities() {
+func (m *Message) IsCommand() bool {
+	if !m.IsText() || !m.HasEntities() {
 		return false
 	}
 
-	entity := msg.Entities[0]
-	return entity.IsBotCommand() && entity.Offset == 0
+	entity := m.Entities[0]
+	return entity.IsBotCommand() &&
+		entity.Offset == 0
 }
 
 // IsCommandEqual checks that the current message is a specific bot command.
-func (msg *Message) IsCommandEqual(command string) bool {
-	return msg.IsCommand() && strings.EqualFold(msg.Command(), command)
+func (m *Message) IsCommandEqual(command string) bool {
+	return m.IsCommand() &&
+		strings.EqualFold(m.Command(), command)
 }
 
 // Command returns identifier of the bot command without bot username, if it was
 // available
-func (msg *Message) Command() string {
-	if !msg.IsCommand() {
+func (m *Message) Command() string {
+	if !m.IsCommand() {
 		return ""
 	}
 
-	return strings.Split(msg.RawCommand(), "@")[0]
+	return strings.Split(m.RawCommand(), "@")[0]
 }
 
 // RawCommand returns identifier of the bot command with bot username, if it was
 // available
-func (msg *Message) RawCommand() string {
-	if !msg.IsCommand() {
+func (m *Message) RawCommand() string {
+	if !m.IsCommand() {
 		return ""
 	}
 
-	return string([]rune(msg.Text)[1:msg.Entities[0].Length])
+	return string([]rune(m.Text)[1:m.Entities[0].Length])
 }
 
 // HasCommandArgument checks that the current command message contains argument.
-func (msg *Message) HasCommandArgument() bool {
-	if !msg.IsCommand() {
+func (m *Message) HasCommandArgument() bool {
+	if !m.IsCommand() {
 		return false
 	}
 
-	entity := msg.Entities[0]
+	entity := m.Entities[0]
 	if !entity.IsBotCommand() {
 		return false
 	}
 
-	return len([]rune(msg.Text)) != entity.Length
+	return len([]rune(m.Text)) != entity.Length
 }
 
 // CommandArgument returns raw command argument.
-func (msg *Message) CommandArgument() string {
-	if !msg.HasCommandArgument() {
+func (m *Message) CommandArgument() string {
+	if !m.HasCommandArgument() {
 		return ""
 	}
 
-	return string([]rune(msg.Text)[msg.Entities[0].Length+1:])
+	return string([]rune(m.Text)[m.Entities[0].Length+1:])
 }
 
 // IsReply checks that the current message is a reply on other message.
-func (msg *Message) IsReply() bool {
-	return msg != nil && msg.ReplyToMessage != nil
+func (m *Message) IsReply() bool {
+	return m != nil &&
+		m.ReplyToMessage != nil
 }
 
 // IsForward checks that the current message is a forward of other message.
-func (msg *Message) IsForward() bool {
-	return msg != nil && msg.ForwardFrom != nil
+func (m *Message) IsForward() bool {
+	return m != nil &&
+		m.ForwardFrom != nil
 }
 
 // Time parse current message Date and returns time.Time.
-func (msg *Message) Time() time.Time {
-	if msg == nil {
+func (m *Message) Time() time.Time {
+	if m == nil {
 		return time.Time{}
 	}
 
-	return time.Unix(msg.Date, 0)
+	return time.Unix(m.Date, 0)
 }
 
 // ForwardTime parse current message ForwardDate and returns time.Time.
-func (msg *Message) ForwardTime() time.Time {
-	if msg == nil {
+func (m *Message) ForwardTime() time.Time {
+	if m == nil {
 		return time.Time{}
 	}
 
-	return time.Unix(msg.ForwardDate, 0)
+	return time.Unix(m.ForwardDate, 0)
 }
 
 // EditTime parse current message EditDate and returns time.Time.
-func (msg *Message) EditTime() time.Time {
+func (m *Message) EditTime() time.Time {
 	var t time.Time
-	if msg == nil || !msg.HasBeenEdited() {
+	if m == nil || !m.HasBeenEdited() {
 		return t
 	}
 
-	return time.Unix(msg.EditDate, 0)
+	return time.Unix(m.EditDate, 0)
 }
 
 // HasBeenEdited checks that the current message has been edited.
-func (msg *Message) HasBeenEdited() bool {
-	return msg != nil && msg.EditDate > 0
+func (m *Message) HasBeenEdited() bool {
+	return m != nil &&
+		m.EditDate > 0
 }
 
 // IsText checks that the current message is just a text message.
-func (msg *Message) IsText() bool {
-	return msg != nil && msg.Text != ""
+func (m *Message) IsText() bool {
+	return m != nil &&
+		m.Text != ""
 }
 
 // IsAudio checks that the current message is a audio.
-func (msg *Message) IsAudio() bool {
-	return !msg.IsText() && msg.Audio != nil
+func (m *Message) IsAudio() bool {
+	return !m.IsText() &&
+		m.Audio != nil
 }
 
 // IsDocument checks that the current message is a document.
-func (msg *Message) IsDocument() bool {
-	return !msg.IsText() && msg.Document != nil
+func (m *Message) IsDocument() bool {
+	return !m.IsText() &&
+		m.Document != nil
 }
 
 // IsGame checks that the current message is a game.
-func (msg *Message) IsGame() bool {
-	return !msg.IsText() && msg.Game != nil
+func (m *Message) IsGame() bool {
+	return !m.IsText() &&
+		m.Game != nil
 }
 
 // IsPhoto checks that the current message is a photo.
-func (msg *Message) IsPhoto() bool {
-	return !msg.IsText() && len(msg.Photo) > 0
+func (m *Message) IsPhoto() bool {
+	return !m.IsText() &&
+		len(m.Photo) > 0
 }
 
 // IsSticker checks that the current message is a sticker.
-func (msg *Message) IsSticker() bool {
-	return !msg.IsText() && msg.Sticker != nil
+func (m *Message) IsSticker() bool {
+	return !m.IsText() &&
+		m.Sticker != nil
 }
 
 // IsVideo checks that the current message is a video.
-func (msg *Message) IsVideo() bool {
-	return !msg.IsText() && msg.Video != nil
+func (m *Message) IsVideo() bool {
+	return !m.IsText() &&
+		m.Video != nil
 }
 
 // IsVoice checks that the current message is a voice.
-func (msg *Message) IsVoice() bool {
-	return !msg.IsText() && msg.Voice != nil
+func (m *Message) IsVoice() bool {
+	return !m.IsText() &&
+		m.Voice != nil
 }
 
 // IsVideoNote checks that the current message is a video note.
-func (msg *Message) IsVideoNote() bool {
-	return !msg.IsText() && msg.VideoNote != nil
+func (m *Message) IsVideoNote() bool {
+	return !m.IsText() &&
+		m.VideoNote != nil
 }
 
 // IsContact checks that the current message is a contact.
-func (msg *Message) IsContact() bool {
-	return !msg.IsText() && msg.Contact != nil
+func (m *Message) IsContact() bool {
+	return !m.IsText() &&
+		m.Contact != nil
 }
 
 // IsLocation checks that the current message is a location.
-func (msg *Message) IsLocation() bool {
-	return !msg.IsText() && msg.Location != nil
+func (m *Message) IsLocation() bool {
+	return !m.IsText() &&
+		m.Location != nil
 }
 
 // IsVenue checks that the current message is a venue.
-func (msg *Message) IsVenue() bool {
-	return !msg.IsText() && msg.Venue != nil
+func (m *Message) IsVenue() bool {
+	return !m.IsText() &&
+		m.Venue != nil
 }
 
 // IsNewChatMembersEvent checks that the current message is a event of entry of
 // new members.
-func (msg *Message) IsNewChatMembersEvent() bool {
-	return !msg.IsText() && len(msg.NewChatMembers) > 0
+func (m *Message) IsNewChatMembersEvent() bool {
+	return !m.IsText() &&
+		len(m.NewChatMembers) > 0
 }
 
 // IsLeftChatMemberEvent checks that the current message is a event of members
 // exit.
-func (msg *Message) IsLeftChatMemberEvent() bool {
-	return !msg.IsText() && msg.LeftChatMember != nil
+func (m *Message) IsLeftChatMemberEvent() bool {
+	return !m.IsText() &&
+		m.LeftChatMember != nil
 }
 
 // IsNewChatTitleEvent checks that the current message is a event of setting a
 // new chat title.
-func (msg *Message) IsNewChatTitleEvent() bool {
-	return !msg.IsText() && msg.NewChatTitle != ""
+func (m *Message) IsNewChatTitleEvent() bool {
+	return !m.IsText() &&
+		m.NewChatTitle != ""
 }
 
 // IsNewChatPhotoEvent checks that the current message is a event of setting a
 // new chat avatar.
-func (msg *Message) IsNewChatPhotoEvent() bool {
-	return !msg.IsText() && len(msg.NewChatPhoto) > 0
+func (m *Message) IsNewChatPhotoEvent() bool {
+	return !m.IsText() &&
+		len(m.NewChatPhoto) > 0
 }
 
 // IsDeleteChatPhotoEvent checks that the current message is a event of deleting
 // a chat avatar.
-func (msg *Message) IsDeleteChatPhotoEvent() bool {
-	return !msg.IsText() && msg.DeleteChatPhoto
+func (m *Message) IsDeleteChatPhotoEvent() bool {
+	return !m.IsText() &&
+		m.DeleteChatPhoto
 }
 
 // IsGroupChatCreatedEvent checks that the current message is a event of creating
 // a new group.
-func (msg *Message) IsGroupChatCreatedEvent() bool {
-	return !msg.IsText() && msg.GroupChatCreated
+func (m *Message) IsGroupChatCreatedEvent() bool {
+	return !m.IsText() &&
+		m.GroupChatCreated
 }
 
 // IsSupergroupChatCreatedEvent checks that the current message is a event of
 // creating a new supergroup.
-func (msg *Message) IsSupergroupChatCreatedEvent() bool {
-	return !msg.IsText() && msg.SupergroupChatCreated
+func (m *Message) IsSupergroupChatCreatedEvent() bool {
+	return !m.IsText() &&
+		m.SupergroupChatCreated
 }
 
 // IsChannelChatCreatedEvent checks that the current message is a event of
 // creating a new channel.
-func (msg *Message) IsChannelChatCreatedEvent() bool {
-	return !msg.IsText() && msg.ChannelChatCreated
+func (m *Message) IsChannelChatCreatedEvent() bool {
+	return !m.IsText() &&
+		m.ChannelChatCreated
 }
 
 // IsPinnedMessage checks that the current message is a event of pinning another
 // message.
-func (msg *Message) IsPinnedMessage() bool {
-	return !msg.IsText() && msg.PinnedMessage != nil
+func (m *Message) IsPinnedMessage() bool {
+	return !m.IsText() &&
+		m.PinnedMessage != nil
 }
 
 // IsInvoice checks that the current message is a invoice.
-func (msg *Message) IsInvoice() bool {
-	return !msg.IsText() && msg.Invoice != nil
+func (m *Message) IsInvoice() bool {
+	return !m.IsText() &&
+		m.Invoice != nil
 }
 
 // IsSuccessfulPayment checks that the current message is a event of successful
 // payment.
-func (msg *Message) IsSuccessfulPayment() bool {
-	return !msg.IsText() && msg.SuccessfulPayment != nil
+func (m *Message) IsSuccessfulPayment() bool {
+	return !m.IsText() &&
+		m.SuccessfulPayment != nil
 }
 
 // HasEntities checks that the current message contains entities.
-func (msg *Message) HasEntities() bool {
-	return msg.IsText() && len(msg.Entities) > 0
+func (m *Message) HasEntities() bool {
+	return m.IsText() &&
+		len(m.Entities) > 0
 }
 
 // HasCaptionEntities checks that the current media contains entities in caption.
-func (msg *Message) HasCaptionEntities() bool {
-	return !msg.IsText() && len(msg.CaptionEntities) > 0
+func (m *Message) HasCaptionEntities() bool {
+	return !m.IsText() &&
+		len(m.CaptionEntities) > 0
 }
 
 // HasMentions checks that the current message contains mentions.
-func (msg *Message) HasMentions() bool {
-	if !msg.HasEntities() {
+func (m *Message) HasMentions() bool {
+	if !m.HasEntities() {
 		return false
 	}
 
-	for _, entity := range msg.Entities {
+	for _, entity := range m.Entities {
 		if entity.IsMention() || entity.IsTextMention() {
 			return true
 		}
@@ -257,12 +287,12 @@ func (msg *Message) HasMentions() bool {
 }
 
 // HasCaptionMentions checks that the current media contains mentions in caption.
-func (msg *Message) HasCaptionMentions() bool {
-	if !msg.HasCaptionEntities() {
+func (m *Message) HasCaptionMentions() bool {
+	if !m.HasCaptionEntities() {
 		return false
 	}
 
-	for _, entity := range msg.CaptionEntities {
+	for _, entity := range m.CaptionEntities {
 		if entity.IsMention() || entity.IsTextMention() {
 			return true
 		}
@@ -272,13 +302,15 @@ func (msg *Message) HasCaptionMentions() bool {
 }
 
 // HasCaption checks that the current media has caption.
-func (msg *Message) HasCaption() bool {
-	return !msg.IsText() && msg.Caption != ""
+func (m *Message) HasCaption() bool {
+	return !m.IsText() &&
+		m.Caption != ""
 }
 
 // HasAuthorSignature checks that the current channel post has author signature.
-func (msg *Message) HasAuthorSignature() bool {
-	return msg != nil && msg.AuthorSignature != ""
+func (m *Message) HasAuthorSignature() bool {
+	return m != nil &&
+		m.AuthorSignature != ""
 }
 
 // IsEvent checks what current message is a any chat event.

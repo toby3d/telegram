@@ -3,42 +3,42 @@ package telegram
 import "fmt"
 
 // IsPrivate checks that the current chat is a private chat with single user.
-func (chat *Chat) IsPrivate() bool {
-	return chat != nil && chat.Type == ChatPrivate
+func (c *Chat) IsPrivate() bool {
+	return c != nil && c.Type == ChatPrivate
 }
 
 // IsGroup checks that the current chat is a group.
-func (chat *Chat) IsGroup() bool {
-	return chat != nil && chat.Type == ChatGroup
+func (c *Chat) IsGroup() bool {
+	return c != nil && c.Type == ChatGroup
 }
 
 // IsSuperGroup checks that the current chat is a supergroup.
-func (chat *Chat) IsSuperGroup() bool {
-	return chat != nil && chat.Type == ChatSuperGroup
+func (c *Chat) IsSuperGroup() bool {
+	return c != nil && c.Type == ChatSuperGroup
 }
 
 // IsChannel checks that the current chat is a channel.
-func (chat *Chat) IsChannel() bool {
-	return chat != nil && chat.Type == ChatChannel
+func (c *Chat) IsChannel() bool {
+	return c != nil && c.Type == ChatChannel
 }
 
 // HasPinnedMessage checks that the current chat has a pinned message.
-func (chat *Chat) HasPinnedMessage() bool {
-	return chat != nil && chat.PinnedMessage != nil
+func (c *Chat) HasPinnedMessage() bool {
+	return c != nil && c.PinnedMessage != nil
 }
 
 // HasStickerSet checks that the current chat has a sticker set.
-func (chat *Chat) HasStickerSet() bool {
-	return chat != nil && chat.StickerSetName != ""
+func (c *Chat) HasStickerSet() bool {
+	return c != nil && c.StickerSetName != ""
 }
 
 // StickerSet return StickerSet structure if StickerSetName is available.
-func (chat *Chat) StickerSet(bot *Bot) *StickerSet {
-	if !chat.HasStickerSet() || bot == nil {
+func (c *Chat) StickerSet(bot *Bot) *StickerSet {
+	if !c.HasStickerSet() || bot == nil {
 		return nil
 	}
 
-	set, err := bot.GetStickerSet(chat.StickerSetName)
+	set, err := bot.GetStickerSet(c.StickerSetName)
 	if err != nil {
 		return nil
 	}
@@ -47,14 +47,14 @@ func (chat *Chat) StickerSet(bot *Bot) *StickerSet {
 }
 
 // FullName returns the full name of chat or FirstName if LastName is not available.
-func (chat *Chat) FullName() string {
-	if chat == nil {
+func (c *Chat) FullName() string {
+	if c == nil {
 		return ""
 	}
 
-	if chat.LastName != "" {
-		return fmt.Sprintln(chat.FirstName, chat.LastName)
+	if c.LastName != "" {
+		return fmt.Sprintln(c.FirstName, c.LastName)
 	}
 
-	return chat.FirstName
+	return c.FirstName
 }

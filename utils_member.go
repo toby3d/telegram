@@ -3,40 +3,40 @@ package telegram
 import "time"
 
 // IsCreator checks that current member is creator.
-func (member *ChatMember) IsCreator() bool {
-	return member != nil && member.Status == StatusCreator
+func (m *ChatMember) IsCreator() bool {
+	return m != nil && m.Status == StatusCreator
 }
 
 // IsAdministrator checks that current member is administrator.
-func (member *ChatMember) IsAdministrator() bool {
-	return member != nil && member.Status == StatusAdministrator
+func (m *ChatMember) IsAdministrator() bool {
+	return m != nil && m.Status == StatusAdministrator
 }
 
-// IsMember checks that current member is a member.
-func (member *ChatMember) IsMember() bool {
-	return member != nil && member.Status == StatusMember
+// IsMember checks that current member is a m.
+func (m *ChatMember) IsMember() bool {
+	return m != nil && m.Status == StatusMember
 }
 
 // IsRestricted checks that current member has been restricted.
-func (member *ChatMember) IsRestricted() bool {
-	return member != nil && member.Status == StatusRestricted
+func (m *ChatMember) IsRestricted() bool {
+	return m != nil && m.Status == StatusRestricted
 }
 
 // IsLeft checks that current member has left the chat.
-func (member *ChatMember) IsLeft() bool {
-	return member != nil && member.Status == StatusLeft
+func (m *ChatMember) IsLeft() bool {
+	return m != nil && m.Status == StatusLeft
 }
 
 // IsKicked checks that current member has been kicked.
-func (member *ChatMember) IsKicked() bool {
-	return member != nil && member.Status == StatusKicked
+func (m *ChatMember) IsKicked() bool {
+	return m != nil && m.Status == StatusKicked
 }
 
 // UntilTime parse UntilDate of restrictions and returns time.Time.
-func (member *ChatMember) UntilTime() time.Time {
-	if member == nil {
+func (m *ChatMember) UntilTime() time.Time {
+	if m == nil {
 		return time.Time{}
 	}
 
-	return time.Unix(member.UntilDate, 0)
+	return time.Unix(m.UntilDate, 0)
 }
