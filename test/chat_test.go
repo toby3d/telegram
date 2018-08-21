@@ -23,6 +23,7 @@ func TestSendChatAction(t *testing.T) {
 	}
 }
 
+/*
 func TestKickChatMember(t *testing.T) {
 	ok, err := bot.KickChatMember(&telegram.KickChatMemberParameters{
 		ChatID:    superGroupID,
@@ -46,6 +47,7 @@ func TestUnbanChatMember(t *testing.T) {
 		t.Error("unexpected result: ok is not true")
 	}
 }
+*/
 
 func TestExportChatInviteLink(t *testing.T) {
 	inviteLink, err := bot.ExportChatInviteLink(superGroupID)
@@ -125,6 +127,7 @@ func TestUnpinChatMessage(t *testing.T) {
 	}
 }
 
+/*
 func TestLeaveChat(t *testing.T) {
 	ErrNotMember := "Forbidden: bot is not a member of the supergroup chat"
 	ok, err := bot.LeaveChat(-1001037355946)
@@ -137,6 +140,7 @@ func TestLeaveChat(t *testing.T) {
 		t.Error("unexpected result: ok is not true")
 	}
 }
+*/
 
 func TestGetChat(t *testing.T) {
 	chat, err := bot.GetChat(superGroupID)

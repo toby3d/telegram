@@ -7,11 +7,9 @@ import (
 	"gitlab.com/toby3d/telegram"
 )
 
-const accessToken = "153667468:AAHlSHlMqSt1f_uFmVRJbm5gntu2HI4WW8I"
-
 var bot = new(telegram.Bot)
 
 func TestMain(m *testing.M) {
-	bot.AccessToken = accessToken
+	bot.AccessToken = os.Getenv("BOT_ACCESS_TOKEN")
 	os.Exit(m.Run())
 }
