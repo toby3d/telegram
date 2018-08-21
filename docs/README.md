@@ -11,6 +11,3 @@ Import it in your code:
 ## Need help?
 - [Open new issue](https://gitlab.com/toby3d/telegram/issues/new)
 - [Discuss in Discord](https://discord.gg/dCWkgSS)
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgitlab.com%2Ftoby3d%2Ftelegram.svg?type=large)](https://app.fossa.io/projects/git%2Bgitlab.com%2Ftoby3d%2Ftelegram?ref=badge_large)
