@@ -1,10 +1,5 @@
 package telegram
 
-import (
-	"fmt"
-	"strings"
-)
-
 // FullName returns the full name of contact or FirstName if LastName is not
 // available.
 func (c *Contact) FullName() string {
@@ -13,7 +8,7 @@ func (c *Contact) FullName() string {
 	}
 
 	if c.HasLastName() {
-		return fmt.Sprint(c.FirstName, " ", c.LastName)
+		return c.FirstName + " " + c.LastName
 	}
 
 	return c.FirstName
@@ -21,7 +16,7 @@ func (c *Contact) FullName() string {
 
 // HaveLastName checks what the current contact has a LastName.
 func (c *Contact) HasLastName() bool {
-	return c != nil && !strings.EqualFold(c.LastName, "")
+	return c != nil && c.LastName != ""
 }
 
 func (c *Contact) HasTelegram() bool {
@@ -29,5 +24,5 @@ func (c *Contact) HasTelegram() bool {
 }
 
 func (c *Contact) HasVCard() bool {
-	return c != nil && !strings.EqualFold(c.VCard, "")
+	return c != nil && c.VCard != ""
 }

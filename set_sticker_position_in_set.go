@@ -11,21 +11,20 @@ type SetStickerPositionInSetParameters struct {
 
 // SetStickerPositionInSet move a sticker in a set created by the bot to a
 // specific position. Returns True on success.
-func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error) {
+func (bot *Bot) SetStickerPositionInSet(sticker string, position int) (ok bool, err error) {
 	dst, err := json.Marshal(&SetStickerPositionInSetParameters{
 		Sticker:  sticker,
 		Position: position,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSetStickerPositionInSet)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

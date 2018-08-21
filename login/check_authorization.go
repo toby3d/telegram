@@ -16,9 +16,10 @@ var ErrUserNotDefined = errors.New("user is not defined")
 // received by comparing the received hash parameter with the hexadecimal
 // representation of the HMAC-SHA-256 signature of the data-check-string with the
 // SHA256 hash of the bot's token used as a secret key.
-func (app *App) CheckAuthorization(user *User) (bool, error) {
+func (a *App) CheckAuthorization(user *User) (ok bool, err error) {
 	if user == nil {
-		return false, ErrUserNotDefined
+		err = ErrUserNotDefined
+		return
 	}
 
 	dataCheck := make(url.Values)
@@ -37,8 +38,12 @@ func (app *App) CheckAuthorization(user *User) (bool, error) {
 		dataCheck.Add(KeyUsername, user.Username)
 	}
 
-	secretKey := sha256.Sum256([]byte(app.SecretKey))
+	secretKey := sha256.Sum256([]byte(a.SecretKey))
 	hash := hmac.New(sha256.New, secretKey[0:])
-	_, err := hash.Write([]byte(dataCheck.Encode()))
-	return hex.EncodeToString(hash.Sum(nil)) == user.Hash, err
+	if _, err = hash.Write([]byte(dataCheck.Encode())); err != nil {
+		return
+	}
+
+	ok = hex.EncodeToString(hash.Sum(nil)) == user.Hash
+	return
 }

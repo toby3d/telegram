@@ -8,6 +8,8 @@ import (
 	"mime/multipart"
 	"net/url"
 	"os"
+	"path"
+	"strconv"
 
 	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
@@ -54,16 +56,16 @@ voice notes will be sent as files.
 
 * Other configurations may work but we can't guarantee that they will.
 */
-func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.Stringer) (*Response, error) {
+func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.Stringer) (response *Response, err error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
 	requestURI := defaultURI
-	requestURI.Path = fmt.Sprint("/bot", bot.AccessToken, "/", method)
+	requestURI.Path = path.Join("bot"+bot.AccessToken, method)
 
 	query, err := url.ParseQuery(args.String())
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	for key, val := range query {
@@ -73,11 +75,11 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	}
 
 	if err = createFileField(multi, file, key, name); err != nil {
-		return nil, err
+		return
 	}
 
 	if err = multi.Close(); err != nil {
-		return nil, err
+		return
 	}
 
 	req := http.AcquireRequest()
@@ -86,7 +88,7 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	req.Header.SetContentType(multi.FormDataContentType())
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
-	req.Header.SetUserAgent(fmt.Sprint("telegram/", Version))
+	req.Header.SetUserAgent(path.Join("telegram", strconv.FormatInt(Version, 10)))
 	req.Header.SetHost(requestURI.Hostname())
 
 	log.Ln("Request:")
@@ -99,19 +101,19 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	log.Ln("Resp:")
 	log.D(resp)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Response
-	if err = json.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, err
+	response = new(Response)
+	if err = json.Unmarshal(resp.Body(), response); err != nil {
+		return
 	}
 
-	if !data.Ok {
-		return nil, errors.New(data.Description)
+	if !response.Ok {
+		err = errors.New(response.Description)
 	}
 
-	return &data, nil
+	return
 }
 
 func createFileField(w *multipart.Writer, file interface{}, key, val string) error {

@@ -24,18 +24,18 @@ type EditMessageReplyMarkupParameters struct {
 // EditMessageReplyMarkup edit only the reply markup of messages sent by the bot
 // or via the bot (for inline bots). On success, if edited message is sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (*Message, error) {
+func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageReplyMarkup)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

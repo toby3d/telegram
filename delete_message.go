@@ -17,21 +17,20 @@ type DeleteMessageParameters struct {
 // bot is an administrator of a group, it can delete any message there; If the
 // bot has can_delete_messages permission in a supergroup or a channel, it can
 // delete any message there. Returns True on success.
-func (bot *Bot) DeleteMessage(chatID int64, messageID int) (bool, error) {
+func (bot *Bot) DeleteMessage(chatID int64, messageID int) (ok bool, err error) {
 	dst, err := json.Marshal(&DeleteMessageParameters{
 		ChatID:    chatID,
 		MessageID: messageID,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodDeleteMessage)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

@@ -37,18 +37,17 @@ func NewAnswerShippingQuery(shippingQueryID string, ok bool) *AnswerShippingQuer
 // If you sent an invoice requesting a shipping address and the parameter
 // is_flexible was specified, the Bot API will send an Update with a
 // shipping_query field to the bot. On success, True is returned.
-func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (bool, error) {
+func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodAnswerShippingQuery)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

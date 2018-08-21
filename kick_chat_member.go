@@ -19,18 +19,17 @@ type KickChatMemberParameters struct {
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are
 // Admins' setting is off in the target group. Otherwise members may only be removed by the group's
 // creator or by the member that added them.
-func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (bool, error) {
+func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (ok bool, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodKickChatMember)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

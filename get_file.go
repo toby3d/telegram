@@ -18,18 +18,18 @@ type GetFileParameters struct {
 // Note: This function may not preserve the original file name and MIME type. You
 // should save the file's MIME type and name (if available) when the File object
 // is received.
-func (bot *Bot) GetFile(fileID string) (*File, error) {
+func (bot *Bot) GetFile(fileID string) (file *File, err error) {
 	dst, err := json.Marshal(&GetFileParameters{FileID: fileID})
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetFile)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data File
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	file = new(File)
+	err = json.Unmarshal(*resp.Result, file)
+	return
 }

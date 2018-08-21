@@ -43,18 +43,18 @@ func NewGameScore(userID, score int) *SetGameScoreParameters {
 // message was sent by the bot, returns the edited Message, otherwise returns
 // True. Returns an error, if the new score is not greater than the user's
 // current score in the chat and force is False.
-func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (*Message, error) {
+func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSetGameScore)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

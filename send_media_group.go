@@ -29,18 +29,17 @@ func NewMediaGroup(chatID int64, media ...interface{}) *SendMediaGroupParameters
 
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent
 // Messages is returned.
-func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) ([]Message, error) {
+func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) (album []Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendMediaGroup)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data []Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &album)
+	return
 }

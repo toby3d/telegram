@@ -55,7 +55,7 @@ func NewAnimation(chatID int64, animation interface{}) *SendAnimationParameters 
 // sound). On success, the sent Message is returned. Bots can currently send
 // animation files of up to 50 MB in size, this limit may be changed in the
 // future.
-func (bot *Bot) SendAnimation(params *SendAnimationParameters) (*Message, error) {
+func (bot *Bot) SendAnimation(params *SendAnimationParameters) (msg *Message, err error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -80,10 +80,10 @@ func (bot *Bot) SendAnimation(params *SendAnimationParameters) (*Message, error)
 
 	resp, err := bot.Upload(MethodSendAnimation, "animation", "", params.Animation, args)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

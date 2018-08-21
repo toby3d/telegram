@@ -14,18 +14,17 @@ type DeleteChatPhotoParameters struct {
 //
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
-func (bot *Bot) DeleteChatPhoto(chatID int64) (bool, error) {
+func (bot *Bot) DeleteChatPhoto(chatID int64) (ok bool, err error) {
 	dst, err := json.Marshal(&DeleteChatPhotoParameters{ChatID: chatID})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodDeleteChatPhoto)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

@@ -16,21 +16,20 @@ type SendChatActionParameters struct {
 //
 // We only recommend using this method when a response from the bot will take a
 // noticeable amount of time to arrive.
-func (bot *Bot) SendChatAction(chatID int64, action string) (bool, error) {
+func (bot *Bot) SendChatAction(chatID int64, action string) (ok bool, err error) {
 	dst, err := json.Marshal(&SendChatActionParameters{
 		ChatID: chatID,
 		Action: action,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendChatAction)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

@@ -2,20 +2,21 @@ package telegram
 
 import (
 	"errors"
-	"fmt"
+	"path"
+	"strconv"
 
 	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
-func (bot *Bot) request(dst []byte, method string) (*Response, error) {
+func (bot *Bot) request(dst []byte, method string) (response *Response, err error) {
 	if bot.Client == nil {
 		bot.SetClient(defaultClient)
 	}
 
 	requestURI := defaultURI
-	requestURI.Path = fmt.Sprint("/bot", bot.AccessToken, "/", method)
+	requestURI.Path = path.Join("bot"+bot.AccessToken, method)
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
@@ -25,30 +26,30 @@ func (bot *Bot) request(dst []byte, method string) (*Response, error) {
 		req.Header.SetMethod("GET")
 	}
 	req.Header.SetRequestURI(requestURI.String())
-	req.Header.SetUserAgent(fmt.Sprint("telegram/", Version))
+	req.Header.SetUserAgent(path.Join("telegram", strconv.FormatInt(Version, 10)))
 	req.Header.SetHost(requestURI.Hostname())
 	req.SetBody(dst)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
 
-	err := bot.Client.Do(req, resp)
+	err = bot.Client.Do(req, resp)
 	log.Ln("Request:")
 	log.D(req)
 	log.Ln("Response:")
 	log.D(resp)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Response
-	if err = json.Unmarshal(resp.Body(), &data); err != nil {
-		return nil, err
+	response = new(Response)
+	if err = json.Unmarshal(resp.Body(), response); err != nil {
+		return
 	}
 
-	if !data.Ok {
-		return &data, errors.New(data.Description)
+	if !response.Ok {
+		err = errors.New(response.Description)
 	}
 
-	return &data, nil
+	return
 }

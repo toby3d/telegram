@@ -1,9 +1,6 @@
 package telegram
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 // IsPrivate checks that the current chat is a private chat with single user.
 func (c *Chat) IsPrivate() bool {
@@ -32,7 +29,7 @@ func (c *Chat) HasPinnedMessage() bool {
 
 // HasStickerSet checks that the current chat has a sticker set.
 func (c *Chat) HasStickerSet() bool {
-	return c != nil && !strings.EqualFold(c.StickerSetName, "")
+	return c != nil && c.StickerSetName != ""
 }
 
 // StickerSet return StickerSet structure if StickerSetName is available.
@@ -56,7 +53,7 @@ func (c *Chat) FullName() string {
 	}
 
 	if c.HasLastName() {
-		return fmt.Sprintln(c.FirstName, c.LastName)
+		return c.FirstName + " " + c.LastName
 	}
 
 	return c.FirstName
@@ -64,18 +61,18 @@ func (c *Chat) FullName() string {
 
 // HaveLastName checks what the current user has a LastName.
 func (c *Chat) HasLastName() bool {
-	return c != nil && !strings.EqualFold(c.LastName, "")
+	return c != nil && c.LastName != ""
 }
 
 // HaveUsername checks what the current user has a username.
 func (c *Chat) HasUsername() bool {
-	return c != nil && !strings.EqualFold(c.Username, "")
+	return c != nil && c.Username != ""
 }
 
 func (c *Chat) HasDescription() bool {
-	return c != nil && !strings.EqualFold(c.Description, "")
+	return c != nil && c.Description != ""
 }
 
 func (c *Chat) HasInviteLink() bool {
-	return c != nil && !strings.EqualFold(c.InviteLink, "")
+	return c != nil && c.InviteLink != ""
 }

@@ -94,18 +94,18 @@ func NewInvoice(chatID int64, title, description, payload, providerToken, startP
 }
 
 // SendInvoice send invoices. On success, the sent Message is returned.
-func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (*Message, error) {
+func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendInvoice)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

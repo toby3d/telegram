@@ -25,18 +25,19 @@ type EditMessageMediaParameters struct {
 // edited, new file can't be uploaded. Use previously uploaded file via its
 // file_id or specify a URL. On success, if the edited message was sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (m *Message, err error) {
+func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (msg *Message, err error) {
 	var src []byte
 	src, err = json.Marshal(emmp)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := b.request(src, MethodEditMessageMedia)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	err = json.Unmarshal(*resp.Result, m)
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
 	return
 }

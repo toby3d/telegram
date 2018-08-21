@@ -33,18 +33,18 @@ func NewGame(chatID int64, gameShortName string) *SendGameParameters {
 }
 
 // SendGame send a game. On success, the sent Message is returned.
-func (bot *Bot) SendGame(params *SendGameParameters) (*Message, error) {
+func (bot *Bot) SendGame(params *SendGameParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendGame)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

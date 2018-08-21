@@ -42,18 +42,18 @@ func NewContact(chatID int64, phoneNumber, firstName string) *SendContactParamet
 }
 
 // SendContact send phone contacts. On success, the sent Message is returned.
-func (bot *Bot) SendContact(params *SendContactParameters) (*Message, error) {
+func (bot *Bot) SendContact(params *SendContactParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(*params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendContact)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

@@ -26,12 +26,12 @@ func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (
 		Errors: errors,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := b.request(dst, MethodSetPassportDataErrors)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	err = json.Unmarshal(*resp.Result, &ok)

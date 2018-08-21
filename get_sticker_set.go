@@ -8,18 +8,18 @@ type GetStickerSetParameters struct {
 }
 
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
-func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
+func (bot *Bot) GetStickerSet(name string) (set *StickerSet, err error) {
 	dst, err := json.Marshal(&GetStickerSetParameters{Name: name})
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetStickerSet)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data StickerSet
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	set = new(StickerSet)
+	err = json.Unmarshal(*resp.Result, set)
+	return
 }

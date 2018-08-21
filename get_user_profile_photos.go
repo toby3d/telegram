@@ -10,18 +10,18 @@ type GetUserProfilePhotosParameters struct {
 }
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
-func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (*UserProfilePhotos, error) {
+func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (photos *UserProfilePhotos, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetUserProfilePhotos)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data UserProfilePhotos
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	photos = new(UserProfilePhotos)
+	err = json.Unmarshal(*resp.Result, photos)
+	return
 }

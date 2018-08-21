@@ -14,21 +14,20 @@ type UnbanChatMemberParameters struct {
 // user will not return to the group or channel automatically, but will be able
 // to join via link, etc. The bot must be an administrator for this to work.
 // Returns True on success.
-func (bot *Bot) UnbanChatMember(chatID int64, userID int) (bool, error) {
+func (bot *Bot) UnbanChatMember(chatID int64, userID int) (ok bool, err error) {
 	dst, err := json.Marshal(&UnbanChatMemberParameters{
 		ChatID: chatID,
 		UserID: userID,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodUnbanChatMember)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

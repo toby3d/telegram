@@ -44,18 +44,17 @@ func NewAnswerCallbackQuery(callbackQueryID string) *AnswerCallbackQueryParamete
 // option to work, you must first create a game for your bot via @Botfather and
 // accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX
 // that open your bot with a parameter.
-func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (bool, error) {
+func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok bool, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodAnswerCallbackQuery)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

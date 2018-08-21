@@ -9,18 +9,17 @@ type DeleteStickerFromSetParameters struct {
 
 // DeleteStickerFromSet delete a sticker from a set created by the bot. Returns
 // True on success.
-func (bot *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
+func (bot *Bot) DeleteStickerFromSet(sticker string) (ok bool, err error) {
 	dst, err := json.Marshal(&DeleteStickerFromSetParameters{Sticker: sticker})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodDeleteStickerFromSet)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

@@ -17,24 +17,26 @@ type User struct {
 }
 
 // ParseUser create User structure from input url.Values.
-func ParseUser(src url.Values) (*User, error) {
-	authDate, err := strconv.Atoi(src.Get(KeyAuthDate))
+func ParseUser(src url.Values) (u *User, err error) {
+	u = new(User)
+
+	var ad int
+	ad, err = strconv.Atoi(src.Get(KeyAuthDate))
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	id, err := strconv.Atoi(src.Get(KeyID))
+	u.ID, err = strconv.Atoi(src.Get(KeyID))
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return &User{
-		AuthDate:  int64(authDate),
-		FirstName: src.Get(KeyFirstName),
-		Hash:      src.Get(KeyHash),
-		ID:        id,
-		LastName:  src.Get(KeyLastName),
-		PhotoURL:  src.Get(KeyPhotoURL),
-		Username:  src.Get(KeyUsername),
-	}, nil
+	u.AuthDate = int64(ad)
+	u.FirstName = src.Get(KeyFirstName)
+	u.Hash = src.Get(KeyHash)
+	u.LastName = src.Get(KeyLastName)
+	u.PhotoURL = src.Get(KeyPhotoURL)
+	u.Username = src.Get(KeyUsername)
+
+	return
 }

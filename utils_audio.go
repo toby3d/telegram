@@ -1,9 +1,5 @@
 package telegram
 
-import (
-	"strings"
-)
-
 func (a *Audio) FullName(sep string) (name string) {
 	if !a.HasTitle() {
 		return
@@ -18,11 +14,11 @@ func (a *Audio) FullName(sep string) (name string) {
 }
 
 func (a *Audio) HasPerformer() bool {
-	return a != nil && !strings.EqualFold(a.Performer, "")
+	return a != nil && a.Performer != ""
 }
 
 func (a *Audio) HasTitle() bool {
-	return a != nil && !strings.EqualFold(a.Title, "")
+	return a != nil && a.Title != ""
 }
 
 func (a *Audio) HasThumb() bool {

@@ -12,18 +12,17 @@ type DeleteChatStickerSetParameters struct {
 // in the chat for this to work and must have the appropriate admin rights. Use the field
 // can_set_sticker_set optionally returned in getChat requests to check if the bot can use this
 // method. Returns True on success.
-func (bot *Bot) DeleteChatStickerSet(chatID int64) (bool, error) {
+func (bot *Bot) DeleteChatStickerSet(chatID int64) (ok bool, err error) {
 	dst, err := json.Marshal(&DeleteChatStickerSetParameters{ChatID: chatID})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodDeleteChatStickerSet)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

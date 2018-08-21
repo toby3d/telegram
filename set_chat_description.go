@@ -13,21 +13,20 @@ type SetChatDescriptionParameters struct {
 // SetChatDescription change the description of a supergroup or a channel. The
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns True on success.
-func (bot *Bot) SetChatDescription(chatID int64, description string) (bool, error) {
+func (bot *Bot) SetChatDescription(chatID int64, description string) (ok bool, err error) {
 	dst, err := json.Marshal(&SetChatDescriptionParameters{
 		ChatID:      chatID,
 		Description: description,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSetChatDescription)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

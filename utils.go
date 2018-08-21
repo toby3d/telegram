@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"fmt"
 	"net/url"
 	"strconv"
 )
@@ -26,15 +25,15 @@ func NewInlineMentionURL(userID int) *url.URL {
 }
 
 func NewMarkdownBold(text string) string {
-	return fmt.Sprint("*", text, "*")
+	return "*" + text + "*"
 }
 
 func NewMarkdownItalic(text string) string {
-	return fmt.Sprint("_", text, "_")
+	return "_" + text + "_"
 }
 
 func NewMarkdownURL(text string, link *url.URL) string {
-	return fmt.Sprint("[", text, "](", link.String(), ")")
+	return "[" + text + "](" + link.String() + ")"
 }
 
 func NewMarkdownMention(text string, id int) string {
@@ -43,23 +42,23 @@ func NewMarkdownMention(text string, id int) string {
 }
 
 func NewMarkdownCode(text string) string {
-	return fmt.Sprint("`", text, "`")
+	return "`" + text + "`"
 }
 
 func NewMarkdownCodeBlock(text string) string {
-	return fmt.Sprint("```", text, "```")
+	return "```" + text + "```"
 }
 
 func NewHtmlBold(text string) string {
-	return fmt.Sprint("<b>", text, "</b>")
+	return "<b>" + text + "</b>"
 }
 
 func NewHtmlItalic(text string) string {
-	return fmt.Sprint("<i>", text, "</i>")
+	return "<i>" + text + "</i>"
 }
 
 func NewHtmlURL(text string, link *url.URL) string {
-	return fmt.Sprint(`<a href="`, link.String(), `">`, text, `</a>`)
+	return `<a href="` + link.String() + `">` + text + `</a>`
 }
 
 func NewHtmlMention(text string, id int) string {
@@ -68,9 +67,9 @@ func NewHtmlMention(text string, id int) string {
 }
 
 func NewHtmlCode(text string) string {
-	return fmt.Sprint("<code>", text, "</code>")
+	return "<code>" + text + "</code>"
 }
 
 func NewHtmlCodeBlock(text string) string {
-	return fmt.Sprint("<pre>", text, "</pre>")
+	return "<pre>" + text + "</pre>"
 }

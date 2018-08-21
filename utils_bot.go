@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"fmt"
 	"net/url"
 	"path"
 	"strings"
@@ -36,20 +35,15 @@ func New(accessToken string) (*Bot, error) {
 // IsMessageFromMe checks that the input message is a message from the current
 // bot.
 func (b *Bot) IsMessageFromMe(m *Message) bool {
-	return m != nil &&
-		b != nil &&
-		m.From != nil &&
-		b.User != nil &&
-		m.From.ID == b.ID
+	return b != nil && b.User != nil &&
+		m != nil && m.From != nil && m.From.ID == b.ID
 }
 
 // IsForwardFromMe checks that the input message is a forwarded message from the
 // current bot.
 func (b *Bot) IsForwardFromMe(m *Message) bool {
-	return m.IsForward() &&
-		b != nil &&
-		b.User != nil &&
-		m.ForwardFrom.ID == b.ID
+	return b != nil && b.User != nil &&
+		m.IsForward() && m.ForwardFrom.ID == b.ID
 }
 
 // IsReplyToMe checks that the input message is a reply to the current bot.
@@ -78,9 +72,8 @@ func (b *Bot) IsCommandToMe(m *Message) bool {
 
 // IsMessageMentionsMe checks that the input message mentions the current bot.
 func (b *Bot) IsMessageMentionsMe(m *Message) bool {
-	if m == nil ||
-		b == nil ||
-		b.User == nil {
+	if b == nil || b.User == nil ||
+		m == nil {
 		return false
 	}
 
@@ -97,10 +90,8 @@ func (b *Bot) IsMessageMentionsMe(m *Message) bool {
 	}
 
 	for _, entity := range entities {
-		if entity.IsMention() {
-			if b.ID == entity.User.ID {
-				return true
-			}
+		if entity.IsMention() && entity.User.ID == b.ID {
+			return true
 		}
 	}
 
@@ -136,23 +127,20 @@ func (b *Bot) IsMessageToMe(m *Message) bool {
 
 // NewFileURL creates a url.URL to file with path getted from GetFile method.
 func (b *Bot) NewFileURL(filePath string) *url.URL {
-	if b == nil ||
-		strings.EqualFold(b.AccessToken, "") ||
-		strings.EqualFold(filePath, "") {
+	if b == nil || b.AccessToken == "" ||
+		filePath == "" {
 		return nil
 	}
 
 	result := defaultURI
-	result.Path = path.Join("file", fmt.Sprint("bot", b.AccessToken), filePath)
+	result.Path = path.Join("file", "bot"+b.AccessToken, filePath)
 
 	return result
 }
 
 // NewRedirectURL creates new url.URL for redirecting from one chat to another.
 func (b *Bot) NewRedirectURL(param string, group bool) *url.URL {
-	if b == nil ||
-		b.User == nil ||
-		b.User.Username == "" {
+	if b == nil || b.User == nil || b.User.Username == "" {
 		return nil
 	}
 

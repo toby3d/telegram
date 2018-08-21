@@ -11,18 +11,18 @@ type GetChatParameters struct {
 // GetChat get up to date information about the chat (current name of the user
 // for one-on-one conversations, current username of a user, group or channel,
 // etc.). Returns a Chat object on success.
-func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
+func (bot *Bot) GetChat(chatID int64) (chat *Chat, err error) {
 	dst, err := json.Marshal(&GetChatParameters{ChatID: chatID})
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetChat)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Chat
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	chat = new(Chat)
+	err = json.Unmarshal(*resp.Result, chat)
+	return
 }

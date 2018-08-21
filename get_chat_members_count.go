@@ -10,18 +10,17 @@ type GetChatMembersCountParameters struct {
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on
 // success.
-func (bot *Bot) GetChatMembersCount(chatID int64) (int, error) {
+func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
 	dst, err := json.Marshal(&GetChatMembersCountParameters{ChatID: chatID})
 	if err != nil {
-		return 0, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetChatMembersCount)
 	if err != nil {
-		return 0, err
+		return
 	}
 
-	var data int
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &count)
+	return
 }

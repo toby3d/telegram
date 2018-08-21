@@ -42,18 +42,18 @@ func NewLiveLocation(latitude, longitude float32) *EditMessageLiveLocationParame
 // or editing is explicitly disabled by a call to stopMessageLiveLocation. On
 // success, if the edited message was sent by the bot, the edited Message is
 // returned, otherwise True is returned.
-func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (*Message, error) {
+func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageLiveLocation)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

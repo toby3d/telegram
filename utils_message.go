@@ -95,13 +95,13 @@ func (m *Message) ForwardTime() *time.Time {
 }
 
 // EditTime parse current message EditDate and returns time.Time.
-func (m *Message) EditTime() time.Time {
-	var t time.Time
+func (m *Message) EditTime() *time.Time {
 	if m == nil || !m.HasBeenEdited() {
-		return t
+		return nil
 	}
 
-	return time.Unix(m.EditDate, 0)
+	et := time.Unix(m.EditDate, 0)
+	return &et
 }
 
 // HasBeenEdited checks that the current message has been edited.
@@ -111,142 +111,142 @@ func (m *Message) HasBeenEdited() bool {
 
 // IsText checks that the current message is just a text message.
 func (m *Message) IsText() bool {
-	return m != nil && !strings.EqualFold(m.Text, "")
+	return m != nil && m.Text != ""
 }
 
 // IsAudio checks that the current message is a audio.
 func (m *Message) IsAudio() bool {
-	return !m.IsText() && m.Audio != nil
+	return m != nil && m.Audio != nil
 }
 
 // IsDocument checks that the current message is a document.
 func (m *Message) IsDocument() bool {
-	return !m.IsText() && m.Document != nil
+	return m != nil && m.Document != nil
 }
 
 // IsGame checks that the current message is a game.
 func (m *Message) IsGame() bool {
-	return !m.IsText() && m.Game != nil
+	return m != nil && m.Game != nil
 }
 
 // IsPhoto checks that the current message is a photo.
 func (m *Message) IsPhoto() bool {
-	return !m.IsText() && len(m.Photo) > 0
+	return m != nil && len(m.Photo) > 0
 }
 
 // IsSticker checks that the current message is a sticker.
 func (m *Message) IsSticker() bool {
-	return !m.IsText() && m.Sticker != nil
+	return m != nil && m.Sticker != nil
 }
 
 // IsVideo checks that the current message is a video.
 func (m *Message) IsVideo() bool {
-	return !m.IsText() && m.Video != nil
+	return m != nil && m.Video != nil
 }
 
 // IsVoice checks that the current message is a voice.
 func (m *Message) IsVoice() bool {
-	return !m.IsText() && m.Voice != nil
+	return m != nil && m.Voice != nil
 }
 
 // IsVideoNote checks that the current message is a video note.
 func (m *Message) IsVideoNote() bool {
-	return !m.IsText() && m.VideoNote != nil
+	return m != nil && m.VideoNote != nil
 }
 
 // IsContact checks that the current message is a contact.
 func (m *Message) IsContact() bool {
-	return !m.IsText() && m.Contact != nil
+	return m != nil && m.Contact != nil
 }
 
 // IsLocation checks that the current message is a location.
 func (m *Message) IsLocation() bool {
-	return !m.IsText() && m.Location != nil
+	return m != nil && m.Location != nil
 }
 
 // IsVenue checks that the current message is a venue.
 func (m *Message) IsVenue() bool {
-	return !m.IsText() && m.Venue != nil
+	return m != nil && m.Venue != nil
 }
 
 // IsAnimation checks that the current message is a animation.
 func (m *Message) IsAnimation() bool {
-	return !m.IsText() && m.Animation != nil
+	return m != nil && m.Animation != nil
 }
 
 // IsNewChatMembersEvent checks that the current message is a event of entry of
 // new members.
 func (m *Message) IsNewChatMembersEvent() bool {
-	return !m.IsText() && len(m.NewChatMembers) > 0
+	return m != nil && len(m.NewChatMembers) > 0
 }
 
 // IsLeftChatMemberEvent checks that the current message is a event of members
 // exit.
 func (m *Message) IsLeftChatMemberEvent() bool {
-	return !m.IsText() && m.LeftChatMember != nil
+	return m != nil && m.LeftChatMember != nil
 }
 
 // IsNewChatTitleEvent checks that the current message is a event of setting a
 // new chat title.
 func (m *Message) IsNewChatTitleEvent() bool {
-	return !m.IsText() && !strings.EqualFold(m.NewChatTitle, "")
+	return m != nil && !strings.EqualFold(m.NewChatTitle, "")
 }
 
 // IsNewChatPhotoEvent checks that the current message is a event of setting a
 // new chat avatar.
 func (m *Message) IsNewChatPhotoEvent() bool {
-	return !m.IsText() && len(m.NewChatPhoto) > 0
+	return m != nil && len(m.NewChatPhoto) > 0
 }
 
 // IsDeleteChatPhotoEvent checks that the current message is a event of deleting
 // a chat avatar.
 func (m *Message) IsDeleteChatPhotoEvent() bool {
-	return !m.IsText() && m.DeleteChatPhoto
+	return m != nil && m.DeleteChatPhoto
 }
 
 // IsGroupChatCreatedEvent checks that the current message is a event of creating
 // a new group.
 func (m *Message) IsGroupChatCreatedEvent() bool {
-	return !m.IsText() && m.GroupChatCreated
+	return m != nil && m.GroupChatCreated
 }
 
 // IsSupergroupChatCreatedEvent checks that the current message is a event of
 // creating a new supergroup.
 func (m *Message) IsSupergroupChatCreatedEvent() bool {
-	return !m.IsText() && m.SupergroupChatCreated
+	return m != nil && m.SupergroupChatCreated
 }
 
 // IsChannelChatCreatedEvent checks that the current message is a event of
 // creating a new channel.
 func (m *Message) IsChannelChatCreatedEvent() bool {
-	return !m.IsText() && m.ChannelChatCreated
+	return m != nil && m.ChannelChatCreated
 }
 
 // IsPinnedMessage checks that the current message is a event of pinning another
 // message.
 func (m *Message) IsPinnedMessage() bool {
-	return !m.IsText() && m.PinnedMessage != nil
+	return m != nil && m.PinnedMessage != nil
 }
 
 // IsInvoice checks that the current message is a invoice.
 func (m *Message) IsInvoice() bool {
-	return !m.IsText() && m.Invoice != nil
+	return m != nil && m.Invoice != nil
 }
 
 // IsSuccessfulPayment checks that the current message is a event of successful
 // payment.
 func (m *Message) IsSuccessfulPayment() bool {
-	return !m.IsText() && m.SuccessfulPayment != nil
+	return m != nil && m.SuccessfulPayment != nil
 }
 
 // HasEntities checks that the current message contains entities.
 func (m *Message) HasEntities() bool {
-	return m.IsText() && len(m.Entities) > 0
+	return m != nil && len(m.Entities) > 0
 }
 
 // HasCaptionEntities checks that the current media contains entities in caption.
 func (m *Message) HasCaptionEntities() bool {
-	return !m.IsText() && len(m.CaptionEntities) > 0
+	return m != nil && len(m.CaptionEntities) > 0
 }
 
 // HasMentions checks that the current message contains mentions.
@@ -281,12 +281,12 @@ func (m *Message) HasCaptionMentions() bool {
 
 // HasCaption checks that the current media has caption.
 func (m *Message) HasCaption() bool {
-	return !m.IsText() && !strings.EqualFold(m.Caption, "")
+	return m != nil && m.Caption != ""
 }
 
 // HasAuthorSignature checks that the current channel post has author signature.
 func (m *Message) HasAuthorSignature() bool {
-	return m != nil && !strings.EqualFold(m.AuthorSignature, "")
+	return m != nil && m.AuthorSignature != ""
 }
 
 // IsEvent checks what current message is a any chat event.

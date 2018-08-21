@@ -54,7 +54,7 @@ func NewWebhook(url string, file interface{}) *SetWebhookParameters {
 // If you'd like to make sure that the Webhook request comes from Telegram, we
 // recommend using a secret path in the URL, e.g. https://www.example.com/<token>.
 // Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
-func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
+func (bot *Bot) SetWebhook(params *SetWebhookParameters) (ok bool, err error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("url", params.URL)
@@ -67,26 +67,22 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 		args.Add("max_connections", strconv.Itoa(params.MaxConnections))
 	}
 
-	var (
-		err  error
-		resp *Response
-	)
+	var resp *Response
 	if params.Certificate != nil {
 		resp, err = bot.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
 	} else {
 		var dst []byte
 		dst, err = json.Marshal(params)
 		if err != nil {
-			return false, err
+			return
 		}
 
 		resp, err = bot.request(dst, MethodSetWebhook)
 	}
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

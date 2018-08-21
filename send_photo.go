@@ -51,7 +51,7 @@ func NewPhoto(chatID int64, photo interface{}) *SendPhotoParameters {
 }
 
 // SendPhoto send photos. On success, the sent Message is returned.
-func (bot *Bot) SendPhoto(params *SendPhotoParameters) (*Message, error) {
+func (bot *Bot) SendPhoto(params *SendPhotoParameters) (msg *Message, err error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -76,10 +76,10 @@ func (bot *Bot) SendPhoto(params *SendPhotoParameters) (*Message, error) {
 
 	resp, err := bot.Upload(MethodSendPhoto, "photo", "", params.Photo, args)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

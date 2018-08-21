@@ -1,16 +1,13 @@
 package telegram
 
 import (
-	"fmt"
 	"net/url"
 	"strings"
 )
 
 // ParseURL selects URL from entered text of message and parse it as url.URL.
 func (e *MessageEntity) ParseURL(messageText string) *url.URL {
-	if e == nil ||
-		!e.IsURL() ||
-		strings.EqualFold(messageText, "") {
+	if e == nil || !e.IsURL() || messageText == "" {
 		return nil
 	}
 
@@ -22,8 +19,8 @@ func (e *MessageEntity) ParseURL(messageText string) *url.URL {
 	}
 
 	link, err := url.Parse(string(text[from:to]))
-	if err == nil && strings.EqualFold(link.Scheme, "") {
-		link, err = url.Parse(fmt.Sprint("http://", link))
+	if err == nil && link.Scheme == "" {
+		link, err = url.Parse("http://" + link.String())
 	}
 	if err != nil {
 		return nil

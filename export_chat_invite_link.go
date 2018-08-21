@@ -11,18 +11,17 @@ type ExportChatInviteLinkParameters struct {
 // ExportChatInviteLink export an invite link to a supergroup or a channel. The
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns exported invite link as String on success.
-func (bot *Bot) ExportChatInviteLink(chatID int64) (string, error) {
+func (bot *Bot) ExportChatInviteLink(chatID int64) (inviteLink string, err error) {
 	dst, err := json.Marshal(&ExportChatInviteLinkParameters{ChatID: chatID})
 	if err != nil {
-		return "", err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodExportChatInviteLink)
 	if err != nil {
-		return "", err
+		return
 	}
 
-	var data string
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &inviteLink)
+	return
 }

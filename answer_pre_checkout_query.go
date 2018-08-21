@@ -39,18 +39,17 @@ func NewAnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool) *AnswerPreChe
 //
 // Note: The Bot API must receive an answer within 10 seconds after the
 // pre-checkout query was sent.
-func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (bool, error) {
+func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodAnswerPreCheckoutQuery)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

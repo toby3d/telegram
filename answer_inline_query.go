@@ -48,18 +48,17 @@ func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerI
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
-func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, error) {
+func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (ok bool, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodAnswerInlineQuery)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

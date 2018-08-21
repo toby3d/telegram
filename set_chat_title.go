@@ -16,21 +16,20 @@ type SetChatTitleParameters struct {
 //
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
-func (bot *Bot) SetChatTitle(chatID int64, title string) (bool, error) {
+func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
 	dst, err := json.Marshal(&SetChatTitleParameters{
 		ChatID: chatID,
 		Title:  title,
 	})
 	if err != nil {
-		return false, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSetChatTitle)
 	if err != nil {
-		return false, err
+		return
 	}
 
-	var data bool
-	err = json.Unmarshal(*resp.Result, &data)
-	return data, err
+	err = json.Unmarshal(*resp.Result, &ok)
+	return
 }

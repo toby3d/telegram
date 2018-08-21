@@ -45,7 +45,7 @@ func NewDocument(chatID int64, document interface{}) *SendDocumentParameters {
 
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send
 // files of any type of up to 50 MB in size, this limit may be changed in the future.
-func (bot *Bot) SendDocument(params *SendDocumentParameters) (*Message, error) {
+func (bot *Bot) SendDocument(params *SendDocumentParameters) (msg *Message, err error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -70,10 +70,10 @@ func (bot *Bot) SendDocument(params *SendDocumentParameters) (*Message, error) {
 
 	resp, err := bot.Upload(MethodSendDocument, "document", "", params.Document, args)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

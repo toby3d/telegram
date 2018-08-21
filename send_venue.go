@@ -52,18 +52,18 @@ func NewVenue(chatID int64, latitude, longitude float32, title, address string) 
 }
 
 // SendVenue send information about a venue. On success, the sent Message is returned.
-func (bot *Bot) SendVenue(params *SendVenueParameters) (*Message, error) {
+func (bot *Bot) SendVenue(params *SendVenueParameters) (msg *Message, err error) {
 	dst, err := json.Marshal(params)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodSendVenue)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data Message
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	msg = new(Message)
+	err = json.Unmarshal(*resp.Result, msg)
+	return
 }

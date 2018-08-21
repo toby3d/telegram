@@ -12,21 +12,21 @@ type GetChatMemberParameters struct {
 
 // GetChatMember get information about a member of a chat. Returns a ChatMember
 // object on success.
-func (bot *Bot) GetChatMember(chatID int64, userID int) (*ChatMember, error) {
+func (bot *Bot) GetChatMember(chatID int64, userID int) (member *ChatMember, err error) {
 	dst, err := json.Marshal(&GetChatMemberParameters{
 		ChatID: chatID,
 		UserID: userID,
 	})
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	resp, err := bot.request(dst, MethodGetChatMember)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var data ChatMember
-	err = json.Unmarshal(*resp.Result, &data)
-	return &data, err
+	member = new(ChatMember)
+	err = json.Unmarshal(*resp.Result, member)
+	return
 }
