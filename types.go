@@ -801,13 +801,6 @@ type (
 		RetryAfter int `json:"retry_after,omitempty"`
 	}
 
-	// InputMedia represents the content of a media message to be sent. It should
-	// be one of
-	InputMedia interface {
-		NewInputMediaPhoto(media InputFile) *InputMediaPhoto
-		NewInputMediaVideo(media InputFile) *InputMediaVideo
-	}
-
 	// InputMediaPhoto represents a photo to be sent.
 	InputMediaPhoto struct {
 		// Type of the result, must be photo
@@ -1051,30 +1044,6 @@ type (
 
 		// Sender location, only for bots that request user location
 		Location *Location `json:"location,omitempty"`
-	}
-
-	// InlineQueryResult represents one result of an inline query.
-	InlineQueryResult interface {
-		NewInlineQueryResultCachedAudio(resultID, fileID string) *InlineQueryResultCachedAudio
-		NewInlineQueryResultCachedDocument(resultID, fileID, title string) *InlineQueryResultCachedDocument
-		NewInlineQueryResultCachedGif(resultID, fileID string) *InlineQueryResultCachedGif
-		NewInlineQueryResultCachedMpeg4Gif(resultID, fileID string) *InlineQueryResultCachedMpeg4Gif
-		NewInlineQueryResultCachedPhoto(resultID, fileID string) *InlineQueryResultCachedPhoto
-		NewInlineQueryResultCachedSticker(resultID, fileID string) *InlineQueryResultCachedSticker
-		NewInlineQueryResultCachedVideo(resultID, fileID, title string) *InlineQueryResultCachedVideo
-		NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQueryResultCachedVoice
-		NewInlineQueryResultArticle(resultID, title, content *InputMessageContent) *InlineQueryResultArticle
-		NewInlineQueryResultAudio(resultID, audioURL, title string) *InlineQueryResultAudio
-		NewInlineQueryResultContact(resultID, phoneNumber, firstName string) *InlineQueryResultContact
-		NewInlineQueryResultGame(resultID, gameShortName string) *InlineQueryResultGame
-		NewInlineQueryResultDocument(resultID, title, documentURL, mimeType string) *InlineQueryResultDocument
-		NewInlineQueryResultGif(resultID, gifURL, thumbURL string) *InlineQueryResultGif
-		NewInlineQueryResultLocation(resultID, title string, latitude, longitude float32) *InlineQueryResultLocation
-		NewInlineQueryResultMpeg4Gif(resultID, mpeg4URL, thumbURL string) *InlineQueryResultMpeg4Gif
-		NewInlineQueryResultPhoto(resultID, photoURL, thumbURL string) *InlineQueryResultPhoto
-		NewInlineQueryResultVenue(resultID, title, address string, latitude, longitude float32) *InlineQueryResultVenue
-		NewInlineQueryResultVideo(resultID, videoURL, mimeType, thumbURL, title string) *InlineQueryResultVideo
-		NewInlineQueryResultVoice(resultID, voiceURL, title string) *InlineQueryResultVoice
 	}
 
 	// InlineQueryResultArticle represents a link to an article or web page.
@@ -1797,15 +1766,6 @@ type (
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 	}
 
-	// InputMessageContent represents the content of a message to be sent as a
-	// result of an inline query.
-	InputMessageContent interface {
-		NewInputTextMessageContent(messageText string) *InputTextMessageContent
-		NewInputLocationMessageContent(latitude, longitude float32) *InputLocationMessageContent
-		NewInputVenueMessageContent(latitude, longitude float32, title, address string) *InputVenueMessageContent
-		NewInputContactMessageContent(phoneNumber, firstName string) *InputContactMessageContent
-	}
-
 	// InputTextMessageContent represents the content of a text message to be
 	// sent as the result of an inline query.
 	InputTextMessageContent struct {
@@ -2310,15 +2270,5 @@ type (
 
 		// User
 		User *User `json:"user"`
-	}
-
-	// ReplyMarkup is a JSON-serialized object for an inline keyboard, custom
-	// reply keyboard, instructions to remove reply keyboard or to force a reply
-	// from the user.
-	ReplyMarkup interface {
-		NewInlineKeyboardMarkup(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup
-		NewReplyKeyboardMarkup(rows ...[]KeyboardButton) *ReplyKeyboardMarkup
-		NewReplyKeyboardRemove(selective bool) *ReplyKeyboardRemove
-		NewForceReply(selective bool) *ForceReply
 	}
 )
