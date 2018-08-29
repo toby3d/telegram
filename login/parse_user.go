@@ -7,10 +7,10 @@ import (
 
 // User contains data about authenticated user.
 type User struct {
+	ID        int    `json:"id"`
 	AuthDate  int64  `json:"auth_date"`
 	FirstName string `json:"first_name"`
 	Hash      string `json:"hash"`
-	ID        int    `json:"id"`
 	LastName  string `json:"last_name,omitempty"`
 	PhotoURL  string `json:"photo_url,omitempty"`
 	Username  string `json:"username,omitempty"`

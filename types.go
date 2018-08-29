@@ -1054,7 +1054,7 @@ type (
 		// Unique identifier for this result, 1-64 Bytes
 		ID string `json:"id"`
 
-		//Title of the result
+		// Title of the result
 		Title string `json:"title"`
 
 		// URL of the result
@@ -1397,7 +1397,7 @@ type (
 		// Location title
 		Title string `json:"title"`
 
-		//Url of the thumbnail for the result
+		// Url of the thumbnail for the result
 		ThumbURL string `json:"thumb_url,omitempty"`
 
 		// Location latitude in degrees
@@ -1406,16 +1406,16 @@ type (
 		// Location longitude in degrees
 		Longitude float32 `json:"longitude"`
 
-		//Inline keyboard attached to the message
+		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-		//Content of the message to be sent instead of the location
+		// Content of the message to be sent instead of the location
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
 
-		//Thumbnail width
+		// Thumbnail width
 		ThumbWidth int `json:"thumb_width,omitempty"`
 
-		//Thumbnail height
+		// Thumbnail height
 		ThumbHeight int `json:"thumb_height,omitempty"`
 	}
 
@@ -2044,7 +2044,7 @@ type (
 		// EncryptedCredentials.
 		Data string `json:"data,omitempty"`
 
-		//User's verified phone number, available only for "phone_number" type
+		// User's verified phone number, available only for "phone_number" type
 		PhoneNumber string `json:"phone_number,omitempty"`
 
 		// User's verified email address, available only for "email" type
