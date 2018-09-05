@@ -7,11 +7,16 @@ func (s *Sticker) InSet() bool {
 	return s != nil && s.SetName != ""
 }
 
+// IsWebP check that the current sticker is a WebP file uploaded by user.
+func (s *Sticker) IsWebP() bool {
+	return s != nil && s.SetName == ""
+}
+
 // Set use bot for getting parent StickerSet if SetName is present.
 //
 // Return nil if current sticker has been uploaded by user as WebP file.
 func (s *Sticker) Set(bot *Bot) *StickerSet {
-	if !s.InSet() || bot == nil {
+	if s.IsWebP() || bot == nil {
 		return nil
 	}
 
