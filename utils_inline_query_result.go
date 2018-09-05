@@ -84,7 +84,7 @@ func NewInlineQueryResultCachedVoice(resultID, fileID, title string) *InlineQuer
 }
 
 // NewInlineQueryResultArticle creates a new inline query result with article.
-func NewInlineQueryResultArticle(resultID, title string, content *InputMessageContent) *InlineQueryResultArticle {
+func NewInlineQueryResultArticle(resultID, title string, content interface{}) *InlineQueryResultArticle {
 	return &InlineQueryResultArticle{
 		Type:                TypeArticle,
 		ID:                  resultID,

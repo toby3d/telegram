@@ -13,7 +13,7 @@ type EditMessageMediaParameters struct {
 	InlineMessageID string `json:"inline_message_id,omitempty"`
 
 	// A JSON-serialized object for a new media content of the message
-	Media *InputMedia `json:"media"`
+	Media interface{} `json:"media"`
 
 	// A JSON-serialized object for a new inline keyboard.
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
