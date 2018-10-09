@@ -1,6 +1,9 @@
 package telegram
 
-import "golang.org/x/text/language"
+import (
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
+)
 
 // Language parse LanguageCode of current user and returns language.Tag.
 func (u *User) Language() language.Tag {
@@ -14,6 +17,11 @@ func (u *User) Language() language.Tag {
 	}
 
 	return tag
+}
+
+// NewPrinter create simple message.Printer with User.Language() by default.
+func (u *User) NewPrinter() *message.Printer {
+	return message.NewPrinter(u.Language())
 }
 
 // FullName returns the full name of user or FirstName if LastName is not
