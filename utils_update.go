@@ -3,7 +3,6 @@ package telegram
 import (
 	"bytes"
 	"log"
-	"net/url"
 	"time"
 
 	"github.com/kirillDanshin/dlog"
@@ -50,7 +49,7 @@ func (b *Bot) NewLongPollingChannel(params *GetUpdatesParameters) UpdatesChannel
 
 // NewWebhookChannel creates channel for receive incoming updates via an outgoing
 // webhook.
-func (b *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters, certFile, keyFile, serveAddr string) (updates UpdatesChannel) {
+func (b *Bot) NewWebhookChannel(setURL *http.URI, params *SetWebhookParameters, certFile, keyFile, serveAddr string) (updates UpdatesChannel) {
 	if params == nil {
 		params = &SetWebhookParameters{
 			URL:            setURL.String(),
@@ -60,11 +59,9 @@ func (b *Bot) NewWebhookChannel(setURL *url.URL, params *SetWebhookParameters, c
 
 	var err error
 	channel := make(chan Update, 100)
-	requiredPath := []byte(setURL.Path)
-	dlog.Ln("requiredPath:", string(requiredPath))
 	handleFunc := func(ctx *http.RequestCtx) {
 		dlog.Ln("Request path:", string(ctx.Path()))
-		if !bytes.HasPrefix(ctx.Path(), requiredPath) {
+		if !bytes.HasPrefix(ctx.Path(), setURL.Path()) {
 			dlog.Ln("Unsupported request path:", string(ctx.Path()))
 			return
 		}
