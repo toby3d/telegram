@@ -2,21 +2,25 @@ package telegram
 
 import (
 	"errors"
+	"log"
 	"path"
 	"strconv"
 
-	log "github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
+
+var defaultClient = new(http.Client)
 
 func (bot *Bot) request(dst []byte, method string) (response *Response, err error) {
 	if bot.Client == nil {
 		bot.SetClient(defaultClient)
 	}
 
-	requestURI := defaultURI
-	requestURI.Path = path.Join("bot"+bot.AccessToken, method)
+	requestURI := http.AcquireURI()
+	requestURI.SetScheme("https")
+	requestURI.SetHost("api.telegram.org")
+	requestURI.SetPath(path.Join("bot"+bot.AccessToken, method))
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
@@ -27,7 +31,7 @@ func (bot *Bot) request(dst []byte, method string) (response *Response, err erro
 	}
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent(path.Join("telegram", strconv.FormatInt(Version, 10)))
-	req.Header.SetHost(requestURI.Hostname())
+	req.Header.SetHostBytes(requestURI.Host())
 	req.SetBody(dst)
 
 	resp := http.AcquireResponse()

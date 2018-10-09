@@ -1,8 +1,7 @@
 package telegram
 
 import (
-	"net/url"
-	"strconv"
+	http "github.com/valyala/fasthttp"
 )
 
 // NewForceReply calls the response interface to the message.
@@ -11,15 +10,14 @@ func NewForceReply() *ForceReply {
 }
 
 // NewInlineMentionURL creates a url.URL for the mention user without username.
-func NewInlineMentionURL(userID int) *url.URL {
-	link := &url.URL{
-		Scheme: SchemeTelegram,
-		Path:   "user",
-	}
+func NewInlineMentionURL(userID int) *http.URI {
+	link := http.AcquireURI()
+	link.SetScheme(SchemeTelegram)
+	link.SetPath("user")
 
-	q := link.Query()
-	q.Add("id", strconv.Itoa(userID))
-	link.RawQuery = q.Encode()
+	q := link.QueryArgs()
+	q.SetUint("id", userID)
+	link.SetQueryStringBytes(q.QueryString())
 
 	return link
 }
@@ -32,13 +30,12 @@ func NewMarkdownItalic(text string) string {
 	return "_" + text + "_"
 }
 
-func NewMarkdownURL(text string, link *url.URL) string {
+func NewMarkdownURL(text string, link *http.URI) string {
 	return "[" + text + "](" + link.String() + ")"
 }
 
 func NewMarkdownMention(text string, id int) string {
-	link := NewInlineMentionURL(id)
-	return NewMarkdownURL(text, link)
+	return NewMarkdownURL(text, NewInlineMentionURL(id))
 }
 
 func NewMarkdownCode(text string) string {
@@ -57,13 +54,12 @@ func NewHtmlItalic(text string) string {
 	return "<i>" + text + "</i>"
 }
 
-func NewHtmlURL(text string, link *url.URL) string {
+func NewHtmlURL(text string, link *http.URI) string {
 	return `<a href="` + link.String() + `">` + text + `</a>`
 }
 
 func NewHtmlMention(text string, id int) string {
-	link := NewInlineMentionURL(id)
-	return NewHtmlURL(text, link)
+	return NewHtmlURL(text, NewInlineMentionURL(id))
 }
 
 func NewHtmlCode(text string) string {

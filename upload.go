@@ -60,8 +60,10 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
-	requestURI := defaultURI
-	requestURI.Path = path.Join("bot"+bot.AccessToken, method)
+	requestURI := http.AcquireURI()
+	requestURI.SetScheme("https")
+	requestURI.SetHost("api.telegram.org")
+	requestURI.SetPath(path.Join("bot"+bot.AccessToken, method))
 
 	query, err := url.ParseQuery(args.String())
 	if err != nil {
@@ -89,7 +91,7 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent(path.Join("telegram", strconv.FormatInt(Version, 10)))
-	req.Header.SetHost(requestURI.Hostname())
+	req.Header.SetHostBytes(requestURI.Host())
 
 	log.Ln("Request:")
 	log.D(req)

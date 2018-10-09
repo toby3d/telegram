@@ -126,14 +126,16 @@ func (b *Bot) IsMessageToMe(m *Message) bool {
 }
 
 // NewFileURL creates a url.URL to file with path getted from GetFile method.
-func (b *Bot) NewFileURL(filePath string) *url.URL {
+func (b *Bot) NewFileURL(filePath string) *http.URI {
 	if b == nil || b.AccessToken == "" ||
 		filePath == "" {
 		return nil
 	}
 
-	result := defaultURI
-	result.Path = path.Join("file", "bot"+b.AccessToken, filePath)
+	result := http.AcquireURI()
+	result.SetScheme("https")
+	result.SetHost("api.telegram.org")
+	result.SetPath(path.Join("file", "bot"+b.AccessToken, filePath))
 
 	return result
 }
