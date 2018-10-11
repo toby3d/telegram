@@ -1,42 +1,31 @@
 package login
 
-import (
-	"net/url"
-	"strconv"
-)
-
-// User contains data about authenticated user.
-type User struct {
-	ID        int    `json:"id"`
-	AuthDate  int64  `json:"auth_date"`
-	FirstName string `json:"first_name"`
-	Hash      string `json:"hash"`
-	LastName  string `json:"last_name,omitempty"`
-	PhotoURL  string `json:"photo_url,omitempty"`
-	Username  string `json:"username,omitempty"`
-}
+import http "github.com/valyala/fasthttp"
 
 // ParseUser create User structure from input url.Values.
-func ParseUser(src url.Values) (u *User, err error) {
-	u = new(User)
+func ParseUser(data interface{}) (*User, error) {
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
 
-	var ad int
-	ad, err = strconv.Atoi(src.Get(KeyAuthDate))
-	if err != nil {
-		return
+	switch d := data.(type) {
+	case *http.Args:
+		d.CopyTo(args)
+		http.ReleaseArgs(d)
+	case []byte:
+		args.ParseBytes(d)
+	case string:
+		args.Parse(d)
+	default:
+		return nil, ErrUnsupportedType
 	}
 
-	u.ID, err = strconv.Atoi(src.Get(KeyID))
-	if err != nil {
-		return
-	}
-
-	u.AuthDate = int64(ad)
-	u.FirstName = src.Get(KeyFirstName)
-	u.Hash = src.Get(KeyHash)
-	u.LastName = src.Get(KeyLastName)
-	u.PhotoURL = src.Get(KeyPhotoURL)
-	u.Username = src.Get(KeyUsername)
-
-	return
+	return &User{
+		ID:        args.GetUintOrZero(KeyID),
+		AuthDate:  int64(args.GetUintOrZero(KeyAuthDate)),
+		FirstName: string(args.Peek(KeyFirstName)),
+		Hash:      string(args.Peek(KeyHash)),
+		LastName:  string(args.Peek(KeyLastName)),
+		PhotoURL:  string(args.Peek(KeyPhotoURL)),
+		Username:  string(args.Peek(KeyUsername)),
+	}, nil
 }
