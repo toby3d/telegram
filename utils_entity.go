@@ -1,12 +1,13 @@
 package telegram
 
 import (
-	"net/url"
 	"strings"
+
+	http "github.com/valyala/fasthttp"
 )
 
-// ParseURL selects URL from entered text of message and parse it as url.URL.
-func (e *MessageEntity) ParseURL(messageText string) *url.URL {
+// ParseURL selects URL from entered text of message and parse it as fasthttp.URI.
+func (e *MessageEntity) ParseURL(messageText string) *http.URI {
 	if e == nil || !e.IsURL() || messageText == "" {
 		return nil
 	}
@@ -18,13 +19,8 @@ func (e *MessageEntity) ParseURL(messageText string) *url.URL {
 		return nil
 	}
 
-	link, err := url.Parse(string(text[from:to]))
-	if err == nil && link.Scheme == "" {
-		link, err = url.Parse("http://" + link.String())
-	}
-	if err != nil {
-		return nil
-	}
+	link := http.AcquireURI()
+	link.Update(string(text[from:to]))
 
 	return link
 }
@@ -84,16 +80,14 @@ func (e *MessageEntity) IsURL() bool {
 	return e != nil && strings.EqualFold(e.Type, EntityURL)
 }
 
-// TextLink parse current text link entity as url.URL.
-func (e *MessageEntity) TextLink() *url.URL {
+// TextLink parse current text link entity as fasthttp.URI.
+func (e *MessageEntity) TextLink() *http.URI {
 	if e == nil {
 		return nil
 	}
 
-	link, err := url.Parse(e.URL)
-	if err != nil {
-		return nil
-	}
+	link := http.AcquireURI()
+	link.Update(e.URL)
 
 	return link
 }

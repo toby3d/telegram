@@ -3,10 +3,8 @@ package telegram
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"mime/multipart"
-	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -27,7 +25,7 @@ media, etc.):
 each file object has a file_id field, simply pass this file_id as a parameter instead of uploading.
 There are no limits for files sent this way.
 
-2. Provide Telegram with an *url.URL for the file to be sent. Telegram will download and send the
+2. Provide Telegram with an *fasthttp.URI for the file to be sent. Telegram will download and send the
 file. 5 MB max size for photos and 20 MB max for other types of content.
 
 3. Post the file using multipart/form-data in the usual way that files are uploaded via the
@@ -46,7 +44,7 @@ as a photo, a photo can't be sent as a document, etc.
 
 Sending by URL
 
-* When sending by *url.URL the target file must have the correct MIME type (e.g., audio/mpeg for
+* When sending by *fasthttp.URI the target file must have the correct MIME type (e.g., audio/mpeg for
 sendAudio, etc.).
 
 * In sendDocument, sending by URL will currently only work for gif, pdf and zip files.
@@ -56,7 +54,7 @@ voice notes will be sent as files.
 
 * Other configurations may work but we can't guarantee that they will.
 */
-func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.Stringer) (response *Response, err error) {
+func (bot *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (response *Response, err error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
@@ -65,16 +63,9 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args fmt.String
 	requestURI.SetHost("api.telegram.org")
 	requestURI.SetPath(path.Join("bot"+bot.AccessToken, method))
 
-	query, err := url.ParseQuery(args.String())
-	if err != nil {
-		return
-	}
-
-	for key, val := range query {
-		if err = multi.WriteField(key, val[0]); err != nil {
-			return nil, err
-		}
-	}
+	args.VisitAll(func(key, value []byte) {
+		multi.WriteField(string(key), string(value))
+	})
 
 	if err = createFileField(multi, file, key, name); err != nil {
 		return
@@ -123,7 +114,7 @@ func createFileField(w *multipart.Writer, file interface{}, key, val string) err
 	switch src := file.(type) {
 	case string: // Send FileID of file on disk path
 		err = createFileFieldString(w, key, src)
-	case *url.URL: // Send by URL
+	case *http.URI: // Send by URL
 		err = w.WriteField(key, src.String())
 	case []byte: // Upload new
 		err = createFileFieldRaw(w, key, val, bytes.NewReader(src))

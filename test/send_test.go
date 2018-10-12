@@ -1,10 +1,10 @@
 package test
 
 import (
-	"net/url"
 	"testing"
 
-	"gitlab.com/toby3d/telegram"
+	http "github.com/valyala/fasthttp"
+	tg "gitlab.com/toby3d/telegram"
 )
 
 const (
@@ -18,18 +18,13 @@ const (
 )
 
 var (
-	photoURL = url.URL{
-		Scheme: "https",
-		Host:   "simg3.gelbooru.com",
-		Path:   "/images/46/24/46246c1b8c4fcc37050085a850c165c4.jpg",
-	}
-
+	photoURL  *http.URI
 	messageID int
 )
 
 func TestSendPhoto(t *testing.T) {
 	resp, err := bot.SendPhoto(
-		telegram.NewPhoto(chatID, photoFileID),
+		tg.NewPhoto(chatID, photoFileID),
 	)
 	if err != nil {
 		t.Error(err.Error())
@@ -43,7 +38,7 @@ func TestSendPhoto(t *testing.T) {
 
 func TestSendDocument(t *testing.T) {
 	resp, err := bot.SendDocument(
-		telegram.NewDocument(chatID, documentFileID),
+		tg.NewDocument(chatID, documentFileID),
 	)
 	if err != nil {
 		t.Error(err.Error())
@@ -55,10 +50,10 @@ func TestSendDocument(t *testing.T) {
 
 func TestSendMediaGroup(t *testing.T) {
 	resp, err := bot.SendMediaGroup(
-		telegram.NewMediaGroup(
+		tg.NewMediaGroup(
 			chatID,
-			telegram.NewInputMediaPhoto(photoFileID),
-			telegram.NewInputMediaPhoto(photoURL.String()),
+			tg.NewInputMediaPhoto(photoFileID),
+			tg.NewInputMediaPhoto(photoURL.String()),
 		),
 	)
 	if err != nil {
@@ -71,7 +66,7 @@ func TestSendMediaGroup(t *testing.T) {
 
 func TestSendLocation(t *testing.T) {
 	resp, err := bot.SendLocation(
-		telegram.NewLocation(chatID, 36.724510, 139.268181),
+		tg.NewLocation(chatID, 36.724510, 139.268181),
 	)
 	if err != nil {
 		t.Error(err.Error())
@@ -83,7 +78,7 @@ func TestSendLocation(t *testing.T) {
 
 func TestSendVenue(t *testing.T) {
 	resp, err := bot.SendVenue(
-		telegram.NewVenue(chatID, 36.724510, 139.268181, "Japan", "Japan"),
+		tg.NewVenue(chatID, 36.724510, 139.268181, "Japan", "Japan"),
 	)
 	if err != nil {
 		t.Error(err.Error())
@@ -95,7 +90,7 @@ func TestSendVenue(t *testing.T) {
 
 func TestSendContact(t *testing.T) {
 	resp, err := bot.SendContact(
-		telegram.NewContact(chatID, "+42410", "Telegram"),
+		tg.NewContact(chatID, "+42410", "Telegram"),
 	)
 	if err != nil {
 		t.Error(err.Error())

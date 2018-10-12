@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"net/url"
 	"path"
 	"strings"
 
@@ -141,25 +140,24 @@ func (b *Bot) NewFileURL(filePath string) *http.URI {
 }
 
 // NewRedirectURL creates new url.URL for redirecting from one chat to another.
-func (b *Bot) NewRedirectURL(param string, group bool) *url.URL {
+func (b *Bot) NewRedirectURL(param string, group bool) *http.URI {
 	if b == nil || b.User == nil || b.User.Username == "" {
 		return nil
 	}
 
-	link := &url.URL{
-		Scheme: "https",
-		Host:   "t.me",
-		Path:   b.User.Username,
-	}
+	link := http.AcquireURI()
+	link.SetScheme("https")
+	link.SetHost("t.me")
+	link.SetPath(b.User.Username)
 
-	q := link.Query()
+	q := link.QueryArgs()
 	key := "start"
 	if group {
 		key += "group"
 	}
-	q.Add(key, param)
+	q.Set(key, param)
 
-	link.RawQuery = q.Encode()
+	link.SetQueryStringBytes(q.QueryString())
 
 	return link
 }

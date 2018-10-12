@@ -1,8 +1,6 @@
 package telegram
 
-import (
-	http "github.com/valyala/fasthttp"
-)
+import http "github.com/valyala/fasthttp"
 
 // NewForceReply calls the response interface to the message.
 func NewForceReply() *ForceReply {
