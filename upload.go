@@ -54,17 +54,17 @@ voice notes will be sent as files.
 
 * Other configurations may work but we can't guarantee that they will.
 */
-func (bot *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (response *Response, err error) {
+func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (response *Response, err error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
 	requestURI := http.AcquireURI()
 	requestURI.SetScheme("https")
 	requestURI.SetHost("api.telegram.org")
-	requestURI.SetPath(path.Join("bot"+bot.AccessToken, method))
+	requestURI.SetPath(path.Join("bot"+b.AccessToken, method))
 
 	args.VisitAll(func(key, value []byte) {
-		multi.WriteField(string(key), string(value))
+		_ = multi.WriteField(string(key), string(value))
 	})
 
 	if err = createFileField(multi, file, key, name); err != nil {
@@ -109,8 +109,7 @@ func (bot *Bot) Upload(method, key, name string, file InputFile, args *http.Args
 	return
 }
 
-func createFileField(w *multipart.Writer, file interface{}, key, val string) error {
-	var err error
+func createFileField(w *multipart.Writer, file interface{}, key, val string) (err error) {
 	switch src := file.(type) {
 	case string: // Send FileID of file on disk path
 		err = createFileFieldString(w, key, src)
@@ -121,13 +120,14 @@ func createFileField(w *multipart.Writer, file interface{}, key, val string) err
 	case io.Reader: // Upload new
 		err = createFileFieldRaw(w, key, val, src)
 	default:
-		return ErrBadFileType
+		err = ErrBadFileType
 	}
-	return err
+
+	return
 }
 
-func createFileFieldString(w *multipart.Writer, key, src string) error {
-	_, err := os.Stat(src)
+func createFileFieldString(w *multipart.Writer, key, src string) (err error) {
+	_, err = os.Stat(src)
 
 	switch {
 	case os.IsNotExist(err):
@@ -136,7 +136,7 @@ func createFileFieldString(w *multipart.Writer, key, src string) error {
 		err = uploadFromDisk(w, key, src)
 	}
 
-	return err
+	return
 }
 
 func uploadFromDisk(w *multipart.Writer, key, src string) error {
