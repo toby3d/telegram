@@ -3,7 +3,7 @@ package telegram
 // Version represents current version of Telegram API supported by this package
 const Version = 4.0
 
-// Action... represents available and supported status actions of bot
+// Action represents available and supported status actions of bot
 const (
 	ActionFindLocation    = "find_location"
 	ActionRecordAudio     = "record_audio"
@@ -17,7 +17,7 @@ const (
 	ActionUploadVideoNote = "upload_video_note"
 )
 
-// Chat... represents available and supported chat types
+// Chat represents available and supported chat types
 const (
 	ChatChannel    = "channel"
 	ChatGroup      = "group"
@@ -25,7 +25,7 @@ const (
 	ChatSuperGroup = "supergroup"
 )
 
-// Command... represents global commands which should be supported by any bot.
+// Command represents global commands which should be supported by any bot.
 // You can user IsCommandEqual method of Message for checking.
 //
 // See: https://core.telegram.org/bots#global-commands
@@ -35,7 +35,7 @@ const (
 	CommandSettings = "settings"
 )
 
-// Entity... represents available and supported entity types
+// Entity represents available and supported entity types
 const (
 	EntityBold        = "bold"
 	EntityBotCommand  = "bot_command"
@@ -52,7 +52,7 @@ const (
 	EntityURL         = "url"
 )
 
-// Method... represents available and supported Telegram API methods
+// Method represents available and supported Telegram API methods
 const (
 	MethodAddStickerToSet         = "addStickerToSet"
 	MethodAnswerCallbackQuery     = "answerCallbackQuery"
@@ -118,13 +118,13 @@ const (
 	MethodUploadStickerFile       = "uploadStickerFile"
 )
 
-// Mode... represents available and supported parsing modes of messages
+// Mode represents available and supported parsing modes of messages
 const (
 	StyleHTML     = "html"
 	StyleMarkdown = "markdown"
 )
 
-// Mime... represents available and supported MIME types of data
+// Mime represents available and supported MIME types of data
 const (
 	MimeHTML = "text/html"
 	MimeMP4  = "video/mp4"
@@ -132,13 +132,13 @@ const (
 	MimeZIP  = "application/zip"
 )
 
-// Scheme... represents optional schemes for URLs
+// Scheme represents optional schemes for URLs
 const (
 	SchemeAttach   = "attach"
 	SchemeTelegram = "tg"
 )
 
-// Status... represents available and supported statuses of ID
+// Status represents available and supported statuses of ID
 const (
 	StatusAdministrator = "administrator"
 	StatusCreator       = "creator"
@@ -148,7 +148,7 @@ const (
 	StatusRestricted    = "restricted"
 )
 
-// Type... represents available and supported types of data
+// Type represents available and supported types of data
 const (
 	TypeAddress               = "address"
 	TypeArticle               = "article"
@@ -178,7 +178,7 @@ const (
 	TypeVoice                 = "voice"
 )
 
-// Update... represents available and supported types of updates
+// Update represents available and supported types of updates
 const (
 	UpdateCallbackQuery      = "callback_query"
 	UpdateChannelPost        = "channel_post"
