@@ -24,3 +24,10 @@ func (a *Audio) HasTitle() bool {
 func (a *Audio) HasThumb() bool {
 	return a != nil && a.Thumb != nil
 }
+
+func (a *Audio) File() *File {
+	return &File{
+		FileID:   a.FileID,
+		FileSize: a.FileSize,
+	}
+}

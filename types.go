@@ -801,6 +801,14 @@ type (
 		RetryAfter int `json:"retry_after,omitempty"`
 	}
 
+	// InputMedia represents the content of a media message to be sent.
+	InputMedia interface {
+		File() string
+		InputMediaCaption() string
+		InputMediaParseMode() string
+		InputMediaType() string
+	}
+
 	// InputMediaPhoto represents a photo to be sent.
 	InputMediaPhoto struct {
 		// Type of the result, must be photo

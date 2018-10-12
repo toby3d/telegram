@@ -20,6 +20,13 @@ type (
 		Location *Location `json:"location,omitempty"`
 	}
 
+	// InlineQueryResult represents one result of an inline query.
+	InlineQueryResult interface {
+		ResultID() string
+		ResultType() string
+		ResultReplyMarkup() *InlineKeyboardMarkup
+	}
+
 	// InlineQueryResultArticle represents a link to an article or web page.
 	InlineQueryResultArticle struct {
 		// Type of the result, must be article
@@ -738,6 +745,12 @@ type (
 
 		// Content of the message to be sent instead of the audio
 		InputMessageContent interface{} `json:"input_message_content,omitempty"`
+	}
+
+	// InputMessageContent represents the content of a message to be sent as a result
+	// of an inline query.
+	InputMessageContent interface {
+		IsInputMessageContent() bool
 	}
 
 	// InputTextMessageContent represents the content of a text message to be

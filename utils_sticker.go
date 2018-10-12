@@ -35,3 +35,10 @@ func (s *Sticker) HasThumb() bool {
 func (s *Sticker) IsMask() bool {
 	return s != nil && s.MaskPosition != nil
 }
+
+func (s *Sticker) File() *File {
+	return &File{
+		FileID:   s.FileID,
+		FileSize: s.FileSize,
+	}
+}

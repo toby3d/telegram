@@ -207,3 +207,243 @@ func NewInlineQueryResultVoice(resultID, voiceURL, title string) *InlineQueryRes
 		Title:    title,
 	}
 }
+
+func (iqra *InlineQueryResultArticle) ResultID() string {
+	return iqra.ID
+}
+
+func (iqra *InlineQueryResultArticle) ResultType() string {
+	return iqra.Type
+}
+
+func (iqra *InlineQueryResultArticle) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqra.ReplyMarkup
+}
+
+func (iqrp *InlineQueryResultPhoto) ResultID() string {
+	return iqrp.ID
+}
+
+func (iqrp *InlineQueryResultPhoto) ResultType() string {
+	return iqrp.Type
+}
+
+func (iqrp *InlineQueryResultPhoto) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrp.ReplyMarkup
+}
+
+func (iqrg *InlineQueryResultGif) ResultID() string {
+	return iqrg.ID
+}
+
+func (iqrg *InlineQueryResultGif) ResultType() string {
+	return iqrg.Type
+}
+
+func (iqrg *InlineQueryResultGif) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrg.ReplyMarkup
+}
+
+func (iqrm4g *InlineQueryResultMpeg4Gif) ResultID() string {
+	return iqrm4g.ID
+}
+
+func (iqrm4g *InlineQueryResultMpeg4Gif) ResultType() string {
+	return iqrm4g.Type
+}
+
+func (iqrm4g *InlineQueryResultMpeg4Gif) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrm4g.ReplyMarkup
+}
+
+func (iqrv *InlineQueryResultVideo) ResultID() string {
+	return iqrv.ID
+}
+
+func (iqrv *InlineQueryResultVideo) ResultType() string {
+	return iqrv.Type
+}
+
+func (iqrv *InlineQueryResultVideo) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrv.ReplyMarkup
+}
+
+func (iqra *InlineQueryResultAudio) ResultID() string {
+	return iqra.ID
+}
+
+func (iqra *InlineQueryResultAudio) ResultType() string {
+	return iqra.Type
+}
+
+func (iqra *InlineQueryResultAudio) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqra.ReplyMarkup
+}
+
+func (iqrv *InlineQueryResultVoice) ResultID() string {
+	return iqrv.ID
+}
+
+func (iqrv *InlineQueryResultVoice) ResultType() string {
+	return iqrv.Type
+}
+
+func (iqrv *InlineQueryResultVoice) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrv.ReplyMarkup
+}
+
+func (iqrd *InlineQueryResultDocument) ResultID() string {
+	return iqrd.ID
+}
+
+func (iqrd *InlineQueryResultDocument) ResultType() string {
+	return iqrd.Type
+}
+
+func (iqrd *InlineQueryResultDocument) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrd.ReplyMarkup
+}
+
+func (iqrl *InlineQueryResultLocation) ResultID() string {
+	return iqrl.ID
+}
+
+func (iqrl *InlineQueryResultLocation) ResultType() string {
+	return iqrl.Type
+}
+
+func (iqrl *InlineQueryResultLocation) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrl.ReplyMarkup
+}
+
+func (iqrv *InlineQueryResultVenue) ResultID() string {
+	return iqrv.ID
+}
+
+func (iqrv *InlineQueryResultVenue) ResultType() string {
+	return iqrv.Type
+}
+
+func (iqrv *InlineQueryResultVenue) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrv.ReplyMarkup
+}
+
+func (iqrc *InlineQueryResultContact) ResultID() string {
+	return iqrc.ID
+}
+
+func (iqrc *InlineQueryResultContact) ResultType() string {
+	return iqrc.Type
+}
+
+func (iqrc *InlineQueryResultContact) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrc.ReplyMarkup
+}
+
+func (iqrg *InlineQueryResultGame) ResultID() string {
+	return iqrg.ID
+}
+
+func (iqrg *InlineQueryResultGame) ResultType() string {
+	return iqrg.Type
+}
+
+func (iqrg *InlineQueryResultGame) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrg.ReplyMarkup
+}
+
+func (iqrcp *InlineQueryResultCachedPhoto) ResultID() string {
+	return iqrcp.ID
+}
+
+func (iqrcp *InlineQueryResultCachedPhoto) ResultType() string {
+	return iqrcp.Type
+}
+
+func (iqrcp *InlineQueryResultCachedPhoto) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcp.ReplyMarkup
+}
+
+func (iqrcg *InlineQueryResultCachedGif) ResultID() string {
+	return iqrcg.ID
+}
+
+func (iqrcg *InlineQueryResultCachedGif) ResultType() string {
+	return iqrcg.Type
+}
+
+func (iqrcg *InlineQueryResultCachedGif) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcg.ReplyMarkup
+}
+
+func (iqrcm4g *InlineQueryResultCachedMpeg4Gif) ResultID() string {
+	return iqrcm4g.ID
+}
+
+func (iqrcm4g *InlineQueryResultCachedMpeg4Gif) ResultType() string {
+	return iqrcm4g.Type
+}
+
+func (iqrcm4g *InlineQueryResultCachedMpeg4Gif) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcm4g.ReplyMarkup
+}
+
+func (iqrcs *InlineQueryResultCachedSticker) ResultID() string {
+	return iqrcs.ID
+}
+
+func (iqrcs *InlineQueryResultCachedSticker) ResultType() string {
+	return iqrcs.Type
+}
+
+func (iqrcs *InlineQueryResultCachedSticker) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcs.ReplyMarkup
+}
+
+func (iqrcd *InlineQueryResultCachedDocument) ResultID() string {
+	return iqrcd.ID
+}
+
+func (iqrcd *InlineQueryResultCachedDocument) ResultType() string {
+	return iqrcd.Type
+}
+
+func (iqrcd *InlineQueryResultCachedDocument) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcd.ReplyMarkup
+}
+
+func (iqrcv *InlineQueryResultCachedVideo) ResultID() string {
+	return iqrcv.ID
+}
+
+func (iqrcv *InlineQueryResultCachedVideo) ResultType() string {
+	return iqrcv.Type
+}
+
+func (iqrcv *InlineQueryResultCachedVideo) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcv.ReplyMarkup
+}
+
+func (iqrcv *InlineQueryResultCachedVoice) ResultID() string {
+	return iqrcv.ID
+}
+
+func (iqrcv *InlineQueryResultCachedVoice) ResultType() string {
+	return iqrcv.Type
+}
+
+func (iqrcv *InlineQueryResultCachedVoice) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrcv.ReplyMarkup
+}
+
+func (iqrca *InlineQueryResultCachedAudio) ResultID() string {
+	return iqrca.ID
+}
+
+func (iqrca *InlineQueryResultCachedAudio) ResultType() string {
+	return iqrca.Type
+}
+
+func (iqrca *InlineQueryResultCachedAudio) ResultReplyMarkup() *InlineKeyboardMarkup {
+	return iqrca.ReplyMarkup
+}
