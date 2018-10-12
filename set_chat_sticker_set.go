@@ -7,6 +7,7 @@ type SetChatStickerSetParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// Name of the sticker set to be set as the group sticker set
 	StickerSetName string `json:"sticker_set_name"`
 }
 

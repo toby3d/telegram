@@ -7,6 +7,7 @@ type SendChatActionParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// Type of action to broadcast
 	Action string `json:"action"`
 }
 

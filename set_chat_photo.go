@@ -12,6 +12,7 @@ type SetChatPhotoParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// New chat photo, uploaded using multipart/form-data
 	ChatPhoto interface{} `json:"chat_photo"`
 }
 

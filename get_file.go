@@ -4,6 +4,7 @@ import json "github.com/pquerna/ffjson/ffjson"
 
 // GetFileParameters represents data for GetFile method.
 type GetFileParameters struct {
+	// File identifier to get info about
 	FileID string `json:"file_id"`
 }
 

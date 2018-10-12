@@ -7,6 +7,7 @@ type GetChatMemberParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// Unique identifier of the target user
 	UserID int `json:"user_id"`
 }
 

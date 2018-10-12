@@ -7,8 +7,13 @@ type KickChatMemberParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// Unique identifier of the target user
+	UserID int `json:"user_id"`
+
+	// Date when the user will be unbanned, unix time. If user is banned for
+	// more than 366 days or less than 30 seconds from the current time they
+	// are considered to be banned forever
 	UntilDate int64 `json:"until_date"`
-	UserID    int   `json:"user_id"`
 }
 
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and

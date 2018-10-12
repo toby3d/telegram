@@ -7,7 +7,12 @@ type PinChatMessageParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
-	MessageID           int  `json:"message_id"`
+	// Identifier of a message to pin
+	MessageID int `json:"message_id"`
+
+	// Pass true, if it is not necessary to send a notification to all chat
+	// members about the new pinned message. Notifications are always
+	// disabled in channels.
 	DisableNotification bool `json:"disable_notification"`
 }
 

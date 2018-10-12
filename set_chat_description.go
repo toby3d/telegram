@@ -7,6 +7,7 @@ type SetChatDescriptionParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// New chat description, 0-255 characters
 	Description string `json:"description"`
 }
 

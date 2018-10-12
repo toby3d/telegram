@@ -11,15 +11,28 @@ import (
 type (
 	// SendStickerParameters represents data for SetSticker method.
 	SendStickerParameters struct {
-		ChatID              int64       `json:"chat_id"`
-		Sticker             interface{} `json:"sticker"`
-		DisableNotification bool        `json:"disable_notification,omitempty"`
-		ReplyToMessageID    int         `json:"reply_to_message_id,omitempty"`
-		ReplyMarkup         interface{} `json:"reply_markup,omitempty"`
+		// Unique identifier for the target chat
+		ChatID int64 `json:"chat_id"`
+
+		// Sticker to send
+		Sticker interface{} `json:"sticker"`
+
+		// Sends the message silently. Users will receive a notification
+		// with no sound
+		DisableNotification bool `json:"disable_notification,omitempty"`
+
+		// If the message is a reply, ID of the original message
+		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Additional interface options. A JSON-serialized object for an
+		// inline keyboard, custom reply keyboard, instructions to remove
+		// reply keyboard or to force a reply from the user.
+		ReplyMarkup interface{} `json:"reply_markup,omitempty"`
 	}
 
 	// GetStickerSetParameters represents data for GetStickerSet method.
 	GetStickerSetParameters struct {
+		// Name of the sticker set
 		Name string `json:"name"`
 	}
 

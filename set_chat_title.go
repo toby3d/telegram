@@ -7,6 +7,7 @@ type SetChatTitleParameters struct {
 	// Unique identifier for the target chat
 	ChatID int64 `json:"chat_id"`
 
+	// New chat title, 1-255 characters
 	Title string `json:"title"`
 }
 
