@@ -26,6 +26,10 @@ func (a *Audio) HasThumb() bool {
 }
 
 func (a *Audio) File() *File {
+	if a == nil {
+		return nil
+	}
+
 	return &File{
 		FileID:   a.FileID,
 		FileSize: a.FileSize,

@@ -5,6 +5,10 @@ func (a *Animation) HasThumb() bool {
 }
 
 func (a *Animation) File() *File {
+	if a == nil {
+		return nil
+	}
+
 	return &File{
 		FileID:   a.FileID,
 		FileSize: a.FileSize,

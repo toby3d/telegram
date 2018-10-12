@@ -17,6 +17,10 @@ type Bot struct {
 
 // SetClient allow set custom fasthttp.Client (for proxy traffic, for example).
 func (b *Bot) SetClient(newClient *http.Client) {
+	if b == nil {
+		b = new(Bot)
+	}
+
 	b.Client = newClient
 }
 

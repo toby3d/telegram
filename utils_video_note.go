@@ -5,6 +5,10 @@ func (vn *VideoNote) HasThumb() bool {
 }
 
 func (vn *VideoNote) File() *File {
+	if vn == nil {
+		return nil
+	}
+
 	return &File{
 		FileID:   vn.FileID,
 		FileSize: vn.FileSize,

@@ -5,6 +5,10 @@ func (v *Video) HasThumb() bool {
 }
 
 func (v *Video) File() *File {
+	if v == nil {
+		return nil
+	}
+
 	return &File{
 		FileID:   v.FileID,
 		FileSize: v.FileSize,

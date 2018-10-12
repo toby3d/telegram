@@ -37,6 +37,10 @@ func (s *Sticker) IsMask() bool {
 }
 
 func (s *Sticker) File() *File {
+	if s == nil {
+		return nil
+	}
+
 	return &File{
 		FileID:   s.FileID,
 		FileSize: s.FileSize,
