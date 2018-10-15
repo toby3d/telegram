@@ -166,40 +166,40 @@ func (b *Bot) NewRedirectURL(param string, group bool) *http.URI {
 	return link
 }
 
-func (b *Bot) DecryptPassportFile(pf *PassportFile, fc *FileCredentials) (data []byte, err error) {
+func (b *Bot) DecryptFile(pf *PassportFile, fc *FileCredentials) (data []byte, err error) {
 	secret, err := decodeField(fc.Secret)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	hash, err := decodeField(fc.FileHash)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	key, iv := decryptSecretHash(secret, hash)
 	file, err := b.GetFile(pf.FileID)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	_, data, err = b.Client.Get(nil, b.NewFileURL(file.FilePath).String())
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	data, err = decryptData(key, iv, data)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	if !match(hash, data) {
 		err = ErrNotEqual
-		return
+		return nil, err
 	}
 
 	offset := int(data[0])
 	data = data[offset:]
 
-	return
+	return nil, err
 }

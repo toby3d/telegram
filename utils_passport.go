@@ -16,17 +16,17 @@ func decrypt(pk *rsa.PrivateKey, s, h, d string) (obj []byte, err error) {
 	// Note that all base64-encoded fields should be decoded before use.
 	secret, err := decodeField(s)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	hash, err := decodeField(h)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	data, err := decodeField(d)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	if pk != nil {
@@ -34,7 +34,7 @@ func decrypt(pk *rsa.PrivateKey, s, h, d string) (obj []byte, err error) {
 		// using your private key
 		secret, err = decryptSecret(pk, secret)
 		if err != nil {
-			return
+			return nil, err
 		}
 	}
 
@@ -42,21 +42,20 @@ func decrypt(pk *rsa.PrivateKey, s, h, d string) (obj []byte, err error) {
 	// EncryptedCredentials) to calculate credentials_key and credentials_iv
 	key, iv := decryptSecretHash(secret, hash)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	// Decrypt the credentials data (data field in EncryptedCredentials) by
 	// AES256-CBC using these credentials_key and credentials_iv.
 	data, err = decryptData(key, iv, data)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	// IMPORTANT: At this step, make sure that the credentials hash is equal
 	// to SHA256(credentials_data)
 	if !match(hash, data) {
-		err = ErrNotEqual
-		return
+		return nil, ErrNotEqual
 	}
 
 	// Credentials data is padded with 32 to 255 random padding bytes to make
@@ -64,9 +63,7 @@ func decrypt(pk *rsa.PrivateKey, s, h, d string) (obj []byte, err error) {
 	// of this padding (including this byte). Remove the padding to get the
 	// data.
 	offset := int(data[0])
-	data = data[offset:]
-
-	return
+	return data[offset:], nil
 }
 
 func decodeField(rawField string) (field []byte, err error) {
