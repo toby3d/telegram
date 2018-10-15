@@ -1,88 +1,165 @@
 package telegram
 
 type (
-	Fields struct {
-		PersonalDetails       *PersonalDetails
-		Passport              *Passport
-		InternalPassport      *InternalPassport
-		DriverLicense         *DriverLicense
-		IdentityCard          *IdentityCard
-		Address               *ResidentialAddress
-		UtilityBill           *UtilityBill
-		BankStatement         *BankStatement
-		RentalAgreement       *RentalAgreement
-		PassportRegistration  *PassportRegistration
-		TemporaryRegistration *TemporaryRegistration
-		PhoneNumber           PhoneNumber
-		Email                 Email
+	// AuthParameters represent a Telegram Passport auth parameters for SDK.
+	AuthParameters struct {
+		// Unique identifier for the bot. You can get it from bot token.
+		// For example, for the bot token
+		// 1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy, the bot id is
+		// 1234567.
+		BotID int `json:"bot_id"`
+
+		// A JSON-serialized object describing the data you want to
+		// request
+		Scope PassportScope `json:"scope"`
+
+		// Public key of the bot
+		PublicKey string `json:"public_key"`
+
+		// Bot-specified nonce.
+		//
+		// Important: For security purposes it should be a
+		// cryptographically secure unique identifier of the request. In
+		// particular, it should be long enough and it should be
+		// generated using a cryptographically secure pseudorandom number
+		// generator. You should never accept credentials with the same
+		// nonce twice.
+		Nonce string `json:"nonce"`
 	}
 
-	// Passport represent passport.
+	// PassportScope represents the data to be requested.
+	PassportScope struct {
+		// List of requested elements, each type may be used only once
+		// in the entire array of PassportScopeElement objects
+		Data []PassportScopeElement `json:"data"`
+
+		// Scope version, must be 1
+		V int `json:"v"`
+	}
+
+	// PassportScopeElement represents a requested element.
+	PassportScopeElement interface {
+		PassportScopeElementTranslation() bool
+		PassportScopeElementSelfie() bool
+	}
+
+	//PassportScopeElementOneOfSeveral represents several elements one of which must be provided.
+	PassportScopeElementOneOfSeveral struct {
+		// List of elements one of which must be provided;
+		OneOf []PassportScopeElementOne `json:"one_of"`
+
+		// Use this parameter if you want to request a selfie with the
+		// document from this list that the user chooses to upload.
+		Selfie bool `json:"selfie,omitempty"`
+
+		// Use this parameter if you want to request a translation of
+		// the document from this list that the user chooses to upload.
+		// Note: We suggest to only request translations after you have
+		// received a valid document that requires one.
+		Translation bool `json:"translation,omitempty"`
+	}
+
+	// PassportScopeElementOne represents one particular element that must
+	// be provided. If no options are needed, String can be used instead of
+	// this object to specify the type of the element.
+	PassportScopeElementOne struct {
+		// Element type.
+		Type string `json:"type"`
+
+		// Use this parameter if you want to request a selfie with the
+		// document as well.
+		Selfie bool `json:"selfie,omitempty"`
+
+		//  Use this parameter if you want to request a translation of
+		// the document as well.
+		Translation bool `json:"translation,omitempty"`
+
+		// Use this parameter to request the first, last and middle name
+		// of the user in the language of the user's country of residence.
+		NativeNames bool `json:"native_names,omitempty"`
+	}
+
 	Passport struct {
-		Data        *IdDocumentData
-		FrontSide   *PassportFile
-		Selfie      *PassportFile
-		Translation []PassportFile
+		// Personal Details
+		PersonalDetails struct {
+			Data *PersonalDetails `json:"data"`
+		} `json:"personal_details"`
+
+		// Passport
+		Passport struct {
+			Data        *IdDocumentData `json:"data"`
+			FrontSide   *PassportFile   `json:"front_side"`
+			Selfie      *PassportFile   `json:"selfie,omitempty"`
+			Translation []PassportFile  `json:"translation,omitempty"`
+		} `json:"passport"`
+
+		// Internal Passport
+		InternalPassport struct {
+			Data        *IdDocumentData `json:"data"`
+			FrontSide   *PassportFile   `json:"front_side"`
+			Selfie      *PassportFile   `json:"selfie,omitempty"`
+			Translation []PassportFile  `json:"translation,omitempty"`
+		} `json:"internal_passport"`
+
+		// Driver License
+		DriverLicense struct {
+			Data        *IdDocumentData `json:"data"`
+			FrontSide   *PassportFile   `json:"front_side"`
+			ReverseSide *PassportFile   `json:"reverse_side"`
+			Selfie      *PassportFile   `json:"selfie,omitempty"`
+			Translation []PassportFile  `json:"translation,omitempty"`
+		} `json:"driver_license"`
+
+		// Identity Card
+		IdentityCard struct {
+			Data        *IdDocumentData `json:"data"`
+			FrontSide   *PassportFile   `json:"front_side"`
+			ReverseSide *PassportFile   `json:"reverse_side"`
+			Selfie      *PassportFile   `json:"selfie,omitempty"`
+			Translation []PassportFile  `json:"translation,omitempty"`
+		} `json:"identity_card"`
+
+		// Address
+		Address struct {
+			Data *ResidentialAddress `json:"data"`
+		} `json:"address"`
+
+		// Utility Bill
+		UtilityBill struct {
+			Files       []PassportFile `json:"files"`
+			Translation []PassportFile `json:"translation,omitempty"`
+		} `json:"utility_bill"`
+
+		// Bank Statement
+		BankStatement struct {
+			Files       []PassportFile `json:"files"`
+			Translation []PassportFile `json:"translation,omitempty"`
+		} `json:"bank_statement"`
+
+		// Rental Agreement
+		RentalAgreement struct {
+			Files       []PassportFile `json:"files"`
+			Translation []PassportFile `json:"translation,omitempty"`
+		} `json:"rental_agreement"`
+
+		// Registration Page in the Internal Passport
+		PassportRegistration struct {
+			Files       []PassportFile `json:"files"`
+			Translation []PassportFile `json:"translation,omitempty"`
+		} `json:"passport_registration"`
+
+		// Temporary Registration
+		TemporaryRegistration struct {
+			Files       []PassportFile `json:"files"`
+			Translation []PassportFile `json:"translation,omitempty"`
+		} `json:"temporary_registration"`
+
+		// Phone number
+		PhoneNumber string `json:"phone_number"`
+
+		// Email
+		Email string `json:"email"`
 	}
-
-	// InternalPassport represent internal passport.
-	InternalPassport struct {
-		Data        *IdDocumentData
-		FrontSide   *PassportFile
-		Selfie      *PassportFile
-		Translation []PassportFile
-	}
-
-	// DriverLicense represent driver license.
-	DriverLicense struct {
-		Passport
-		ReverseSide *PassportFile
-	}
-
-	// IdentityCard represent identity card.
-	IdentityCard struct {
-		Data        *IdDocumentData
-		FrontSide   *PassportFile
-		ReverseSide *PassportFile
-		Selfie      *PassportFile
-		Translation []PassportFile
-	}
-
-	// UtilityBill represent utility bill.
-	UtilityBill struct {
-		Files       []PassportFile
-		Translation []PassportFile
-	}
-
-	// BankStatement represent bank statement.
-	BankStatement struct {
-		Files       []PassportFile
-		Translation []PassportFile
-	}
-
-	// RentalAgreement represent rental agreement.
-	RentalAgreement struct {
-		Files       []PassportFile
-		Translation []PassportFile
-	}
-
-	// PassportRegistration represent registration Page in the internal passport.
-	PassportRegistration struct {
-		Files       []PassportFile
-		Translation []PassportFile
-	}
-
-	// TemporaryRegistration represent temporary registration.
-	TemporaryRegistration struct {
-		Files       []PassportFile
-		Translation []PassportFile
-	}
-
-	// PhoneNumber represent phone number.
-	PhoneNumber string
-
-	// Email represent email.
-	Email string
 
 	// PersonalDetails represents personal details.
 	PersonalDetails struct {
