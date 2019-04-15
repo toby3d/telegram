@@ -11,7 +11,7 @@ GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 all: build
 
 lint: ## Lint the files
-	@gocritic check-project $(PACKAGE_PATH)
+	@golangci-lint run
 
 test: ## Run unittests
 	@go test -short ${PACKAGE_LIST}
