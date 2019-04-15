@@ -10,6 +10,7 @@ cache:
 
 stages:
   - test
+  - review
 
 before_script:
   - apk add --no-cache git build-base bash make
