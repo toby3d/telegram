@@ -54,6 +54,9 @@ type (
 		// New incoming pre-checkout query. Contains full information about
 		// checkout
 		PreCheckoutQuery *PreCheckoutQuery `json:"pre_checkout_query,omitempty"`
+
+		// New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
+		Poll *Poll `json:"poll,omitempty"`
 	}
 
 	// WebhookInfo contains information about the current status of a webhook.
@@ -127,6 +130,12 @@ type (
 		// Last name of the other party in a private chat
 		LastName string `json:"last_name,omitempty"`
 
+		// True if a group has ‘All Members Are Admins’ enabled.
+		AllMembersAreAdministrators bool `json:"all_members_are_administrators,omitempty"`
+
+		// Chat photo. Returned only in getChat.
+		Photo *ChatPhoto `json:"photo,omitempty"`
+
 		// Description, for supergroups and channel chats. Returned only in
 		// getChat.
 		Description string `json:"description,omitempty"`
@@ -135,21 +144,15 @@ type (
 		// getChat.
 		InviteLink string `json:"invite_link,omitempty"`
 
+		// Pinned message, for groups, supergroups and channels. Returned only in getChat.
+		PinnedMessage *Message `json:"pinned_message,omitempty"`
+
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
-
-		// True if a group has ‘All Members Are Admins’ enabled.
-		AllMembersAreAdministrators bool `json:"all_members_are_administrators,omitempty"`
 
 		// True, if the bot can change group the sticker set. Returned only in
 		// getChat.
 		CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
-
-		// Chat photo. Returned only in getChat.
-		Photo *ChatPhoto `json:"photo,omitempty"`
-
-		// Pinned message, for supergroups. Returned only in getChat.
-		PinnedMessage *Message `json:"pinned_message,omitempty"`
 	}
 
 	// Message represents a message.
@@ -157,48 +160,45 @@ type (
 		// Unique message identifier inside this chat
 		ID int `json:"message_id"`
 
-		// For messages forwarded from channels, identifier of the original
-		// message in the channel
-		ForwardFromMessageID int `json:"forward_from_message_id,omitempty"`
-
 		// Sender, empty for messages sent to channels
 		From *User `json:"from,omitempty"`
-
-		// For forwarded messages, sender of the original message
-		ForwardFrom *User `json:"forward_from,omitempty"`
-
-		// A member was removed from the group, information about them (this
-		// member may be the bot itself)
-		LeftChatMember *User `json:"left_chat_member,omitempty"`
 
 		// Date the message was sent in Unix time
 		Date int64 `json:"date"`
 
-		// For forwarded messages, date the original message was sent in Unix
-		// time
-		ForwardDate int64 `json:"forward_date,omitempty"`
-
-		// Date the message was last edited in Unix time
-		EditDate int64 `json:"edit_date,omitempty"`
-
-		// The group has been migrated to a supergroup with the specified
-		// identifier.
-		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
-
-		// The supergroup has been migrated from a group with the specified
-		// identifier.
-		MigrateFromChatID int64 `json:"migrate_from_chat_id,omitempty"`
-
 		// Conversation the message belongs to
 		Chat *Chat `json:"chat"`
+
+		// For forwarded messages, sender of the original message
+		ForwardFrom *User `json:"forward_from,omitempty"`
 
 		// For messages forwarded from channels, information about the original
 		// channel
 		ForwardFromChat *Chat `json:"forward_from_chat,omitempty"`
 
+		// For messages forwarded from channels, identifier of the original
+		// message in the channel
+		ForwardFromMessageID int `json:"forward_from_message_id,omitempty"`
+
 		// For messages forwarded from channels, signature of the post author if
 		// present
 		ForwardSignature string `json:"forward_signature,omitempty"`
+
+		// Sender's name for messages forwarded from users who disallow adding a
+		// link to their account in forwarded messages
+		ForwardSenderName string `json:"forward_sender_name,omitempty"`
+
+		// For forwarded messages, date the original message was sent in Unix
+		// time
+		ForwardDate int64 `json:"forward_date,omitempty"`
+
+		// For replies, the original message. Note that the Message object in
+		// this field will not contain further reply_to_message fields even if it
+		// itself is a reply.
+		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
+
+		// Date the message was last edited in Unix time
+		EditDate int64 `json:"edit_date,omitempty"`
 
 		// The unique identifier of a media message group this message belongs to
 		MediaGroupID string `json:"media_group_id,omitempty"`
@@ -209,25 +209,6 @@ type (
 		// For text messages, the actual UTF-8 text of the message, 0-4096
 		// characters.
 		Text string `json:"text,omitempty"`
-
-		// Caption for the document, photo or video, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// A chat title was changed to this value
-		NewChatTitle string `json:"new_chat_title,omitempty"`
-
-		// The domain name of the website on which the user has logged in.
-		ConnectedWebsite string `json:"connected_website,omitempty"`
-
-		// For replies, the original message. Note that the Message object in
-		// this field will not contain further reply_to_message fields even if it
-		// itself is a reply.
-		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
-
-		// Specified message was pinned. Note that the Message object in this
-		// field will not contain further reply_to_message fields even if it is
-		// itself a reply.
-		PinnedMessage *Message `json:"pinned_message,omitempty"`
 
 		// For text messages, special entities like usernames, URLs, bot
 		// commands, etc. that appear in the text
@@ -254,9 +235,6 @@ type (
 		// Message is a photo, available sizes of the photo
 		Photo []PhotoSize `json:"photo,omitempty"`
 
-		// A chat photo was change to this value
-		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
-
 		// Message is a sticker, information about the sticker
 		Sticker *Sticker `json:"sticker,omitempty"`
 
@@ -269,6 +247,9 @@ type (
 		// Message is a video note, information about the video message
 		VideoNote *VideoNote `json:"video_note,omitempty"`
 
+		// Caption for the document, photo or video, 0-200 characters
+		Caption string `json:"caption,omitempty"`
+
 		// Message is a shared contact, information about the contact
 		Contact *Contact `json:"contact,omitempty"`
 
@@ -278,9 +259,22 @@ type (
 		// Message is a venue, information about the venue
 		Venue *Venue `json:"venue,omitempty"`
 
+		// Message is a native poll, information about the poll
+		Poll *Poll `json:"poll,omitempry"`
+
 		// New members that were added to the group or supergroup and information
 		// about them (the bot itself may be one of these members)
 		NewChatMembers []User `json:"new_chat_members,omitempty"`
+
+		// A member was removed from the group, information about them (this
+		// member may be the bot itself)
+		LeftChatMember *User `json:"left_chat_member,omitempty"`
+
+		// A chat title was changed to this value
+		NewChatTitle string `json:"new_chat_title,omitempty"`
+
+		// A chat photo was change to this value
+		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
 
 		// Service message: the chat photo was deleted
 		DeleteChatPhoto bool `json:"delete_chat_photo,omitempty"`
@@ -302,12 +296,28 @@ type (
 		// channel.
 		ChannelChatCreated bool `json:"channel_chat_created,omitempty"`
 
+		// The group has been migrated to a supergroup with the specified
+		// identifier.
+		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
+
+		// The supergroup has been migrated from a group with the specified
+		// identifier.
+		MigrateFromChatID int64 `json:"migrate_from_chat_id,omitempty"`
+
+		// Specified message was pinned. Note that the Message object in this
+		// field will not contain further reply_to_message fields even if it is
+		// itself a reply.
+		PinnedMessage *Message `json:"pinned_message,omitempty"`
+
 		// Message is an invoice for a payment, information about the invoice.
 		Invoice *Invoice `json:"invoice,omitempty"`
 
 		// Message is a service message about a successful payment, information
 		// about the payment.
 		SuccessfulPayment *SuccessfulPayment `json:"successful_payment,omitempty"`
+
+		// The domain name of the website on which the user has logged in.
+		ConnectedWebsite string `json:"connected_website,omitempty"`
 
 		// Telegram Passport data
 		PassportData *PassportData `json:"passport_data,omitempty"`
@@ -498,6 +508,30 @@ type (
 		// "arts_entertainment/default", "arts_entertainment/aquarium" or
 		// "food/icecream".)
 		FoursquareType string `json:"foursquare_type,omitempty"`
+	}
+
+	// This object contains information about one answer option in a poll.
+	PollOption struct {
+		// Option text, 1-100 characters
+		Text string `json:"text"`
+
+		// Number of users that voted for this option
+		VoterCount int `json:"voter_count"`
+	}
+
+	// This object contains information about a poll.
+	Poll struct {
+		// Unique poll identifier
+		ID string `json:"id"`
+
+		// Poll question, 1-255 characters
+		Question string `json:"question"`
+
+		// List of poll options
+		Options []PollOption `json:"options"`
+
+		// True, if the poll is closed
+		IsClosed bool `json:"is_closed"`
 	}
 
 	// UserProfilePhotos represent a user's profile pictures.
@@ -771,6 +805,9 @@ type (
 		// administrators that he has promoted, directly or indirectly (promoted
 		// by administrators that were appointed by the user)
 		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
+
+		// Restricted only. True, if the user is a member of the chat at the moment of the request
+		IsMember bool `json:"is_member,omitempty"`
 
 		// Restricted only. True, if the user can send text messages, contacts,
 		// locations and venues

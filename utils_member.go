@@ -15,11 +15,6 @@ func (m *ChatMember) IsAdministrator() bool {
 	return m != nil && strings.EqualFold(m.Status, StatusAdministrator)
 }
 
-// IsMember checks that current member is a m.
-func (m *ChatMember) IsMember() bool {
-	return m != nil && strings.EqualFold(m.Status, StatusMember)
-}
-
 // IsRestricted checks that current member has been restricted.
 func (m *ChatMember) IsRestricted() bool {
 	return m != nil && strings.EqualFold(m.Status, StatusRestricted)

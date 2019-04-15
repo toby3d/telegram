@@ -369,3 +369,7 @@ func (m *Message) SmallChatPhoto() *PhotoSize {
 	sp := sortPhotos(m.NewChatPhoto, false)
 	return &sp[0]
 }
+
+func (m *Message) HasPoll() bool {
+	return m != nil && m.Poll != nil
+}
