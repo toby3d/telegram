@@ -321,6 +321,9 @@ type (
 
 		// Telegram Passport data
 		PassportData *PassportData `json:"passport_data,omitempty"`
+
+		// Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
+		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// MessageEntity represents one special entity in a text message. For
@@ -648,6 +651,10 @@ type (
 		// HTTP url to be opened when button is pressed
 		URL string `json:"url,omitempty"`
 
+		// An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram
+		// Login Widget.
+		LoginURL *LoginURL `json:"login_url,omitempty"`
+
 		// Data to be sent in a callback query to the bot when button is pressed,
 		// 1-64 bytes
 		CallbackData string `json:"callback_data,omitempty"`
@@ -684,6 +691,29 @@ type (
 		// NOTE: This type of button must always be the first button in the
 		// first row.
 		Pay bool `json:"pay,omitempty"`
+	}
+
+	// LoginURL represents a parameter of the inline keyboard button used to automatically authorize a user.
+	LoginURL struct {
+		// An HTTP URL to be opened with user authorization data added to the query string when the button is
+		// pressed. If the user refuses to provide authorization data, the original URL without information
+		// about the user will be opened. The data added is the same as described in Receiving authorization
+		// data.
+		//
+		// NOTE: You must always check the hash of the received data to verify the authentication and the
+		// integrity of the data as described in Checking authorization.
+		URL string `json:"url"`
+
+		// New text of the button in forwarded messages.
+		ForwardText string `json:"forward_text,omitempty"`
+
+		// Username of a bot, which will be used for user authorization. See Setting up a bot for more
+		// details. If not specified, the current bot's username will be assumed. The url's domain must be the
+		// same as the domain linked with the bot. See Linking your domain to the bot for more details.
+		BotUsername string `json:"bot_username,omitempty"`
+
+		// Pass true to request the permission for your bot to send messages to the user.
+		RequestWriteAccess bool `json:"request_write_access,omitempty"`
 	}
 
 	// CallbackQuery represents an incoming callback query from a callback button
