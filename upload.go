@@ -1,3 +1,4 @@
+//go:generate ffjson $GOFILE
 package telegram
 
 import (
@@ -13,6 +14,16 @@ import (
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
+
+type UploadStickerFileParameters struct {
+	// User identifier of sticker file owner
+	UserID int `json:"user_id"`
+
+	// Png image with the sticker, must be up to 512 kilobytes in size,
+	// dimensions must not exceed 512px, and either width or height
+	// must be exactly 512px.
+	PNGSticker interface{} `json:"png_sticker"`
+}
 
 // ErrBadFileType describes error of the unsupported file data type for uploading
 var ErrBadFileType = errors.New("bad file type")
@@ -98,7 +109,7 @@ func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) 
 	}
 
 	response = new(Response)
-	if err = json.Unmarshal(resp.Body(), response); err != nil {
+	if err = json.UnmarshalFast(resp.Body(), response); err != nil {
 		return
 	}
 
@@ -166,4 +177,22 @@ func createFileFieldRaw(w *multipart.Writer, key, value string, src io.Reader) e
 
 	_, err = io.Copy(field, src)
 	return err
+}
+
+// UploadStickerFile upload a .png file with a sticker for later use in
+// createNewStickerSet and addStickerToSet methods (can be used multiple times).
+// Returns the uploaded File on success.
+func (b *Bot) UploadStickerFile(userID int, pngSticker interface{}) (*File, error) {
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
+	args.SetUint("user_id", userID)
+
+	resp, err := b.Upload(MethodUploadStickerFile, TypeSticker, "sticker", pngSticker, args)
+	if err != nil {
+		return nil, err
+	}
+
+	var f File
+	err = json.UnmarshalFast(*resp.Result, &f)
+	return &f, err
 }

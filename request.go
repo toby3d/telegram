@@ -5,7 +5,6 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/kirillDanshin/dlog"
 	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
@@ -38,16 +37,16 @@ func (bot *Bot) request(dst []byte, method string) (response *Response, err erro
 	defer http.ReleaseResponse(resp)
 
 	err = bot.Client.Do(req, resp)
-	dlog.Ln("Request:")
-	dlog.D(req)
-	dlog.Ln("Response:")
-	dlog.D(resp)
+	// dlog.Ln("Request:")
+	// dlog.D(req)
+	// dlog.Ln("Response:")
+	// dlog.D(resp)
 	if err != nil {
 		return
 	}
 
 	response = new(Response)
-	if err = json.Unmarshal(resp.Body(), response); err != nil {
+	if err = json.UnmarshalFast(resp.Body(), response); err != nil {
 		return
 	}
 
