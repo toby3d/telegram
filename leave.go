@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // LeaveChatParameters represents data for LeaveChat method.
 type LeaveChatParameters struct {
@@ -11,7 +8,7 @@ type LeaveChatParameters struct {
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
 func (bot *Bot) LeaveChat(chatID int64) (ok bool, err error) {
-	dst, err := json.MarshalFast(&LeaveChatParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&LeaveChatParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -21,6 +18,6 @@ func (bot *Bot) LeaveChat(chatID int64) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

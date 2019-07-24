@@ -1,21 +1,6 @@
-//go:generate ffjson $GOFILE
 package telegram
 
-import "encoding/json"
-
 type (
-	// Response represents a response from the Telegram API with the result
-	// stored raw. If ok equals true, the request was successful, and the result
-	// of the query can be found in the result field. In case of an unsuccessful
-	// request, ok equals false, and the error is explained in the error field.
-	Response struct {
-		Ok          bool                `json:"ok"`
-		ErrorCode   int                 `json:"error_code,omitempty"`
-		Description string              `json:"description,omitempty"`
-		Result      *json.RawMessage    `json:"result,omitempty"`
-		Parameters  *ResponseParameters `json:"parameters,omitempty"`
-	}
-
 	// Update represents an incoming update.
 	//
 	// At most one of the optional parameters can be present in any given update.

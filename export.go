@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // ExportChatInviteLinkParameters represents data for ExportChatInviteLink method.
 type ExportChatInviteLinkParameters struct {
@@ -13,7 +10,7 @@ type ExportChatInviteLinkParameters struct {
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns exported invite link as String on success.
 func (bot *Bot) ExportChatInviteLink(chatID int64) (inviteLink string, err error) {
-	dst, err := json.MarshalFast(&ExportChatInviteLinkParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&ExportChatInviteLinkParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -23,6 +20,6 @@ func (bot *Bot) ExportChatInviteLink(chatID int64) (inviteLink string, err error
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &inviteLink)
+	err = parser.Unmarshal(resp.Result, &inviteLink)
 	return
 }

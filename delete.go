@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 type (
 	// DeleteChatPhotoParameters represents data for DeleteChatPhoto method.
@@ -39,7 +36,7 @@ type (
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
 func (bot *Bot) DeleteChatPhoto(chatID int64) (ok bool, err error) {
-	dst, err := json.MarshalFast(&DeleteChatPhotoParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&DeleteChatPhotoParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -49,7 +46,7 @@ func (bot *Bot) DeleteChatPhoto(chatID int64) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -58,7 +55,7 @@ func (bot *Bot) DeleteChatPhoto(chatID int64) (ok bool, err error) {
 // can_set_sticker_set optionally returned in getChat requests to check if the bot can use this
 // method. Returns True on success.
 func (bot *Bot) DeleteChatStickerSet(chatID int64) (ok bool, err error) {
-	dst, err := json.MarshalFast(&DeleteChatStickerSetParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&DeleteChatStickerSetParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -68,7 +65,7 @@ func (bot *Bot) DeleteChatStickerSet(chatID int64) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -80,7 +77,7 @@ func (bot *Bot) DeleteWebhook() (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -92,7 +89,7 @@ func (bot *Bot) DeleteWebhook() (ok bool, err error) {
 // bot has can_delete_messages permission in a supergroup or a channel, it can
 // delete any message there. Returns True on success.
 func (bot *Bot) DeleteMessage(chatID int64, messageID int) (ok bool, err error) {
-	dst, err := json.MarshalFast(&DeleteMessageParameters{
+	dst, err := parser.Marshal(&DeleteMessageParameters{
 		ChatID:    chatID,
 		MessageID: messageID,
 	})
@@ -105,14 +102,14 @@ func (bot *Bot) DeleteMessage(chatID int64, messageID int) (ok bool, err error) 
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
 // DeleteStickerFromSet delete a sticker from a set created by the bot. Returns
 // True on success.
 func (bot *Bot) DeleteStickerFromSet(sticker string) (ok bool, err error) {
-	dst, err := json.MarshalFast(&DeleteStickerFromSetParameters{Sticker: sticker})
+	dst, err := parser.Marshal(&DeleteStickerFromSetParameters{Sticker: sticker})
 	if err != nil {
 		return
 	}
@@ -122,6 +119,6 @@ func (bot *Bot) DeleteStickerFromSet(sticker string) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

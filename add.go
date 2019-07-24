@@ -1,10 +1,8 @@
-//go:generate ffjson $GOFILE
 package telegram
 
 import (
 	"strings"
 
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
@@ -39,7 +37,7 @@ func (b *Bot) AddStickerToSet(params *AddStickerToSetParameters) (ok bool, err e
 	args.Set("emojis", params.Emojis)
 
 	if params.MaskPosition != nil {
-		mp, err := json.MarshalFast(params.MaskPosition)
+		mp, err := parser.Marshal(params.MaskPosition)
 		if err != nil {
 			return false, err
 		}
@@ -52,6 +50,6 @@ func (b *Bot) AddStickerToSet(params *AddStickerToSetParameters) (ok bool, err e
 		return false, err
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

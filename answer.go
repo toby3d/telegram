@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 type (
 	// AnswerCallbackQueryParameters represents data for AnswerCallbackQuery method.
@@ -149,7 +146,7 @@ func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerI
 // accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX
 // that open your bot with a parameter.
 func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -159,7 +156,7 @@ func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok b
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -173,7 +170,7 @@ func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok b
 // Note: The Bot API must receive an answer within 10 seconds after the
 // pre-checkout query was sent.
 func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -183,7 +180,7 @@ func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (o
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -193,7 +190,7 @@ func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (o
 // is_flexible was specified, the Bot API will send an Update with a
 // shipping_query field to the bot. On success, True is returned.
 func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -203,7 +200,7 @@ func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (ok b
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -211,7 +208,7 @@ func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (ok b
 //
 // No more than 50 results per query are allowed.
 func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -221,6 +218,6 @@ func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (ok bool,
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

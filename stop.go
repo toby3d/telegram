@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 type StopPollConfig struct {
 	// Unique identifier for the target chat. A native poll can't be sent to a private chat.
@@ -15,7 +12,7 @@ type StopPollConfig struct {
 }
 
 func (b *Bot) StopPoll(params StopPollConfig) (*Poll, error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +23,6 @@ func (b *Bot) StopPoll(params StopPollConfig) (*Poll, error) {
 	}
 
 	var poll Poll
-	err = json.UnmarshalFast(*resp.Result, &poll)
+	err = parser.Unmarshal(resp.Result, &poll)
 	return &poll, err
 }

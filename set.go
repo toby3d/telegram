@@ -1,11 +1,9 @@
-//go:generate ffjson $GOFILE
 package telegram
 
 import (
 	"strconv"
 	"strings"
 
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
@@ -143,7 +141,7 @@ func NewGameScore(userID, score int) *SetGameScoreParameters {
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns True on success.
 func (bot *Bot) SetChatDescription(chatID int64, description string) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SetChatDescriptionParameters{
+	dst, err := parser.Marshal(&SetChatDescriptionParameters{
 		ChatID:      chatID,
 		Description: description,
 	})
@@ -156,7 +154,7 @@ func (bot *Bot) SetChatDescription(chatID int64, description string) (ok bool, e
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -166,18 +164,19 @@ func (bot *Bot) SetChatDescription(chatID int64, description string) (ok bool, e
 //
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are
 // Admins' setting is off in the target group.
-func (bot *Bot) SetChatPhoto(chatID int64, chatPhoto interface{}) (ok bool, err error) {
+func (bot *Bot) SetChatPhoto(chatID int64, chatPhoto interface{}) (bool, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(chatID, 10))
 
 	resp, err := bot.Upload(MethodSetChatPhoto, TypePhoto, "chat_photo", chatPhoto, args)
 	if err != nil {
-		return
+		return false, err
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
-	return
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
 }
 
 // SetChatStickerSet set a new group sticker set for a supergroup. The bot must be an administrator
@@ -185,7 +184,7 @@ func (bot *Bot) SetChatPhoto(chatID int64, chatPhoto interface{}) (ok bool, err 
 // can_set_sticker_set optionally returned in getChat requests to check if the bot can use this
 // method. Returns True on success.
 func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SetChatStickerSetParameters{
+	dst, err := parser.Marshal(&SetChatStickerSetParameters{
 		ChatID:         chatID,
 		StickerSetName: stickerSetName,
 	})
@@ -198,7 +197,7 @@ func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (ok bool,
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -209,7 +208,7 @@ func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (ok bool,
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
 func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SetChatTitleParameters{
+	dst, err := parser.Marshal(&SetChatTitleParameters{
 		ChatID: chatID,
 		Title:  title,
 	})
@@ -222,7 +221,7 @@ func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -237,7 +236,7 @@ func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
 // etc. Supply some details in the error message to make sure the user knows how
 // to correct the issues.
 func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SetPassportDataErrorsParameters{
+	dst, err := parser.Marshal(&SetPassportDataErrorsParameters{
 		UserID: userId,
 		Errors: errors,
 	})
@@ -250,7 +249,7 @@ func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }
 
@@ -263,7 +262,7 @@ func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (
 // If you'd like to make sure that the Webhook request comes from Telegram, we
 // recommend using a secret path in the URL, e.g. https://www.example.com/<token>.
 // Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
-func (bot *Bot) SetWebhook(params *SetWebhookParameters) (ok bool, err error) {
+func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("url", params.URL)
@@ -277,23 +276,25 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (ok bool, err error) {
 	}
 
 	var resp *Response
+	var err error
 	if params.Certificate != nil {
 		resp, err = bot.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
 	} else {
 		var dst []byte
-		dst, err = json.MarshalFast(params)
+		dst, err = parser.Marshal(params)
 		if err != nil {
-			return
+			return false, err
 		}
 
 		resp, err = bot.request(dst, MethodSetWebhook)
 	}
 	if err != nil {
-		return
+		return false, err
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
-	return
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
 }
 
 // SetGameScore set the score of the specified user in a game. On success, if the
@@ -301,7 +302,7 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (ok bool, err error) {
 // True. Returns an error, if the new score is not greater than the user's
 // current score in the chat and force is False.
 func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -312,14 +313,14 @@ func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (msg *Message, err 
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SetStickerPositionInSet move a sticker in a set created by the bot to a
 // specific position. Returns True on success.
 func (b *Bot) SetStickerPositionInSet(sticker string, position int) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SetStickerPositionInSetParameters{
+	dst, err := parser.Marshal(&SetStickerPositionInSetParameters{
 		Sticker:  sticker,
 		Position: position,
 	})
@@ -332,6 +333,6 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (ok bool, er
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

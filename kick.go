@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // KickChatMemberParameters represents data for KickChatMember method.
 type KickChatMemberParameters struct {
@@ -26,7 +23,7 @@ type KickChatMemberParameters struct {
 // Admins' setting is off in the target group. Otherwise members may only be removed by the group's
 // creator or by the member that added them.
 func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -36,6 +33,6 @@ func (bot *Bot) KickChatMember(params *KickChatMemberParameters) (ok bool, err e
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // PinChatMessageParameters represents data for PinChatMessage method.
 type PinChatMessageParameters struct {
@@ -21,7 +18,7 @@ type PinChatMessageParameters struct {
 // chat for this to work and must have the 'can_pin_messages' admin right in the supergroup or
 // 'can_edit_messages' admin right in the channel. Returns True on success.
 func (bot *Bot) PinChatMessage(params *PinChatMessageParameters) (ok bool, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -31,6 +28,6 @@ func (bot *Bot) PinChatMessage(params *PinChatMessageParameters) (ok bool, err e
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

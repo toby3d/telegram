@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 type (
 	// GetChatParameters represents data for GetChat method.
@@ -114,7 +111,7 @@ func NewGameHighScores(userID int) *GetGameHighScoresParameters {
 // for one-on-one conversations, current username of a user, group or channel,
 // etc.). Returns a Chat object on success.
 func (bot *Bot) GetChat(chatID int64) (chat *Chat, err error) {
-	dst, err := json.MarshalFast(&GetChatParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&GetChatParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -125,7 +122,7 @@ func (bot *Bot) GetChat(chatID int64) (chat *Chat, err error) {
 	}
 
 	chat = new(Chat)
-	err = json.UnmarshalFast(*resp.Result, chat)
+	err = parser.Unmarshal(resp.Result, chat)
 	return
 }
 
@@ -134,7 +131,7 @@ func (bot *Bot) GetChat(chatID int64) (chat *Chat, err error) {
 // chat administrators except other bots. If the chat is a group or a supergroup
 // and no administrators were appointed, only the creator will be returned.
 func (bot *Bot) GetChatAdministrators(chatID int64) (members []ChatMember, err error) {
-	dst, err := json.MarshalFast(&GetChatAdministratorsParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&GetChatAdministratorsParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -144,14 +141,14 @@ func (bot *Bot) GetChatAdministrators(chatID int64) (members []ChatMember, err e
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &members)
+	err = parser.Unmarshal(resp.Result, &members)
 	return
 }
 
 // GetChatMember get information about a member of a chat. Returns a ChatMember
 // object on success.
 func (bot *Bot) GetChatMember(chatID int64, userID int) (member *ChatMember, err error) {
-	dst, err := json.MarshalFast(&GetChatMemberParameters{
+	dst, err := parser.Marshal(&GetChatMemberParameters{
 		ChatID: chatID,
 		UserID: userID,
 	})
@@ -165,14 +162,14 @@ func (bot *Bot) GetChatMember(chatID int64, userID int) (member *ChatMember, err
 	}
 
 	member = new(ChatMember)
-	err = json.UnmarshalFast(*resp.Result, member)
+	err = parser.Unmarshal(resp.Result, member)
 	return
 }
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on
 // success.
 func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
-	dst, err := json.MarshalFast(&GetChatMembersCountParameters{ChatID: chatID})
+	dst, err := parser.Marshal(&GetChatMembersCountParameters{ChatID: chatID})
 	if err != nil {
 		return
 	}
@@ -182,7 +179,7 @@ func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &count)
+	err = parser.Unmarshal(resp.Result, &count)
 	return
 }
 
@@ -198,7 +195,7 @@ func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
 // should save the file's MIME type and name (if available) when the File object
 // is received.
 func (bot *Bot) GetFile(fileID string) (file *File, err error) {
-	dst, err := json.MarshalFast(&GetFileParameters{FileID: fileID})
+	dst, err := parser.Marshal(&GetFileParameters{FileID: fileID})
 	if err != nil {
 		return
 	}
@@ -209,7 +206,7 @@ func (bot *Bot) GetFile(fileID string) (file *File, err error) {
 	}
 
 	file = new(File)
-	err = json.UnmarshalFast(*resp.Result, file)
+	err = parser.Unmarshal(resp.Result, file)
 	return
 }
 
@@ -222,7 +219,7 @@ func (bot *Bot) GetMe() (me *User, err error) {
 	}
 
 	me = new(User)
-	err = json.UnmarshalFast(*resp.Result, me)
+	err = parser.Unmarshal(resp.Result, me)
 	return
 }
 
@@ -232,7 +229,7 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) (updates []Update, err 
 		params = &GetUpdatesParameters{Limit: 100}
 	}
 
-	src, err := json.MarshalFast(params)
+	src, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -243,13 +240,13 @@ func (bot *Bot) GetUpdates(params *GetUpdatesParameters) (updates []Update, err 
 	}
 
 	updates = make([]Update, params.Limit)
-	err = json.UnmarshalFast(*resp.Result, &updates)
+	err = parser.Unmarshal(resp.Result, &updates)
 	return
 }
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
 func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (photos *UserProfilePhotos, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -260,7 +257,7 @@ func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (ph
 	}
 
 	photos = new(UserProfilePhotos)
-	err = json.UnmarshalFast(*resp.Result, photos)
+	err = parser.Unmarshal(resp.Result, photos)
 	return
 }
 
@@ -274,7 +271,7 @@ func (bot *Bot) GetWebhookInfo() (info *WebhookInfo, err error) {
 	}
 
 	info = new(WebhookInfo)
-	err = json.UnmarshalFast(*resp.Result, info)
+	err = parser.Unmarshal(resp.Result, info)
 	return
 }
 
@@ -282,7 +279,7 @@ func (bot *Bot) GetWebhookInfo() (info *WebhookInfo, err error) {
 // specified user and several of his neighbors in a game. On success, returns an
 // Array of GameHighScore objects.
 func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) (scores []GameHighScore, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -292,13 +289,13 @@ func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) (scores [
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &scores)
+	err = parser.Unmarshal(resp.Result, &scores)
 	return
 }
 
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
 func (bot *Bot) GetStickerSet(name string) (set *StickerSet, err error) {
-	dst, err := json.MarshalFast(&GetStickerSetParameters{Name: name})
+	dst, err := parser.Marshal(&GetStickerSetParameters{Name: name})
 	if err != nil {
 		return
 	}
@@ -309,6 +306,6 @@ func (bot *Bot) GetStickerSet(name string) (set *StickerSet, err error) {
 	}
 
 	set = new(StickerSet)
-	err = json.UnmarshalFast(*resp.Result, set)
+	err = parser.Unmarshal(resp.Result, set)
 	return
 }

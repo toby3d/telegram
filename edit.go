@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 type (
 	// EditMessageLiveLocationParameters represents data for EditMessageLiveLocation
@@ -145,7 +142,7 @@ func NewMessageText(text string) *EditMessageTextParameters {
 // success, if the edited message was sent by the bot, the edited Message is
 // returned, otherwise True is returned.
 func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -156,7 +153,7 @@ func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameter
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
@@ -164,7 +161,7 @@ func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameter
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
 func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -175,7 +172,7 @@ func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (msg *Message
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
@@ -183,7 +180,7 @@ func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (msg *Message
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
 func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -194,7 +191,7 @@ func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (msg *M
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
@@ -206,7 +203,7 @@ func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (msg *M
 // bot, the edited Message is returned, otherwise True is returned.
 func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (msg *Message, err error) {
 	var src []byte
-	src, err = json.MarshalFast(emmp)
+	src, err = parser.Marshal(emmp)
 	if err != nil {
 		return
 	}
@@ -217,7 +214,7 @@ func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (msg *Message, 
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
@@ -225,7 +222,7 @@ func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (msg *Message, 
 // or via the bot (for inline bots). On success, if edited message is sent by the
 // bot, the edited Message is returned, otherwise True is returned.
 func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -236,6 +233,6 @@ func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters)
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }

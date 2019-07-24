@@ -1,11 +1,9 @@
-//go:generate ffjson $GOFILE
 package telegram
 
 import (
 	"strconv"
 	"strings"
 
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
@@ -44,7 +42,7 @@ type CreateNewStickerSetParameters struct {
 
 // CreateNewStickerSet create new sticker set owned by a user. The bot will be
 // able to edit the created sticker set. Returns True on success.
-func (b *Bot) CreateNewStickerSet(params *CreateNewStickerSetParameters) (ok bool, err error) {
+func (b *Bot) CreateNewStickerSet(params *CreateNewStickerSetParameters) (bool, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.SetUint("user_id", params.UserID)
@@ -59,7 +57,7 @@ func (b *Bot) CreateNewStickerSet(params *CreateNewStickerSetParameters) (ok boo
 	args.Set("contains_masks", strconv.FormatBool(params.ContainsMasks))
 
 	if params.MaskPosition != nil {
-		mp, err := json.MarshalFast(params.MaskPosition)
+		mp, err := parser.Marshal(params.MaskPosition)
 		if err != nil {
 			return false, err
 		}
@@ -72,6 +70,7 @@ func (b *Bot) CreateNewStickerSet(params *CreateNewStickerSetParameters) (ok boo
 		return false, err
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
-	return
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
 }

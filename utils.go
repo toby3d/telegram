@@ -1,4 +1,3 @@
-//go:generate ffjson $GOFILE
 package telegram
 
 import (
@@ -22,7 +21,6 @@ import (
 	"time"
 
 	"github.com/kirillDanshin/dlog"
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -177,7 +175,7 @@ func (b *Bot) SetClient(newClient *http.Client) {
 func New(accessToken string) (*Bot, error) {
 	var err error
 	b := new(Bot)
-	b.SetClient(defaultClient)
+	b.SetClient(&defaultClient)
 	b.AccessToken = accessToken
 
 	b.User, err = b.GetMe()
@@ -504,7 +502,7 @@ func (ec *EncryptedCredentials) Decrypt(pk *rsa.PrivateKey) (*Credentials, error
 	}
 
 	var c Credentials
-	err = json.UnmarshalFast(data, &c)
+	err = parser.Unmarshal(data, &c)
 	return &c, err
 }
 
@@ -519,7 +517,7 @@ func (epe *EncryptedPassportElement) DecryptPersonalDetails(sv *SecureValue) (*P
 	}
 
 	var pd PersonalDetails
-	err = json.UnmarshalFast(body, &pd)
+	err = parser.Unmarshal(body, &pd)
 	return &pd, err
 }
 
@@ -534,7 +532,7 @@ func (epe *EncryptedPassportElement) DecryptPassport(sv *SecureValue, b *Bot) (*
 	}
 
 	var idd IDDocumentData
-	if err = json.UnmarshalFast(body, &idd); err != nil {
+	if err = parser.Unmarshal(body, &idd); err != nil {
 		return nil, nil, nil, nil, err
 	}
 
@@ -573,7 +571,7 @@ func (epe *EncryptedPassportElement) DecryptInternalPassport(sv *SecureValue, b 
 	}
 
 	var idd IDDocumentData
-	if err = json.UnmarshalFast(body, &idd); err != nil {
+	if err = parser.Unmarshal(body, &idd); err != nil {
 		return nil, nil, nil, nil, err
 	}
 
@@ -612,7 +610,7 @@ func (epe *EncryptedPassportElement) DecryptDriverLicense(sv *SecureValue, b *Bo
 	}
 
 	var idd IDDocumentData
-	if err = json.UnmarshalFast(body, &idd); err != nil {
+	if err = parser.Unmarshal(body, &idd); err != nil {
 		return nil, nil, nil, nil, nil, err
 	}
 
@@ -2498,7 +2496,7 @@ func (b *Bot) NewWebhookChannel(setURL *http.URI, params *SetWebhookParameters, 
 		dlog.Ln("Catched supported request path:", string(ctx.Path()))
 
 		var update Update
-		if err = json.UnmarshalFast(ctx.Request.Body(), &update); err != nil {
+		if err = parser.Unmarshal(ctx.Request.Body(), &update); err != nil {
 			return
 		}
 

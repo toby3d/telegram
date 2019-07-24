@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // ForwardMessageParameters represents data for ForwardMessage method.
 type ForwardMessageParameters struct {
@@ -32,7 +29,7 @@ func NewForwardMessage(from, to int64, messageID int) *ForwardMessageParameters 
 
 // ForwardMessage forward messages of any kind. On success, the sent Message is returned.
 func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -43,6 +40,6 @@ func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (msg *Message, 
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }

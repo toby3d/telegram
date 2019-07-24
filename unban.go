@@ -1,7 +1,4 @@
-//go:generate ffjson $GOFILE
 package telegram
-
-import json "github.com/pquerna/ffjson/ffjson"
 
 // UnbanChatMemberParameters represents data for UnbanChatMember method.
 type UnbanChatMemberParameters struct {
@@ -20,7 +17,7 @@ func (bot *Bot) UnbanChatMember(chatID int64, userID int) (ok bool, err error) {
 		ChatID: chatID,
 		UserID: userID,
 	}
-	dst, err := json.MarshalFast(&params)
+	dst, err := parser.Marshal(&params)
 	if err != nil {
 		return
 	}
@@ -30,6 +27,6 @@ func (bot *Bot) UnbanChatMember(chatID int64, userID int) (ok bool, err error) {
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
+	err = parser.Unmarshal(resp.Result, &ok)
 	return
 }

@@ -1,10 +1,8 @@
-//go:generate ffjson $GOFILE
 package telegram
 
 import (
 	"strconv"
 
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
 
@@ -504,7 +502,7 @@ func NewGame(chatID int64, gameShortName string) *SendGameParameters {
 // sound). On success, the sent Message is returned. Bots can currently send
 // animation files of up to 50 MB in size, this limit may be changed in the
 // future.
-func (bot *Bot) SendAnimation(params *SendAnimationParameters) (msg *Message, err error) {
+func (bot *Bot) SendAnimation(params *SendAnimationParameters) (*Message, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -514,7 +512,7 @@ func (bot *Bot) SendAnimation(params *SendAnimationParameters) (msg *Message, er
 	}
 
 	if params.ReplyMarkup != nil {
-		dst, err := json.MarshalFast(params.ReplyMarkup)
+		dst, err := parser.Marshal(params.ReplyMarkup)
 		if err != nil {
 			return nil, err
 		}
@@ -529,12 +527,12 @@ func (bot *Bot) SendAnimation(params *SendAnimationParameters) (msg *Message, er
 
 	resp, err := bot.Upload(MethodSendAnimation, "animation", "", params.Animation, args)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
-	return
+	var result Message
+	err = parser.Unmarshal(resp.Result, &result)
+	return &result, err
 }
 
 // SendChatAction tell the user that something is happening on the bot's side.
@@ -543,27 +541,28 @@ func (bot *Bot) SendAnimation(params *SendAnimationParameters) (msg *Message, er
 //
 // We only recommend using this method when a response from the bot will take a
 // noticeable amount of time to arrive.
-func (bot *Bot) SendChatAction(chatID int64, action string) (ok bool, err error) {
-	dst, err := json.MarshalFast(&SendChatActionParameters{
+func (bot *Bot) SendChatAction(chatID int64, action string) (bool, error) {
+	dst, err := parser.Marshal(&SendChatActionParameters{
 		ChatID: chatID,
 		Action: action,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodSendChatAction)
 	if err != nil {
-		return
+		return false, err
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &ok)
-	return
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
 }
 
 // SendContact send phone contacts. On success, the sent Message is returned.
 func (bot *Bot) SendContact(params *SendContactParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(*params)
+	dst, err := parser.Marshal(*params)
 	if err != nil {
 		return
 	}
@@ -574,13 +573,13 @@ func (bot *Bot) SendContact(params *SendContactParameters) (msg *Message, err er
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send
 // files of any type of up to 50 MB in size, this limit may be changed in the future.
-func (bot *Bot) SendDocument(params *SendDocumentParameters) (msg *Message, err error) {
+func (bot *Bot) SendDocument(params *SendDocumentParameters) (*Message, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -590,7 +589,7 @@ func (bot *Bot) SendDocument(params *SendDocumentParameters) (msg *Message, err 
 	}
 
 	if params.ReplyMarkup != nil {
-		dst, err := json.MarshalFast(params.ReplyMarkup)
+		dst, err := parser.Marshal(params.ReplyMarkup)
 		if err != nil {
 			return nil, err
 		}
@@ -605,17 +604,17 @@ func (bot *Bot) SendDocument(params *SendDocumentParameters) (msg *Message, err 
 
 	resp, err := bot.Upload(MethodSendDocument, "document", "", params.Document, args)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
-	return
+	var result Message
+	err = parser.Unmarshal(resp.Result, &result)
+	return &result, err
 }
 
 // SendInvoice send invoices. On success, the sent Message is returned.
 func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -626,13 +625,13 @@ func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (msg *Message, err er
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SendLocation send point on the map. On success, the sent Message is returned.
 func (bot *Bot) SendLocation(params *SendLocationParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -643,14 +642,14 @@ func (bot *Bot) SendLocation(params *SendLocationParameters) (msg *Message, err 
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent
 // Messages is returned.
 func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) (album []Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -660,13 +659,13 @@ func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) (album []Messag
 		return
 	}
 
-	err = json.UnmarshalFast(*resp.Result, &album)
+	err = parser.Unmarshal(resp.Result, &album)
 	return
 }
 
 // SendMessage send text messages. On success, the sent Message is returned.
 func (bot *Bot) SendMessage(params *SendMessageParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -677,12 +676,12 @@ func (bot *Bot) SendMessage(params *SendMessageParameters) (msg *Message, err er
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SendPhoto send photos. On success, the sent Message is returned.
-func (bot *Bot) SendPhoto(params *SendPhotoParameters) (msg *Message, err error) {
+func (bot *Bot) SendPhoto(params *SendPhotoParameters) (*Message, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.Add("chat_id", strconv.FormatInt(params.ChatID, 10))
@@ -692,7 +691,7 @@ func (bot *Bot) SendPhoto(params *SendPhotoParameters) (msg *Message, err error)
 	}
 
 	if params.ReplyMarkup != nil {
-		dst, err := json.MarshalFast(params.ReplyMarkup)
+		dst, err := parser.Marshal(params.ReplyMarkup)
 		if err != nil {
 			return nil, err
 		}
@@ -707,18 +706,18 @@ func (bot *Bot) SendPhoto(params *SendPhotoParameters) (msg *Message, err error)
 
 	resp, err := bot.Upload(MethodSendPhoto, "photo", "", params.Photo, args)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
-	return
+	var result Message
+	err = parser.Unmarshal(resp.Result, &result)
+	return &result, err
 }
 
 // SendPoll send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is
 // returned.
 func (b *Bot) SendPoll(params SendPollConfig) (*Message, error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return nil, err
 	}
@@ -729,13 +728,13 @@ func (b *Bot) SendPoll(params SendPollConfig) (*Message, error) {
 	}
 
 	var msg Message
-	err = json.UnmarshalFast(*resp.Result, &msg)
+	err = parser.Unmarshal(resp.Result, &msg)
 	return &msg, err
 }
 
 // SendVenue send information about a venue. On success, the sent Message is returned.
 func (bot *Bot) SendVenue(params *SendVenueParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -746,13 +745,13 @@ func (bot *Bot) SendVenue(params *SendVenueParameters) (msg *Message, err error)
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
 // SendGame send a game. On success, the sent Message is returned.
 func (bot *Bot) SendGame(params *SendGameParameters) (msg *Message, err error) {
-	dst, err := json.MarshalFast(params)
+	dst, err := parser.Marshal(params)
 	if err != nil {
 		return
 	}
@@ -763,7 +762,7 @@ func (bot *Bot) SendGame(params *SendGameParameters) (msg *Message, err error) {
 	}
 
 	msg = new(Message)
-	err = json.UnmarshalFast(*resp.Result, msg)
+	err = parser.Unmarshal(resp.Result, msg)
 	return
 }
 
@@ -777,7 +776,7 @@ func (b *Bot) SendSticker(params *SendStickerParameters) (*Message, error) {
 		args.SetUint("reply_to_message_id", params.ReplyToMessageID)
 	}
 	if params.ReplyMarkup != nil {
-		rm, err := json.MarshalFast(params.ReplyMarkup)
+		rm, err := parser.Marshal(params.ReplyMarkup)
 		if err != nil {
 			return nil, err
 		}
@@ -790,7 +789,7 @@ func (b *Bot) SendSticker(params *SendStickerParameters) (*Message, error) {
 		return nil, err
 	}
 
-	var m Message
-	err = json.UnmarshalFast(*resp.Result, &m)
-	return &m, err
+	var result Message
+	err = parser.Unmarshal(resp.Result, &result)
+	return &result, err
 }
