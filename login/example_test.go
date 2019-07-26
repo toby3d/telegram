@@ -1,5 +1,6 @@
 package login_test
 
+/*
 import (
 	"log"
 
@@ -40,3 +41,4 @@ func Example_fastStart() {
 		log.Fatalln(err.Error())
 	}
 }
+*/

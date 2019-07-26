@@ -7,12 +7,19 @@ import (
 	"mime/multipart"
 	"os"
 	"path"
-	"strconv"
 
-	log "github.com/kirillDanshin/dlog"
-	json "github.com/pquerna/ffjson/ffjson"
 	http "github.com/valyala/fasthttp"
 )
+
+type UploadStickerFileParameters struct {
+	// User identifier of sticker file owner
+	UserID int `json:"user_id"`
+
+	// Png image with the sticker, must be up to 512 kilobytes in size,
+	// dimensions must not exceed 512px, and either width or height
+	// must be exactly 512px.
+	PNGSticker interface{} `json:"png_sticker"`
+}
 
 // ErrBadFileType describes error of the unsupported file data type for uploading
 var ErrBadFileType = errors.New("bad file type")
@@ -54,7 +61,7 @@ voice notes will be sent as files.
 
 * Other configurations may work but we can't guarantee that they will.
 */
-func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (response *Response, err error) {
+func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) (*Response, error) {
 	buffer := bytes.NewBuffer(nil)
 	multi := multipart.NewWriter(buffer)
 
@@ -67,12 +74,12 @@ func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) 
 		_ = multi.WriteField(string(key), string(value))
 	})
 
-	if err = createFileField(multi, file, key, name); err != nil {
-		return
+	if err := createFileField(multi, file, key, name); err != nil {
+		return nil, err
 	}
 
-	if err = multi.Close(); err != nil {
-		return
+	if err := multi.Close(); err != nil {
+		return nil, err
 	}
 
 	req := http.AcquireRequest()
@@ -81,49 +88,41 @@ func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) 
 	req.Header.SetContentType(multi.FormDataContentType())
 	req.Header.SetMethod("POST")
 	req.Header.SetRequestURI(requestURI.String())
-	req.Header.SetUserAgent(path.Join("telegram", strconv.FormatInt(Version, 10)))
+	req.Header.SetUserAgent(path.Join("telegram", Version))
 	req.Header.SetHostBytes(requestURI.Host())
-
-	log.Ln("Request:")
-	log.D(req)
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
 
-	err = http.Do(req, resp)
-	log.Ln("Resp:")
-	log.D(resp)
-	if err != nil {
-		return
+	if err := http.Do(req, resp); err != nil {
+		return nil, err
 	}
 
-	response = new(Response)
-	if err = json.Unmarshal(resp.Body(), response); err != nil {
-		return
+	var response Response
+	if err := parser.Unmarshal(resp.Body(), &response); err != nil {
+		return nil, err
 	}
 
 	if !response.Ok {
-		err = errors.New(response.Description)
+		return nil, errors.New(response.Description)
 	}
 
-	return
+	return &response, nil
 }
 
 func createFileField(w *multipart.Writer, file interface{}, key, val string) (err error) {
 	switch src := file.(type) {
 	case string: // Send FileID of file on disk path
-		err = createFileFieldString(w, key, src)
+		return createFileFieldString(w, key, src)
 	case *http.URI: // Send by URL
-		err = w.WriteField(key, src.String())
+		return w.WriteField(key, src.String())
 	case []byte: // Upload new
-		err = createFileFieldRaw(w, key, val, bytes.NewReader(src))
+		return createFileFieldRaw(w, key, val, bytes.NewReader(src))
 	case io.Reader: // Upload new
-		err = createFileFieldRaw(w, key, val, src)
+		return createFileFieldRaw(w, key, val, src)
 	default:
-		err = ErrBadFileType
+		return ErrBadFileType
 	}
-
-	return
 }
 
 func createFileFieldString(w *multipart.Writer, key, src string) (err error) {
@@ -166,4 +165,22 @@ func createFileFieldRaw(w *multipart.Writer, key, value string, src io.Reader) e
 
 	_, err = io.Copy(field, src)
 	return err
+}
+
+// UploadStickerFile upload a .png file with a sticker for later use in
+// createNewStickerSet and addStickerToSet methods (can be used multiple times).
+// Returns the uploaded File on success.
+func (b *Bot) UploadStickerFile(userID int, pngSticker interface{}) (*File, error) {
+	args := http.AcquireArgs()
+	defer http.ReleaseArgs(args)
+	args.SetUint("user_id", userID)
+
+	resp, err := b.Upload(MethodUploadStickerFile, TypeSticker, "sticker", pngSticker, args)
+	if err != nil {
+		return nil, err
+	}
+
+	var f File
+	err = parser.Unmarshal(resp.Result, &f)
+	return &f, err
 }
