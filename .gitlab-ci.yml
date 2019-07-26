@@ -1,13 +1,5 @@
 image: golang:alpine
 
-cache:
-  paths:
-    - /go/src/github.com
-    - /go/src/gitlab.com
-    - /go/src/golang.org
-    - /go/src/google.golang.org
-    - /go/src/gopkg.in
-
 stages:
   - test
   - review
@@ -25,11 +17,6 @@ unit_tests:
   stage: test
   script:
     - make test
-
-.race_detector:
-  stage: test
-  script:
-    - make race
 
 code_coverage:
   stage: test
