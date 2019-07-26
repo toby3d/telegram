@@ -141,58 +141,58 @@ func NewMessageText(text string) *EditMessageTextParameters {
 // or editing is explicitly disabled by a call to stopMessageLiveLocation. On
 // success, if the edited message was sent by the bot, the edited Message is
 // returned, otherwise True is returned.
-func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (msg *Message, err error) {
+func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageLiveLocation)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // EditMessageText edit text and game messages sent by the bot or via the bot
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (msg *Message, err error) {
+func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageText)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // EditMessageCaption edit captions of messages sent by the bot or via the bot
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (msg *Message, err error) {
+func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageCaption)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // EditMessageMedia edit audio, document, photo, or video messages. If a message
@@ -201,38 +201,37 @@ func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (msg *M
 // edited, new file can't be uploaded. Use previously uploaded file via its
 // file_id or specify a URL. On success, if the edited message was sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (msg *Message, err error) {
-	var src []byte
-	src, err = parser.Marshal(emmp)
+func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (*Message, error) {
+	src, err := parser.Marshal(emmp)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := b.request(src, MethodEditMessageMedia)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // EditMessageReplyMarkup edit only the reply markup of messages sent by the bot
 // or via the bot (for inline bots). On success, if edited message is sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (msg *Message, err error) {
+func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodEditMessageReplyMarkup)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }

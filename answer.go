@@ -145,19 +145,20 @@ func NewAnswerInlineQuery(inlineQueryID string, results ...interface{}) *AnswerI
 // option to work, you must first create a game for your bot via @Botfather and
 // accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX
 // that open your bot with a parameter.
-func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok bool, err error) {
+func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (bool, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodAnswerCallbackQuery)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // AnswerPreCheckoutQuery respond to such pre-checkout queries.
@@ -169,19 +170,20 @@ func (bot *Bot) AnswerCallbackQuery(params *AnswerCallbackQueryParameters) (ok b
 //
 // Note: The Bot API must receive an answer within 10 seconds after the
 // pre-checkout query was sent.
-func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
+func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (bool, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodAnswerPreCheckoutQuery)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // AnswerShippingQuery reply to shipping queries.
@@ -189,35 +191,37 @@ func (bot *Bot) AnswerPreCheckoutQuery(params *AnswerShippingQueryParameters) (o
 // If you sent an invoice requesting a shipping address and the parameter
 // is_flexible was specified, the Bot API will send an Update with a
 // shipping_query field to the bot. On success, True is returned.
-func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (ok bool, err error) {
+func (bot *Bot) AnswerShippingQuery(params *AnswerShippingQueryParameters) (bool, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodAnswerShippingQuery)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
-func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (ok bool, err error) {
+func (bot *Bot) AnswerInlineQuery(params *AnswerInlineQueryParameters) (bool, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodAnswerInlineQuery)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }

@@ -113,18 +113,16 @@ func (b *Bot) Upload(method, key, name string, file InputFile, args *http.Args) 
 func createFileField(w *multipart.Writer, file interface{}, key, val string) (err error) {
 	switch src := file.(type) {
 	case string: // Send FileID of file on disk path
-		err = createFileFieldString(w, key, src)
+		return createFileFieldString(w, key, src)
 	case *http.URI: // Send by URL
-		err = w.WriteField(key, src.String())
+		return w.WriteField(key, src.String())
 	case []byte: // Upload new
-		err = createFileFieldRaw(w, key, val, bytes.NewReader(src))
+		return createFileFieldRaw(w, key, val, bytes.NewReader(src))
 	case io.Reader: // Upload new
-		err = createFileFieldRaw(w, key, val, src)
+		return createFileFieldRaw(w, key, val, src)
 	default:
-		err = ErrBadFileType
+		return ErrBadFileType
 	}
-
-	return
 }
 
 func createFileFieldString(w *multipart.Writer, key, src string) (err error) {

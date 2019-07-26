@@ -7,17 +7,18 @@ type LeaveChatParameters struct {
 }
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
-func (bot *Bot) LeaveChat(chatID int64) (ok bool, err error) {
+func (bot *Bot) LeaveChat(chatID int64) (bool, error) {
 	dst, err := parser.Marshal(&LeaveChatParameters{ChatID: chatID})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodLeaveChat)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }

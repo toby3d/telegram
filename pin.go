@@ -17,17 +17,18 @@ type PinChatMessageParameters struct {
 // PinChatMessage pin a message in a supergroup or a channel. The bot must be an administrator in the
 // chat for this to work and must have the 'can_pin_messages' admin right in the supergroup or
 // 'can_edit_messages' admin right in the channel. Returns True on success.
-func (bot *Bot) PinChatMessage(params *PinChatMessageParameters) (ok bool, err error) {
+func (bot *Bot) PinChatMessage(params *PinChatMessageParameters) (bool, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodPinChatMessage)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }

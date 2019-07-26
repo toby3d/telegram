@@ -561,20 +561,20 @@ func (bot *Bot) SendChatAction(chatID int64, action string) (bool, error) {
 }
 
 // SendContact send phone contacts. On success, the sent Message is returned.
-func (bot *Bot) SendContact(params *SendContactParameters) (msg *Message, err error) {
+func (bot *Bot) SendContact(params *SendContactParameters) (*Message, error) {
 	dst, err := parser.Marshal(*params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendContact)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send
@@ -613,71 +613,72 @@ func (bot *Bot) SendDocument(params *SendDocumentParameters) (*Message, error) {
 }
 
 // SendInvoice send invoices. On success, the sent Message is returned.
-func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (msg *Message, err error) {
+func (bot *Bot) SendInvoice(params *SendInvoiceParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendInvoice)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendLocation send point on the map. On success, the sent Message is returned.
-func (bot *Bot) SendLocation(params *SendLocationParameters) (msg *Message, err error) {
+func (bot *Bot) SendLocation(params *SendLocationParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendLocation)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent
 // Messages is returned.
-func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) (album []Message, err error) {
+func (bot *Bot) SendMediaGroup(params *SendMediaGroupParameters) ([]Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendMediaGroup)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = parser.Unmarshal(resp.Result, &album)
-	return
+	var group []Message
+	err = parser.Unmarshal(resp.Result, &group)
+	return group, err
 }
 
 // SendMessage send text messages. On success, the sent Message is returned.
-func (bot *Bot) SendMessage(params *SendMessageParameters) (msg *Message, err error) {
+func (bot *Bot) SendMessage(params *SendMessageParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendMessage)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendPhoto send photos. On success, the sent Message is returned.
@@ -733,37 +734,37 @@ func (b *Bot) SendPoll(params SendPollConfig) (*Message, error) {
 }
 
 // SendVenue send information about a venue. On success, the sent Message is returned.
-func (bot *Bot) SendVenue(params *SendVenueParameters) (msg *Message, err error) {
+func (bot *Bot) SendVenue(params *SendVenueParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendVenue)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendGame send a game. On success, the sent Message is returned.
-func (bot *Bot) SendGame(params *SendGameParameters) (msg *Message, err error) {
+func (bot *Bot) SendGame(params *SendGameParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSendGame)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SendSticker send .webp stickers. On success, the sent Message is returned.

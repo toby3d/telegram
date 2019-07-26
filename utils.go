@@ -47,9 +47,31 @@ const (
 
 var ErrNotEqual = errors.New("credentials hash and credentials data hash is not equal")
 
+// New creates a new default Bot structure based on the input access token.
+func New(accessToken string) (*Bot, error) {
+	var err error
+	b := new(Bot)
+	b.SetClient(&defaultClient)
+	b.AccessToken = accessToken
+
+	b.User, err = b.GetMe()
+	return b, err
+}
+
+// SetClient allow set custom fasthttp.Client (for proxy traffic, for example).
+func (b *Bot) SetClient(newClient *http.Client) {
+	if b == nil {
+		b = new(Bot)
+	}
+
+	b.Client = newClient
+}
+
 // NewForceReply calls the response interface to the message.
 func NewForceReply() *ForceReply {
-	return &ForceReply{ForceReply: true}
+	return &ForceReply{
+		ForceReply: true,
+	}
 }
 
 // NewInlineMentionURL creates a url.URL for the mention user without username.
@@ -160,26 +182,6 @@ func (a *Audio) File() *File {
 		FileID:   a.FileID,
 		FileSize: a.FileSize,
 	}
-}
-
-// SetClient allow set custom fasthttp.Client (for proxy traffic, for example).
-func (b *Bot) SetClient(newClient *http.Client) {
-	if b == nil {
-		b = new(Bot)
-	}
-
-	b.Client = newClient
-}
-
-// New creates a new default Bot structure based on the input access token.
-func New(accessToken string) (*Bot, error) {
-	var err error
-	b := new(Bot)
-	b.SetClient(&defaultClient)
-	b.AccessToken = accessToken
-
-	b.User, err = b.GetMe()
-	return b, err
 }
 
 // IsMessageFromMe checks that the input message is a message from the current

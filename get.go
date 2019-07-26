@@ -110,77 +110,79 @@ func NewGameHighScores(userID int) *GetGameHighScoresParameters {
 // GetChat get up to date information about the chat (current name of the user
 // for one-on-one conversations, current username of a user, group or channel,
 // etc.). Returns a Chat object on success.
-func (bot *Bot) GetChat(chatID int64) (chat *Chat, err error) {
+func (bot *Bot) GetChat(chatID int64) (*Chat, error) {
 	dst, err := parser.Marshal(&GetChatParameters{ChatID: chatID})
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetChat)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	chat = new(Chat)
-	err = parser.Unmarshal(resp.Result, chat)
-	return
+	var chat Chat
+	err = parser.Unmarshal(resp.Result, &chat)
+	return &chat, err
 }
 
 // GetChatAdministrators get a list of administrators in a chat. On success,
 // returns an Array of ChatMember objects that contains information about all
 // chat administrators except other bots. If the chat is a group or a supergroup
 // and no administrators were appointed, only the creator will be returned.
-func (bot *Bot) GetChatAdministrators(chatID int64) (members []ChatMember, err error) {
+func (bot *Bot) GetChatAdministrators(chatID int64) ([]ChatMember, error) {
 	dst, err := parser.Marshal(&GetChatAdministratorsParameters{ChatID: chatID})
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetChatAdministrators)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = parser.Unmarshal(resp.Result, &members)
-	return
+	var chatMembers []ChatMember
+	err = parser.Unmarshal(resp.Result, &chatMembers)
+	return chatMembers, err
 }
 
 // GetChatMember get information about a member of a chat. Returns a ChatMember
 // object on success.
-func (bot *Bot) GetChatMember(chatID int64, userID int) (member *ChatMember, err error) {
+func (bot *Bot) GetChatMember(chatID int64, userID int) (*ChatMember, error) {
 	dst, err := parser.Marshal(&GetChatMemberParameters{
 		ChatID: chatID,
 		UserID: userID,
 	})
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetChatMember)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	member = new(ChatMember)
-	err = parser.Unmarshal(resp.Result, member)
-	return
+	var chatMember ChatMember
+	err = parser.Unmarshal(resp.Result, &chatMember)
+	return &chatMember, err
 }
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on
 // success.
-func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
+func (bot *Bot) GetChatMembersCount(chatID int64) (int, error) {
 	dst, err := parser.Marshal(&GetChatMembersCountParameters{ChatID: chatID})
 	if err != nil {
-		return
+		return 0, err
 	}
 
 	resp, err := bot.request(dst, MethodGetChatMembersCount)
 	if err != nil {
-		return
+		return 0, err
 	}
 
+	var count int
 	err = parser.Unmarshal(resp.Result, &count)
-	return
+	return count, err
 }
 
 // GetFile get basic info about a file and prepare it for downloading. For the
@@ -194,118 +196,119 @@ func (bot *Bot) GetChatMembersCount(chatID int64) (count int, err error) {
 // Note: This function may not preserve the original file name and MIME type. You
 // should save the file's MIME type and name (if available) when the File object
 // is received.
-func (bot *Bot) GetFile(fileID string) (file *File, err error) {
+func (bot *Bot) GetFile(fileID string) (*File, error) {
 	dst, err := parser.Marshal(&GetFileParameters{FileID: fileID})
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetFile)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	file = new(File)
-	err = parser.Unmarshal(resp.Result, file)
-	return
+	var file File
+	err = parser.Unmarshal(resp.Result, &file)
+	return &file, err
 }
 
 // GetMe testing your bot's auth token. Requires no parameters. Returns basic
 // information about the bot in form of a User object.
-func (bot *Bot) GetMe() (me *User, err error) {
+func (bot *Bot) GetMe() (*User, error) {
 	resp, err := bot.request(nil, MethodGetMe)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	me = new(User)
-	err = parser.Unmarshal(resp.Result, me)
-	return
+	var me User
+	err = parser.Unmarshal(resp.Result, &me)
+	return &me, err
 }
 
 // GetUpdates receive incoming updates using long polling. An Array of Update objects is returned.
-func (bot *Bot) GetUpdates(params *GetUpdatesParameters) (updates []Update, err error) {
+func (bot *Bot) GetUpdates(params *GetUpdatesParameters) ([]Update, error) {
 	if params == nil {
 		params = &GetUpdatesParameters{Limit: 100}
 	}
 
 	src, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(src, MethodGetUpdates)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	updates = make([]Update, params.Limit)
+	updates := make([]Update, params.Limit)
 	err = parser.Unmarshal(resp.Result, &updates)
-	return
+	return updates, err
 }
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
-func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (photos *UserProfilePhotos, err error) {
+func (bot *Bot) GetUserProfilePhotos(params *GetUserProfilePhotosParameters) (*UserProfilePhotos, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetUserProfilePhotos)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	photos = new(UserProfilePhotos)
-	err = parser.Unmarshal(resp.Result, photos)
-	return
+	var photos UserProfilePhotos
+	err = parser.Unmarshal(resp.Result, &photos)
+	return &photos, err
 }
 
 // GetWebhookInfo get current webhook status. Requires no parameters. On success,
 // returns a WebhookInfo object. If the bot is using getUpdates, will return an
 // object with the url field empty.
-func (bot *Bot) GetWebhookInfo() (info *WebhookInfo, err error) {
+func (bot *Bot) GetWebhookInfo() (*WebhookInfo, error) {
 	resp, err := bot.request(nil, MethodGetWebhookInfo)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	info = new(WebhookInfo)
-	err = parser.Unmarshal(resp.Result, info)
-	return
+	var info WebhookInfo
+	err = parser.Unmarshal(resp.Result, &info)
+	return &info, err
 }
 
 // GetGameHighScores get data for high score tables. Will return the score of the
 // specified user and several of his neighbors in a game. On success, returns an
 // Array of GameHighScore objects.
-func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) (scores []GameHighScore, err error) {
+func (bot *Bot) GetGameHighScores(params *GetGameHighScoresParameters) ([]GameHighScore, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetGameHighScores)
 	if err != nil {
-		return
+		return nil, err
 	}
 
+	var scores []GameHighScore
 	err = parser.Unmarshal(resp.Result, &scores)
-	return
+	return scores, err
 }
 
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
-func (bot *Bot) GetStickerSet(name string) (set *StickerSet, err error) {
+func (bot *Bot) GetStickerSet(name string) (*StickerSet, error) {
 	dst, err := parser.Marshal(&GetStickerSetParameters{Name: name})
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodGetStickerSet)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	set = new(StickerSet)
-	err = parser.Unmarshal(resp.Result, set)
-	return
+	var set StickerSet
+	err = parser.Unmarshal(resp.Result, &set)
+	return &set, err
 }

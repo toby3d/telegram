@@ -25,7 +25,7 @@ type AddStickerToSetParameters struct {
 
 // AddStickerToSet add a new sticker to a set created by the bot. Returns True
 // on success.
-func (b *Bot) AddStickerToSet(params *AddStickerToSetParameters) (ok bool, err error) {
+func (b *Bot) AddStickerToSet(params *AddStickerToSetParameters) (bool, error) {
 	args := http.AcquireArgs()
 	defer http.ReleaseArgs(args)
 	args.SetUint("user_id", params.UserID)
@@ -50,6 +50,7 @@ func (b *Bot) AddStickerToSet(params *AddStickerToSetParameters) (ok bool, err e
 		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }

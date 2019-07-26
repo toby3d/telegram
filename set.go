@@ -140,22 +140,23 @@ func NewGameScore(userID, score int) *SetGameScoreParameters {
 // SetChatDescription change the description of a supergroup or a channel. The
 // bot must be an administrator in the chat for this to work and must have the
 // appropriate admin rights. Returns True on success.
-func (bot *Bot) SetChatDescription(chatID int64, description string) (ok bool, err error) {
+func (bot *Bot) SetChatDescription(chatID int64, description string) (bool, error) {
 	dst, err := parser.Marshal(&SetChatDescriptionParameters{
 		ChatID:      chatID,
 		Description: description,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodSetChatDescription)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // SetChatPhoto set a new profile photo for the chat. Photos can't be changed for private chats. The
@@ -183,22 +184,23 @@ func (bot *Bot) SetChatPhoto(chatID int64, chatPhoto interface{}) (bool, error) 
 // in the chat for this to work and must have the appropriate admin rights. Use the field
 // can_set_sticker_set optionally returned in getChat requests to check if the bot can use this
 // method. Returns True on success.
-func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (ok bool, err error) {
+func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (bool, error) {
 	dst, err := parser.Marshal(&SetChatStickerSetParameters{
 		ChatID:         chatID,
 		StickerSetName: stickerSetName,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodSetChatStickerSet)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // SetChatTitle change the title of a chat. Titles can't be changed for private
@@ -207,22 +209,23 @@ func (bot *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (ok bool,
 //
 // Note: In regular groups (non-supergroups), this method will only work if the
 // 'All Members Are Admins' setting is off in the target group.
-func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
+func (bot *Bot) SetChatTitle(chatID int64, title string) (bool, error) {
 	dst, err := parser.Marshal(&SetChatTitleParameters{
 		ChatID: chatID,
 		Title:  title,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := bot.request(dst, MethodSetChatTitle)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // SetPassportDataErrors informs a user that some of the Telegram Passport
@@ -235,22 +238,23 @@ func (bot *Bot) SetChatTitle(chatID int64, title string) (ok bool, err error) {
 // invalid, a submitted document is blurry, a scan shows evidence of tampering,
 // etc. Supply some details in the error message to make sure the user knows how
 // to correct the issues.
-func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (ok bool, err error) {
+func (b *Bot) SetPassportDataErrors(userId int, errors []PassportElementError) (bool, error) {
 	dst, err := parser.Marshal(&SetPassportDataErrorsParameters{
 		UserID: userId,
 		Errors: errors,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := b.request(dst, MethodSetPassportDataErrors)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }
 
 // SetWebhook specify a url and receive incoming updates via an outgoing webhook.
@@ -301,38 +305,39 @@ func (bot *Bot) SetWebhook(params *SetWebhookParameters) (bool, error) {
 // message was sent by the bot, returns the edited Message, otherwise returns
 // True. Returns an error, if the new score is not greater than the user's
 // current score in the chat and force is False.
-func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (msg *Message, err error) {
+func (bot *Bot) SetGameScore(params *SetGameScoreParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodSetGameScore)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
 
 // SetStickerPositionInSet move a sticker in a set created by the bot to a
 // specific position. Returns True on success.
-func (b *Bot) SetStickerPositionInSet(sticker string, position int) (ok bool, err error) {
+func (b *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error) {
 	dst, err := parser.Marshal(&SetStickerPositionInSetParameters{
 		Sticker:  sticker,
 		Position: position,
 	})
 	if err != nil {
-		return
+		return false, err
 	}
 
 	resp, err := b.request(dst, MethodSetStickerPositionInSet)
 	if err != nil {
-		return
+		return false, err
 	}
 
+	var ok bool
 	err = parser.Unmarshal(resp.Result, &ok)
-	return
+	return ok, err
 }

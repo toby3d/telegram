@@ -26,22 +26,22 @@ var (
 	parser        = json.ConfigFastest
 )
 
-func (bot *Bot) request(dst []byte, method string) (*Response, error) {
-	if bot.Client == nil {
-		bot.SetClient(&defaultClient)
+func (b *Bot) request(dst []byte, method string) (*Response, error) {
+	if b.Client == nil {
+		b.SetClient(&defaultClient)
 	}
 
 	requestURI := http.AcquireURI()
 	requestURI.SetScheme("https")
 	requestURI.SetHost("api.telegram.org")
-	requestURI.SetPath(path.Join("bot"+bot.AccessToken, method))
+	requestURI.SetPath(path.Join("bot"+b.AccessToken, method))
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
 	req.Header.SetContentType("application/json; charset=utf-8")
-	req.Header.SetMethod("POST")
+	req.Header.SetMethod(http.MethodPost)
 	if dst == nil {
-		req.Header.SetMethod("GET")
+		req.Header.SetMethod(http.MethodGet)
 	}
 	req.Header.SetRequestURI(requestURI.String())
 	req.Header.SetUserAgent(path.Join("telegram", Version))
@@ -51,7 +51,7 @@ func (bot *Bot) request(dst []byte, method string) (*Response, error) {
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)
 
-	if err := bot.Client.Do(req, resp); err != nil {
+	if err := b.Client.Do(req, resp); err != nil {
 		return nil, err
 	}
 

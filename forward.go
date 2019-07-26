@@ -28,18 +28,18 @@ func NewForwardMessage(from, to int64, messageID int) *ForwardMessageParameters 
 }
 
 // ForwardMessage forward messages of any kind. On success, the sent Message is returned.
-func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (msg *Message, err error) {
+func (bot *Bot) ForwardMessage(params *ForwardMessageParameters) (*Message, error) {
 	dst, err := parser.Marshal(params)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	resp, err := bot.request(dst, MethodForwardMessage)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	msg = new(Message)
-	err = parser.Unmarshal(resp.Result, msg)
-	return
+	var msg Message
+	err = parser.Unmarshal(resp.Result, &msg)
+	return &msg, err
 }
