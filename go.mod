@@ -3,9 +3,7 @@ module gitlab.com/toby3d/telegram
 go 1.12
 
 require (
-	github.com/buaazp/fasthttprouter v0.1.1
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/json-iterator/go v1.1.6
+	github.com/json-iterator/go v1.1.7
 	github.com/kirillDanshin/dlog v0.0.0-20170728000807-97d876b12bf9
 	github.com/kirillDanshin/myutils v0.0.0-20160713214838-182269b1fbcc // indirect
 	github.com/klauspost/compress v1.7.4 // indirect
