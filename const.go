@@ -106,6 +106,7 @@ const (
 	MethodSendVideoNote           = "sendVideoNote"
 	MethodSendVoice               = "sendVoice"
 	MethodSetChatDescription      = "setChatDescription"
+	MethodSetChatPermissions      = "setChatPermissions"
 	MethodSetChatPhoto            = "setChatPhoto"
 	MethodSetChatStickerSet       = "setChatStickerSet"
 	MethodSetChatTitle            = "setChatTitle"

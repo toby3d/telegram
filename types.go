@@ -116,14 +116,10 @@ type (
 		// Last name of the other party in a private chat
 		LastName string `json:"last_name,omitempty"`
 
-		// True if a group has ‘All Members Are Admins’ enabled.
-		AllMembersAreAdministrators bool `json:"all_members_are_administrators,omitempty"`
-
 		// Chat photo. Returned only in getChat.
 		Photo *ChatPhoto `json:"photo,omitempty"`
 
-		// Description, for supergroups and channel chats. Returned only in
-		// getChat.
+		// Description, for groups, supergroups and channel chats. Returned only in getChat.
 		Description string `json:"description,omitempty"`
 
 		// Chat invite link, for supergroups and channel chats. Returned only in
@@ -132,6 +128,9 @@ type (
 
 		// Pinned message, for groups, supergroups and channels. Returned only in getChat.
 		PinnedMessage *Message `json:"pinned_message,omitempty"`
+
+		// Default chat member permissions, for groups and supergroups. Returned only in getChat.
+		Permissions *ChatPermissions `json:"permissions,omitempty"`
 
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
@@ -763,11 +762,13 @@ type (
 	// ChatPhoto represents a chat photo.
 	ChatPhoto struct {
 		// Unique file identifier of small (160x160) chat photo. This file_id can
-		// be used only for photo download.
+		// be used only for photo download. This file_id can be used only for photo download and only for as
+		// long as the photo is not changed.
 		SmallFileID string `json:"small_file_id"`
 
 		// Unique file identifier of big (640x640) chat photo. This file_id can
-		// be used only for photo download.
+		// be used only for photo download. This file_id can be used only for photo download and only for as
+		// long as the photo is not changed.
 		BigFileID string `json:"big_file_id"`
 	}
 
@@ -776,51 +777,45 @@ type (
 		// Information about the user
 		User *User `json:"user"`
 
-		// The member's status in the chat. Can be "creator", "administrator",
-		// "member", "restricted", "left" or "kicked"
+		// The member's status in the chat. Can be "creator", "administrator", "member", "restricted", "left"
+		// or "kicked"
 		Status string `json:"status"`
 
-		// Restictred and kicked only. Date when restrictions will be lifted for
-		// this user, unix time
+		// Restictred and kicked only. Date when restrictions will be lifted for this user, unix time
 		UntilDate int64 `json:"until_date,omitempty"`
 
-		// Administrators only. True, if the bot is allowed to edit administrator
-		// privileges of that user
+		// Administrators only. True, if the bot is allowed to edit administrator privileges of that user
 		CanBeEdited bool `json:"can_be_edited,omitempty"`
 
-		// Administrators only. True, if the administrator can change the chat
-		// title, photo and other settings
-		CanChangeInfo bool `json:"can_change_info,omitempty"`
-
-		// Administrators only. True, if the administrator can post in the
-		// channel, channels only
+		// Administrators only. True, if the administrator can post in the channel, channels only
 		CanPostMessages bool `json:"can_post_messages,omitempty"`
 
-		// Administrators only. True, if the administrator can edit messages of
-		// other users, channels only
+		// Administrators only. True, if the administrator can edit messages of other users, channels only
 		CanEditMessages bool `json:"can_edit_messages,omitempty"`
 
-		// Administrators only. True, if the administrator can delete messages of
-		// other users
+		// Administrators only. True, if the administrator can delete messages of other users
 		CanDeleteMessages bool `json:"can_delete_messages,omitempty"`
-
-		// Administrators only. True, if the administrator can invite new users
-		// to the chat
-		CanInviteUsers bool `json:"can_invite_users,omitempty"`
 
 		// Administrators only. True, if the administrator can restrict, ban or
 		// unban chat members
 		CanRestrictMembers bool `json:"can_restrict_members,omitempty"`
-
-		// Administrators only. True, if the administrator can pin messages,
-		// supergroups only
-		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 
 		// Administrators only. True, if the administrator can add new
 		// administrators with a subset of his own privileges or demote
 		// administrators that he has promoted, directly or indirectly (promoted
 		// by administrators that were appointed by the user)
 		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
+
+		// Administrators and restricted only. True, if the user is allowed to change the chat title, photo
+		// and other settings
+		CanChangeInfo bool `json:"can_change_info,omitempty"`
+
+		// Administrators and restricted only. True, if the user is allowed to invite new users to the chat
+		CanInviteUsers bool `json:"can_invite_users,omitempty"`
+
+		// Administrators and restricted only. True, if the user is allowed to pin messages; groups and
+		// supergroups only
+		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 
 		// Restricted only. True, if the user is a member of the chat at the moment of the request
 		IsMember bool `json:"is_member,omitempty"`
@@ -833,6 +828,9 @@ type (
 		// videos, video notes and voice notes, implies can_send_messages
 		CanSendMediaMessages bool `json:"can_send_media_messages,omitempty"`
 
+		// Restricted only. True, if the user is allowed to send polls
+		CanSendPolls bool `json:"can_send_polls,omitempty"`
+
 		// Restricted only. True, if the user can send animations, games,
 		// stickers and use inline bots, implies can_send_media_messages
 		CanSendOtherMessages bool `json:"can_send_other_messages,omitempty"`
@@ -840,6 +838,36 @@ type (
 		// Restricted only. True, if user may add web page previews to his
 		// messages, implies can_send_media_messages
 		CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
+	}
+
+	// ChatPermissions describes actions that a non-administrator user is allowed to take in a chat.
+	ChatPermissions struct {
+		// True, if the user is allowed to send text messages, contacts, locations and venues
+		CanSendMessages bool `json:"can_send_messages,omitempty"`
+
+		// True, if the user is allowed to send audios, documents, photos, videos, video notes and voice
+		// notes, implies can_send_messages
+		CanSendMediaMessages bool `json:"can_send_media_messages,omitempty"`
+
+		// True, if the user is allowed to send polls, implies can_send_messages
+		CanSendPolls bool `json:"can_send_polls,omitempty"`
+
+		// True, if the user is allowed to send animations, games, stickers and use inline bots, implies
+		// can_send_media_messages
+		CanSendOtherMessages bool `json:"can_send_other_messages,omitempty"`
+
+		// True, if the user is allowed to add web page previews to their messages, implies can_send_media_messages
+		CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
+
+		// True, if the user is allowed to change the chat title, photo and other settings. Ignored in public
+		// supergroups
+		CanChangeInfo bool `json:"can_change_info,omitempty"`
+
+		// True, if the user is allowed to invite new users to the chat
+		CanInviteUsers bool `json:"can_invite_users,omitempty"`
+
+		// True, if the user is allowed to pin messages. Ignored in public supergroups
+		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 	}
 
 	// ResponseParameters contains information about why a request was
@@ -2693,6 +2721,9 @@ type (
 
 		// For mask stickers, the position where the mask should be placed
 		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
+
+		// true, if the sticker is animated
+		IsAnimated bool `json:"is_animated"`
 	}
 
 	// StickerSet represents a sticker set.
@@ -2708,6 +2739,9 @@ type (
 
 		// List of all set stickers
 		Stickers []Sticker `json:"stickers"`
+
+		// true, if the sticker set contains animated stickers
+		IsAnimated bool `json:"is_animated"`
 	}
 
 	// MaskPosition describes the position on faces where a mask should be placed

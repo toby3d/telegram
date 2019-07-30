@@ -119,6 +119,15 @@ type (
 		// New sticker position in the set, zero-based
 		Position int `json:"position"`
 	}
+
+	// SetChatPermissionsParameters represents data for SetChatPermissions method.
+	SetChatPermissionsParameters struct {
+		// Unique identifier for the target chat
+		ChatID int64 `json:"chat_id"`
+
+		// New default chat permissions
+		Permissions ChatPermissions `json:"permissions"`
+	}
 )
 
 // NewWebhook creates new SetWebhookParameters only with required parameters.
@@ -333,6 +342,24 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error
 	}
 
 	resp, err := b.request(dst, MethodSetStickerPositionInSet)
+	if err != nil {
+		return false, err
+	}
+
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
+}
+
+// SetChatPermissions set default chat permissions for all members. The bot must be an administrator in the group or a
+// supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success.
+func (b *Bot) SetChatPermissions(params SetChatPermissionsParameters) (bool, error) {
+	dst, err := parser.Marshal(&params)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := b.request(dst, MethodSetChatPermissions)
 	if err != nil {
 		return false, err
 	}
