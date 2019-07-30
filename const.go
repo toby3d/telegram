@@ -1,7 +1,7 @@
 package telegram
 
 // Version represents current version of Telegram API supported by this package
-const Version = "4.3"
+const Version string = "4.4"
 
 // Action represents available and supported status actions of bot
 const (
