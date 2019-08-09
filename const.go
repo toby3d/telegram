@@ -190,6 +190,7 @@ const (
 	UpdateEditedMessage      string = "edited_message"
 	UpdateInlineQuery        string = "inline_query"
 	UpdateMessage            string = "message"
+	UpdatePoll               string = "poll"
 	UpdatePreCheckoutQuery   string = "pre_checkout_query"
 	UpdateShippingQuery      string = "shipping_query"
 )

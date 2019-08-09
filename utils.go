@@ -1860,6 +1860,11 @@ func (m *Message) IsSuccessfulPayment() bool {
 	return m != nil && m.SuccessfulPayment != nil
 }
 
+// IsPoll checks that the current message is a poll.
+func (m *Message) IsPoll() bool {
+	return m != nil && m.Poll != nil
+}
+
 // HasEntities checks that the current message contains entities.
 func (m *Message) HasEntities() bool {
 	return m != nil && len(m.Entities) > 0
@@ -1989,10 +1994,6 @@ func (m *Message) SmallChatPhoto() *PhotoSize {
 
 	sp := sortPhotos(m.NewChatPhoto, false)
 	return &sp[0]
-}
-
-func (m *Message) HasPoll() bool {
-	return m != nil && m.Poll != nil
 }
 
 func decrypt(pk *rsa.PrivateKey, s, h, d string) (obj []byte, err error) {
@@ -2581,6 +2582,11 @@ func (u *Update) IsPreCheckoutQuery() bool {
 	return u != nil && u.PreCheckoutQuery != nil
 }
 
+// IsPoll checks that the current update is a poll update.
+func (u *Update) IsPoll() bool {
+	return u != nil && u.Poll != nil
+}
+
 // Type return update type for current update.
 func (u *Update) Type() string {
 	switch {
@@ -2602,6 +2608,8 @@ func (u *Update) Type() string {
 		return UpdatePreCheckoutQuery
 	case u.IsShippingQuery():
 		return UpdateShippingQuery
+	case u.IsPoll():
+		return UpdatePoll
 	default:
 		return ""
 	}
