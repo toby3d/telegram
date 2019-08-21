@@ -25,3 +25,8 @@ _testmain.go
 
 ffjson-inception*
 *_ffjson_expose.go
+.DS_Store
+
+# IDE stuff
+.idea/
+
