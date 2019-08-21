@@ -1,10 +1,5 @@
-PROJECT_NAMESPACE := $(CI_PROJECT_NAMESPACE)
-PROJECT_NAME := $(CI_PROJECT_NAME)
-PROJECT_PATH := "$(PROJECT_NAMESPACE)/$(PROJECT_NAME)"
-PACKAGE_NAME := "gitlab.com/$(PROJECT_PATH)"
-PACKAGE_PATH := "$(GOPATH)/src/$(PACKAGE_NAME)"
+PACKAGE_NAME := "gitlab.com/toby3d/telegram"
 PACKAGE_LIST := $(shell go list $(PACKAGE_NAME)/... | grep -v /vendor/)
-GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 
 .PHONY: all lint test rase coverage tidy
 
