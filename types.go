@@ -10,7 +10,7 @@ type (
 		// especially handy if you’re using Webhooks, since it allows you to
 		// ignore repeated updates or to restore the correct update sequence,
 		// should they get out of order.
-		ID int `json:"update_id"`
+		UpdateID int `json:"update_id"`
 
 		// New incoming message of any kind — text, photo, sticker, etc.
 		Message *Message `json:"message,omitempty"`
@@ -131,6 +131,9 @@ type (
 
 		// Default chat member permissions, for groups and supergroups. Returned only in getChat.
 		Permissions *ChatPermissions `json:"permissions,omitempty"`
+
+		// For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
+		SlowModeDelay int `json:"slow_mode_delay,omitempty"`
 
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
@@ -336,8 +339,11 @@ type (
 
 	// PhotoSize represents one size of a photo or a file / sticker thumbnail.
 	PhotoSize struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// Photo width
 		Width int `json:"width"`
@@ -352,8 +358,14 @@ type (
 	// Audio represents an audio file to be treated as music by the Telegram
 	// clients.
 	Audio struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
+
+		// Duration of the audio in seconds as defined by sender
+		Duration int `json:"duration"`
 
 		// Performer of the audio as defined by sender or by audio tags
 		Performer string `json:"performer,omitempty"`
@@ -363,9 +375,6 @@ type (
 
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
-
-		// Duration of the audio in seconds as defined by sender
-		Duration int `json:"duration"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -377,8 +386,14 @@ type (
 	// Document represents a general file (as opposed to photos, voice messages
 	// and audio files).
 	Document struct {
-		// Unique file identifier
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
+
+		// Document thumbnail as defined by sender
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 
 		// Original filename as defined by sender
 		FileName string `json:"file_name,omitempty"`
@@ -386,20 +401,17 @@ type (
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
 
-		// Document thumbnail as defined by sender
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
 		// File size
 		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// Video represents a video file.
 	Video struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
 
-		// Mime type of a file as defined by sender
-		MimeType string `json:"mime_type,omitempty"`
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// Video width as defined by sender
 		Width int `json:"width"`
@@ -410,23 +422,29 @@ type (
 		// Duration of the video in seconds as defined by sender
 		Duration int `json:"duration"`
 
-		// File size
-		FileSize int `json:"file_size,omitempty"`
-
 		// Video thumbnail
 		Thumb *PhotoSize `json:"thumb,omitempty"`
+
+		// Mime type of a file as defined by sender
+		MimeType string `json:"mime_type,omitempty"`
+
+		// File size
+		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// Voice represents a voice note.
 	Voice struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
 
-		// MIME type of the file as defined by sender
-		MimeType string `json:"mime_type,omitempty"`
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// Duration of the audio in seconds as defined by sender
 		Duration int `json:"duration"`
+
+		// MIME type of the file as defined by sender
+		MimeType string `json:"mime_type,omitempty"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -435,8 +453,11 @@ type (
 	// VideoNote represents a video message (available in Telegram apps as of
 	// v.4.0).
 	VideoNote struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// Video width and height (diameter of the video message) as defined by sender
 		Length int `json:"length"`
@@ -444,11 +465,11 @@ type (
 		// Duration of the video in seconds as defined by sender
 		Duration int `json:"duration"`
 
-		// File size
-		FileSize int `json:"file_size,omitempty"`
-
 		// Video thumbnail
 		Thumb *PhotoSize `json:"thumb,omitempty"`
+
+		// File size
+		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// Contact represents a phone contact.
@@ -538,15 +559,18 @@ type (
 	//
 	// Maximum file size to download is 20 MB
 	File struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
+
+		// File size, if known
+		FileSize int `json:"file_size,omitempty"`
 
 		// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to
 		// get the file.
 		FilePath string `json:"file_path,omitempty"`
-
-		// File size, if known
-		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// ReplyKeyboardMarkup represents a custom keyboard with reply options (see
@@ -761,15 +785,17 @@ type (
 
 	// ChatPhoto represents a chat photo.
 	ChatPhoto struct {
-		// Unique file identifier of small (160x160) chat photo. This file_id can
-		// be used only for photo download. This file_id can be used only for photo download and only for as
-		// long as the photo is not changed.
+		// File identifier of small (160x160) chat photo. This file_id can be used only for photo download and only for as long as the photo is not changed.
 		SmallFileID string `json:"small_file_id"`
 
-		// Unique file identifier of big (640x640) chat photo. This file_id can
-		// be used only for photo download. This file_id can be used only for photo download and only for as
-		// long as the photo is not changed.
+		// Unique file identifier of small (160x160) chat photo, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		SmallFileUniqueID string `json:"small_file_unique_id"`
+
+		// File identifier of big (640x640) chat photo. This file_id can be used only for photo download and only for as long as the photo is not changed.
 		BigFileID string `json:"big_file_id"`
+
+		// Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		BigFileUniqueID string `json:"big_file_unique_id"`
 	}
 
 	// ChatMember contains information about one member of a chat.
@@ -780,6 +806,9 @@ type (
 		// The member's status in the chat. Can be "creator", "administrator", "member", "restricted", "left"
 		// or "kicked"
 		Status string `json:"status"`
+
+		// Owner and administrators only. Custom title for this user
+		CustomTitle string `json:"custom_title,omitempty"`
 
 		// Restictred and kicked only. Date when restrictions will be lifted for this user, unix time
 		UntilDate int64 `json:"until_date,omitempty"`
@@ -1060,14 +1089,26 @@ type (
 		// Unique file identifier
 		FileID string `json:"file_id"`
 
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
+
+		// Video width as defined by sender
+		Width int `json:"width"`
+
+		// Video height as defined by sender
+		Height int `json:"height"`
+
+		// Duration of the video in seconds as defined by sender
+		Duration int `json:"duration"`
+
+		// Animation thumbnail as defined by sender
+		Thumb *PhotoSize `json:"thumb,omitempty"`
+
 		// Original animation filename as defined by sender
 		FileName string `json:"file_name,omitempty"`
 
 		// MIME type of the file as defined by sender
 		MimeType string `json:"mime_type,omitempty"`
-
-		// Animation thumbnail as defined by sender
-		Thumb *PhotoSize `json:"thumb,omitempty"`
 
 		// File size
 		FileSize int `json:"file_size,omitempty"`
@@ -2191,14 +2232,17 @@ type (
 	// Telegram Passport files are in JPEG format when decrypted and don't exceed
 	// 10MB.
 	PassportFile struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// File size
 		FileSize int `json:"file_size"`
 
 		// Unix time when the file was uploaded
-		FileDate int64 `json:"file_date"`
+		FileDate int `json:"file_date"`
 	}
 
 	// Credentials is a JSON-serialized object.
@@ -2698,14 +2742,11 @@ type (
 
 	// Sticker represents a sticker.
 	Sticker struct {
-		// Unique identifier for this file
+		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
 
-		// Emoji associated with the sticker
-		Emoji string `json:"emoji,omitempty"`
-
-		// Name of the sticker set to which the sticker belongs
-		SetName string `json:"set_name,omitempty"`
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
 
 		// Sticker width
 		Width int `json:"width"`
@@ -2713,17 +2754,23 @@ type (
 		// Sticker height
 		Height int `json:"height"`
 
-		// File size
-		FileSize int `json:"file_size,omitempty"`
+		// true, if the sticker is animated
+		IsAnimated bool `json:"is_animated"`
 
 		// Sticker thumbnail in the .webp or .jpg format
 		Thumb *PhotoSize `json:"thumb,omitempty"`
 
+		// Emoji associated with the sticker
+		Emoji string `json:"emoji,omitempty"`
+
+		// Name of the sticker set to which the sticker belongs
+		SetName string `json:"set_name,omitempty"`
+
 		// For mask stickers, the position where the mask should be placed
 		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 
-		// true, if the sticker is animated
-		IsAnimated bool `json:"is_animated"`
+		// File size
+		FileSize int `json:"file_size,omitempty"`
 	}
 
 	// StickerSet represents a sticker set.

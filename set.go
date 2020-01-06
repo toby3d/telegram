@@ -128,6 +128,17 @@ type (
 		// New default chat permissions
 		Permissions ChatPermissions `json:"permissions"`
 	}
+
+	SetChatAdministratorCustomTitle struct {
+		// Unique identifier for the target chat
+		ChatID int64 `json:"chat_id"`
+
+		// Unique identifier of the target user
+		UserID int `json:"user_id"`
+
+		// New custom title for the administrator; 0-16 characters, emoji are not allowed
+		CustomTitle string `json:"custom_title"`
+	}
 )
 
 // NewWebhook creates new SetWebhookParameters only with required parameters.
@@ -360,6 +371,23 @@ func (b *Bot) SetChatPermissions(params SetChatPermissionsParameters) (bool, err
 	}
 
 	resp, err := b.request(dst, MethodSetChatPermissions)
+	if err != nil {
+		return false, err
+	}
+
+	var ok bool
+	err = parser.Unmarshal(resp.Result, &ok)
+	return ok, err
+}
+
+// SetChatAdministratorCustomTitle method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
+func (b *Bot) SetChatAdministratorCustomTitle(params SetChatAdministratorCustomTitle) (bool, error) {
+	dst, err := parser.Marshal(&params)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := b.request(dst, MethodSetChatAdministratorCustomTitle)
 	if err != nil {
 		return false, err
 	}
