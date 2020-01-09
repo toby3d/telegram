@@ -30,6 +30,7 @@ func New(accessToken string) (b *Bot, err error) {
 	b.SetClient(&http.Client{})
 	b.AccessToken = accessToken
 	b.User, err = b.GetMe()
+
 	return b, err
 }
 

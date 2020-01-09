@@ -34,6 +34,7 @@ func TestCheckAuthorization(t *testing.T) {
 		PhotoURL:  "https://toby3d.me/avatar.jpg",
 		AuthDate:  time.Now().UTC().Unix(),
 	}
+
 	t.Run("invalid", func(t *testing.T) {
 		u.Hash = "wtf"
 		ok, err := w.CheckAuthorization(u)

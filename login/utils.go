@@ -6,6 +6,10 @@ import (
 
 // FullName return user first name only or full name if last name is present.
 func (u *User) FullName() string {
+	if u == nil || u.FirstName == "" {
+		return ""
+	}
+
 	name := u.FirstName
 	if u.HasLastName() {
 		name += " " + u.LastName
@@ -15,13 +19,12 @@ func (u *User) FullName() string {
 }
 
 // AuthTime convert AuthDate field into time.Time.
-func (u *User) AuthTime() *time.Time {
+func (u *User) AuthTime() time.Time {
 	if u == nil || u.AuthDate == 0 {
-		return nil
+		return time.Time{}
 	}
 
-	t := time.Unix(u.AuthDate, 0)
-	return &t
+	return time.Unix(u.AuthDate, 0)
 }
 
 // HasLastName checks what the current user has a LastName.

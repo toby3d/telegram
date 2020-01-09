@@ -1775,6 +1775,7 @@ func TestContactFullName(t *testing.T) {
 		name:      "false",
 		expResult: "",
 	}} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.contact.FullName(), tc.expResult)
 		})
@@ -1795,6 +1796,7 @@ func TestContactHasLastName(t *testing.T) {
 		contact:   Contact{FirstName: "Maxim"},
 		expResult: false,
 	}} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.contact.HasLastName(), tc.expResult)
 		})
@@ -1814,6 +1816,7 @@ func TestContactInTelegram(t *testing.T) {
 		name:      "false",
 		expResult: false,
 	}} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.contact.InTelegram(), tc.expResult)
 		})
@@ -1838,6 +1841,7 @@ func TestContactHasVCard(t *testing.T) {
 		name:      "false",
 		expResult: false,
 	}} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.contact.HasVCard(), tc.expResult)
 		})
@@ -1852,19 +1856,20 @@ func TestPollVotesCount(t *testing.T) {
 	}{{
 		name: "true",
 		poll: Poll{Options: []*PollOption{
-			&PollOption{Text: "a", VoterCount: 24},
-			&PollOption{Text: "b", VoterCount: 42},
+			{Text: "a", VoterCount: 24},
+			{Text: "b", VoterCount: 42},
 		}},
 		expResult: 66,
 	}, {
 		name: "true",
 		poll: Poll{Options: []*PollOption{
-			&PollOption{Text: "a", VoterCount: 10},
-			&PollOption{Text: "b", VoterCount: 0},
-			&PollOption{Text: "c", VoterCount: 120},
+			{Text: "a", VoterCount: 10},
+			{Text: "b", VoterCount: 0},
+			{Text: "c", VoterCount: 120},
 		}},
 		expResult: 130,
 	}} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, tc.poll.VotesCount(), tc.expResult)
 		})
@@ -2067,6 +2072,7 @@ func TestInputFileIsURI(t *testing.T) {
 func TestInputFileIsAttachment(t *testing.T) {
 	file, err := ioutil.TempFile(os.TempDir(), "photo_*.jpeg")
 	assert.NoError(t, err)
+
 	defer os.RemoveAll(file.Name())
 
 	t.Run("true", func(t *testing.T) {
@@ -2086,6 +2092,7 @@ func TestInputFileMarshalJSON(t *testing.T) {
 
 	file, err := ioutil.TempFile(os.TempDir(), "photo_*.jpeg")
 	assert.NoError(t, err)
+
 	defer os.RemoveAll(file.Name())
 
 	_, fileName := filepath.Split(file.Name())

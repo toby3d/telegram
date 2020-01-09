@@ -31,11 +31,11 @@ func TestUser(t *testing.T) {
 	t.Run("auth time", func(t *testing.T) {
 		t.Run("empty", func(t *testing.T) {
 			var u User
-			assert.Nil(t, u.AuthTime())
+			assert.True(t, u.AuthTime().IsZero())
 		})
 		t.Run("exists", func(t *testing.T) {
 			u := User{AuthDate: time.Now().UTC().Unix()}
-			assert.NotNil(t, u.AuthTime())
+			assert.False(t, u.AuthTime().IsZero())
 		})
 	})
 	t.Run("has photo", func(t *testing.T) {

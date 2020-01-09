@@ -57,18 +57,25 @@ func (w *Widget) GenerateHash(u User) (string, error) {
 	a.SetUint(KeyAuthDate, int(u.AuthDate))
 	a.Set(KeyFirstName, u.FirstName)
 	a.SetUint(KeyID, u.ID)
+
 	if u.LastName != "" {
 		a.Set(KeyLastName, u.LastName)
 	}
+
 	if u.PhotoURL != "" {
 		a.Set(KeyPhotoURL, u.PhotoURL)
 	}
+
 	if u.Username != "" {
 		a.Set(KeyUsername, u.Username)
 	}
 
 	secretKey := sha256.Sum256([]byte(w.accessToken))
 	h := hmac.New(sha256.New, secretKey[0:])
-	_, err := h.Write(a.QueryString())
-	return hex.EncodeToString(h.Sum(nil)), err
+
+	if _, err := h.Write(a.QueryString()); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(h.Sum(nil)), nil
 }

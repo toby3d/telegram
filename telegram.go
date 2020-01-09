@@ -95,7 +95,10 @@ func (b *Bot) Upload(method string, payload map[string]string, files ...*InputFi
 	req.SetRequestURIBytes(u.RequestURI())
 	req.Header.SetContentType(w.FormDataContentType())
 	req.Header.SetMultipartFormBoundary(w.Boundary())
-	body.WriteTo(req.BodyWriter())
+
+	if _, err := body.WriteTo(req.BodyWriter()); err != nil {
+		return nil, err
+	}
 
 	resp := http.AcquireResponse()
 	defer http.ReleaseResponse(resp)

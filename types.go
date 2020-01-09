@@ -1536,8 +1536,8 @@ func (f *InputFile) MarshalJSON() ([]byte, error) {
 		u.SetHost(fileName)
 		u.SetPathBytes(nil)
 
-		// NOTE(toby3d): remove slash on the end
-		uri := u.FullURI()
+		uri := u.FullURI() // NOTE(toby3d): remove slash on the end
+
 		return uri[:len(uri)-1], nil
 	default:
 		return nil, nil

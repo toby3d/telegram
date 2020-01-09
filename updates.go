@@ -160,15 +160,11 @@ func (b *Bot) GetUpdates(p *GetUpdates) ([]*Update, error) {
 //
 // If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
 func (b *Bot) SetWebhook(p SetWebhook) (bool, error) {
-	var src []byte
-	var err error
-
+	// TODO(toby3d)
 	// if p.Certificate != nil {
-	// src, err = b.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
-	// } else {
-	src, err = b.Do(MethodSetWebhook, p)
+	// 	src, err = b.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
 	// }
-
+	src, err := b.Do(MethodSetWebhook, p)
 	if err != nil {
 		return false, err
 	}
@@ -295,5 +291,6 @@ func (wi WebhookInfo) URI() *http.URI {
 
 	u := http.AcquireURI()
 	u.Update(wi.URL)
+
 	return u
 }
