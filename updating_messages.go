@@ -1,34 +1,8 @@
 package telegram
 
 type (
-	// EditMessageLiveLocationParameters represents data for EditMessageLiveLocation
-	// method.
-	EditMessageLiveLocationParameters struct {
-		// Required if inline_message_id is not specified. Unique identifier for the
-		// target chat or username of the target channel (in the format
-		// @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
-
-		// Required if inline_message_id is not specified. Identifier of the sent
-		// message
-		MessageID int `json:"message_id,omitempty"`
-
-		// Required if chat_id and message_id are not specified. Identifier of the
-		// inline message
-		InlineMessageID string `json:"inline_message_id,omitempty"`
-
-		// Latitude of new location
-		Latitude float32 `json:"latitude"`
-
-		// Longitude of new location
-		Longitude float32 `json:"longitude"`
-
-		// A JSON-serialized object for a new inline keyboard.
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	}
-
 	// EditMessageTextParameters represents data for EditMessageText method.
-	EditMessageTextParameters struct {
+	EditMessageText struct {
 		// Required if inline_message_id is not specified. Unique identifier for the
 		// target chat or username of the target channel (in the format
 		// @channelusername)
@@ -57,7 +31,7 @@ type (
 	}
 
 	// EditMessageCaptionParameters represents data for EditMessageCaption method.
-	EditMessageCaptionParameters struct {
+	EditMessageCaption struct {
 		// Required if inline_message_id is not specified. Unique identifier for the
 		// target chat or username of the target channel (in the format
 		// @channelusername)
@@ -83,7 +57,7 @@ type (
 	}
 
 	// EditMessageMediaParameters represents data for EditMessageMedia method.
-	EditMessageMediaParameters struct {
+	EditMessageMedia struct {
 		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 		ChatID int64 `json:"chat_id,omitempty"`
 
@@ -101,7 +75,7 @@ type (
 	}
 
 	// EditMessageReplyMarkupParameters represents data for EditMessageReplyMarkup method.
-	EditMessageReplyMarkupParameters struct {
+	EditMessageReplyMarkup struct {
 		// Required if inline_message_id is not specified. Unique identifier for the
 		// target chat or username of the target channel (in the format
 		// @channelusername)
@@ -118,81 +92,70 @@ type (
 		// A JSON-serialized object for an inline keyboard.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
+
+	StopPoll struct {
+		// Unique identifier for the target chat. A native poll can't be sent to a private chat.
+		ChatID int64 `json:"chat_id"`
+
+		// Identifier of the original message with the poll
+		MessageID int `json:"message_id"`
+
+		// A JSON-serialized object for a new message inline keyboard.
+		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	}
+
+	// DeleteMessageParameters represents data for DeleteMessage method.
+	DeleteMessage struct {
+		// Unique identifier for the target chat
+		ChatID int64 `json:"chat_id"`
+
+		// Identifier of the message to delete
+		MessageID int `json:"message_id"`
+	}
 )
-
-// NewLiveLocation creates EditMessageLiveLocationParameters only with required
-// parameters.
-func NewLiveLocation(latitude, longitude float32) *EditMessageLiveLocationParameters {
-	return &EditMessageLiveLocationParameters{
-		Latitude:  latitude,
-		Longitude: longitude,
-	}
-}
-
-// NewMessageText creates EditMessageTextParameters only with required parameters.
-func NewMessageText(text string) *EditMessageTextParameters {
-	return &EditMessageTextParameters{
-		Text: text,
-	}
-}
-
-// EditMessageLiveLocation edit live location messages sent by the bot or via the
-// bot (for inline bots). A location can be edited until its live_period expires
-// or editing is explicitly disabled by a call to stopMessageLiveLocation. On
-// success, if the edited message was sent by the bot, the edited Message is
-// returned, otherwise True is returned.
-func (bot *Bot) EditMessageLiveLocation(params *EditMessageLiveLocationParameters) (*Message, error) {
-	dst, err := parser.Marshal(params)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := bot.request(dst, MethodEditMessageLiveLocation)
-	if err != nil {
-		return nil, err
-	}
-
-	var msg Message
-	err = parser.Unmarshal(resp.Result, &msg)
-	return &msg, err
-}
 
 // EditMessageText edit text and game messages sent by the bot or via the bot
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageText(params *EditMessageTextParameters) (*Message, error) {
-	dst, err := parser.Marshal(params)
+func (b *Bot) EditMessageText(p *EditMessageText) (*Message, error) {
+	src, err := b.Do(MethodEditMessageText, p)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, MethodEditMessageText)
-	if err != nil {
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
 		return nil, err
 	}
 
-	var msg Message
-	err = parser.Unmarshal(resp.Result, &msg)
-	return &msg, err
+	result := new(Message)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // EditMessageCaption edit captions of messages sent by the bot or via the bot
 // (for inline bots). On success, if edited message is sent by the bot, the
 // edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (*Message, error) {
-	dst, err := parser.Marshal(params)
+func (b *Bot) EditMessageCaption(p *EditMessageCaption) (*Message, error) {
+	src, err := b.Do(MethodEditMessageCaption, p)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, MethodEditMessageCaption)
-	if err != nil {
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
 		return nil, err
 	}
 
-	var msg Message
-	err = parser.Unmarshal(resp.Result, &msg)
-	return &msg, err
+	result := new(Message)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // EditMessageMedia edit audio, document, photo, or video messages. If a message
@@ -201,37 +164,94 @@ func (bot *Bot) EditMessageCaption(params *EditMessageCaptionParameters) (*Messa
 // edited, new file can't be uploaded. Use previously uploaded file via its
 // file_id or specify a URL. On success, if the edited message was sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (b *Bot) EditMessageMedia(emmp *EditMessageMediaParameters) (*Message, error) {
-	src, err := parser.Marshal(emmp)
+func (b *Bot) EditMessageMedia(p EditMessageMedia) (*Message, error) {
+	src, err := b.Do(MethodEditMessageMedia, p)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := b.request(src, MethodEditMessageMedia)
-	if err != nil {
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
 		return nil, err
 	}
 
-	var msg Message
-	err = parser.Unmarshal(resp.Result, &msg)
-	return &msg, err
+	result := new(Message)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // EditMessageReplyMarkup edit only the reply markup of messages sent by the bot
 // or via the bot (for inline bots). On success, if edited message is sent by the
 // bot, the edited Message is returned, otherwise True is returned.
-func (bot *Bot) EditMessageReplyMarkup(params *EditMessageReplyMarkupParameters) (*Message, error) {
-	dst, err := parser.Marshal(params)
+func (b *Bot) EditMessageReplyMarkup(p EditMessageReplyMarkup) (*Message, error) {
+	src, err := b.Do(MethodEditMessageReplyMarkup, p)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := bot.request(dst, MethodEditMessageReplyMarkup)
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(Message)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (b *Bot) StopPoll(p StopPoll) (*Poll, error) {
+	src, err := b.Do(MethodStopPoll, p)
 	if err != nil {
 		return nil, err
 	}
 
-	var msg Message
-	err = parser.Unmarshal(resp.Result, &msg)
-	return &msg, err
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(Poll)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// DeleteMessage delete a message, including service messages, with the following limitations:
+//
+// - A message can only be deleted if it was sent less than 48 hours ago.
+// - Bots can delete outgoing messages in private chats, groups, and supergroups.
+// - Bots can delete incoming messages in private chats.
+// - Bots granted can_post_messages permissions can delete outgoing messages in channels.
+// - If the bot is an administrator of a group, it can delete any message there.
+// - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
+//
+// Returns True on success.
+func (b *Bot) DeleteMessage(chatID int64, messageID int) (bool, error) {
+	src, err := b.Do(MethodDeleteMessage, DeleteMessage{
+		ChatID:    chatID,
+		MessageID: messageID,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return false, err
+	}
+
+	var result bool
+	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+		return false, err
+	}
+
+	return result, nil
 }

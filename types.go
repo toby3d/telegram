@@ -1,79 +1,16 @@
 package telegram
 
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
+	http "github.com/valyala/fasthttp"
+	"golang.org/x/text/language"
+)
+
 type (
-	// Update represents an incoming update.
-	//
-	// At most one of the optional parameters can be present in any given update.
-	Update struct {
-		// The update‘s unique identifier. Update identifiers start from a
-		// certain positive number and increase sequentially. This ID becomes
-		// especially handy if you’re using Webhooks, since it allows you to
-		// ignore repeated updates or to restore the correct update sequence,
-		// should they get out of order.
-		UpdateID int `json:"update_id"`
-
-		// New incoming message of any kind — text, photo, sticker, etc.
-		Message *Message `json:"message,omitempty"`
-
-		// New version of a message that is known to the bot and was edited
-		EditedMessage *Message `json:"edited_message,omitempty"`
-
-		// New incoming channel post of any kind — text, photo, sticker, etc.
-		ChannelPost *Message `json:"channel_post,omitempty"`
-
-		// New version of a channel post that is known to the bot and was edited
-		EditedChannelPost *Message `json:"adited_channel_post,omitempty"`
-
-		// New incoming inline query
-		InlineQuery *InlineQuery `json:"inline_query,omitempty"`
-
-		// The result of an inline query that was chosen by a user and sent to
-		// their chat partner.
-		ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
-
-		// New incoming callback query
-		CallbackQuery *CallbackQuery `json:"callback_query,omitempty"`
-
-		// New incoming shipping query. Only for invoices with flexible price
-		ShippingQuery *ShippingQuery `json:"shipping_query,omitempty"`
-
-		// New incoming pre-checkout query. Contains full information about
-		// checkout
-		PreCheckoutQuery *PreCheckoutQuery `json:"pre_checkout_query,omitempty"`
-
-		// New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
-		Poll *Poll `json:"poll,omitempty"`
-	}
-
-	// WebhookInfo contains information about the current status of a webhook.
-	WebhookInfo struct {
-		// Webhook URL, may be empty if webhook is not set up
-		URL string `json:"url"`
-
-		// Error message in human-readable format for the most recent error that
-		// happened when trying to deliver an update via webhook
-		LastErrorMessage string `json:"last_error_message,omitempty"`
-
-		// True, if a custom certificate was provided for webhook certificate
-		// checks
-		HasCustomCertificate bool `json:"has_custom_certificate"`
-
-		// Number of updates awaiting delivery
-		PendingUpdateCount int `json:"pending_update_count"`
-
-		// Maximum allowed number of simultaneous HTTPS connections to the
-		// webhook for update delivery
-		MaxConnections int `json:"max_connections,omitempty"`
-
-		// Unix time for the most recent error that happened when trying to
-		// deliver an update via webhook
-		LastErrorDate int64 `json:"last_error_date,omitempty"`
-
-		// A list of update types the bot is subscribed to. Defaults to all
-		// update types
-		AllowedUpdates []string `json:"allowed_updates,omitempty"`
-	}
-
 	// User represents a Telegram user or bot.
 	User struct {
 		// Unique identifier for this user or bot
@@ -200,11 +137,11 @@ type (
 
 		// For text messages, special entities like usernames, URLs, bot
 		// commands, etc. that appear in the text
-		Entities []MessageEntity `json:"entities,omitempty"`
+		Entities []*MessageEntity `json:"entities,omitempty"`
 
 		// For messages with a caption, special entities like usernames, URLs,
 		// bot commands, etc. that appear in the caption
-		CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
 
 		// Message is an audio file, information about the file
 		Audio *Audio `json:"audio,omitempty"`
@@ -221,7 +158,7 @@ type (
 		Game *Game `json:"game,omitempty"`
 
 		// Message is a photo, available sizes of the photo
-		Photo []PhotoSize `json:"photo,omitempty"`
+		Photo []*PhotoSize `json:"photo,omitempty"`
 
 		// Message is a sticker, information about the sticker
 		Sticker *Sticker `json:"sticker,omitempty"`
@@ -248,11 +185,11 @@ type (
 		Venue *Venue `json:"venue,omitempty"`
 
 		// Message is a native poll, information about the poll
-		Poll *Poll `json:"poll,omitempry"`
+		Poll *Poll `json:"poll,omitempty"`
 
 		// New members that were added to the group or supergroup and information
 		// about them (the bot itself may be one of these members)
-		NewChatMembers []User `json:"new_chat_members,omitempty"`
+		NewChatMembers []*User `json:"new_chat_members,omitempty"`
 
 		// A member was removed from the group, information about them (this
 		// member may be the bot itself)
@@ -262,7 +199,7 @@ type (
 		NewChatTitle string `json:"new_chat_title,omitempty"`
 
 		// A chat photo was change to this value
-		NewChatPhoto []PhotoSize `json:"new_chat_photo,omitempty"`
+		NewChatPhoto []*PhotoSize `json:"new_chat_photo,omitempty"`
 
 		// Service message: the chat photo was deleted
 		DeleteChatPhoto bool `json:"delete_chat_photo,omitempty"`
@@ -342,7 +279,8 @@ type (
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
 
-		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+		// Can't be used to download or reuse the file.
 		FileUniqueID string `json:"file_unique_id"`
 
 		// Photo width
@@ -432,6 +370,38 @@ type (
 		FileSize int `json:"file_size,omitempty"`
 	}
 
+	// Animation provide an animation for your game so that it looks stylish in
+	// chats (check out Lumberjack for an example). This object represents an
+	// animation file to be displayed in the message containing a game.
+	Animation struct {
+		// Unique file identifier
+		FileID string `json:"file_id"`
+
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+		FileUniqueID string `json:"file_unique_id"`
+
+		// Video width as defined by sender
+		Width int `json:"width"`
+
+		// Video height as defined by sender
+		Height int `json:"height"`
+
+		// Duration of the video in seconds as defined by sender
+		Duration int `json:"duration"`
+
+		// Animation thumbnail as defined by sender
+		Thumb *PhotoSize `json:"thumb,omitempty"`
+
+		// Original animation filename as defined by sender
+		FileName string `json:"file_name,omitempty"`
+
+		// MIME type of the file as defined by sender
+		MimeType string `json:"mime_type,omitempty"`
+
+		// File size
+		FileSize int `json:"file_size,omitempty"`
+	}
+
 	// Voice represents a voice note.
 	Voice struct {
 		// Identifier for this file, which can be used to download or reuse the file
@@ -513,9 +483,7 @@ type (
 		// Foursquare identifier of the venue
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
-		// Foursquare type of the venue. (For example,
-		// "arts_entertainment/default", "arts_entertainment/aquarium" or
-		// "food/icecream".)
+		// Foursquare type of the venue. (For example, "arts_entertainment/default", "arts_entertainment/aquarium" or "food/icecream".)
 		FoursquareType string `json:"foursquare_type,omitempty"`
 	}
 
@@ -537,7 +505,7 @@ type (
 		Question string `json:"question"`
 
 		// List of poll options
-		Options []PollOption `json:"options"`
+		Options []*PollOption `json:"options"`
 
 		// True, if the poll is closed
 		IsClosed bool `json:"is_closed"`
@@ -549,7 +517,7 @@ type (
 		TotalCount int `json:"total_count"`
 
 		// Requested profile pictures (in up to 4 sizes each)
-		Photos [][]PhotoSize `json:"photos"`
+		Photos [][]*PhotoSize `json:"photos"`
 	}
 
 	// File represents a file ready to be downloaded. The file can be downloaded
@@ -578,7 +546,7 @@ type (
 	ReplyKeyboardMarkup struct {
 		// Array of button rows, each represented by an Array of KeyboardButton
 		// objects
-		Keyboard [][]KeyboardButton `json:"keyboard"`
+		Keyboard [][]*KeyboardButton `json:"keyboard"`
 
 		// Requests clients to resize the keyboard vertically for optimal fit
 		// (e.g., make the keyboard smaller if there are just two rows of
@@ -623,7 +591,7 @@ type (
 
 	// ReplyKeyboardRemove will remove the current custom keyboard and display
 	// the default letter-keyboard. By default, custom keyboards are displayed
-	// until a new keyboard is sent by a bot. An exception is made for one-time
+	// until a new keyboard is sent by a b. An exception is made for one-time
 	// keyboards that are hidden immediately after the user presses a button
 	// (see ReplyKeyboardMarkup).
 	ReplyKeyboardRemove struct {
@@ -648,7 +616,7 @@ type (
 	InlineKeyboardMarkup struct {
 		// Array of button rows, each represented by an Array of
 		// InlineKeyboardButton objects
-		InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+		InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"`
 	}
 
 	// InlineKeyboardButton represents one button of an inline keyboard. You
@@ -718,7 +686,7 @@ type (
 
 		// Username of a bot, which will be used for user authorization. See Setting up a bot for more
 		// details. If not specified, the current bot's username will be assumed. The url's domain must be the
-		// same as the domain linked with the bot. See Linking your domain to the bot for more details.
+		// same as the domain linked with the b. See Linking your domain to the bot for more details.
 		BotUsername string `json:"bot_username,omitempty"`
 
 		// Pass true to request the permission for your bot to send messages to the user.
@@ -736,7 +704,7 @@ type (
 	// display a progress bar until you call answerCallbackQuery. It is,
 	// therefore, necessary to react by calling answerCallbackQuery even if no
 	// notification to the user is needed (e.g., without specifying any of the
-	// optional parameters).
+	// optional ).
 	CallbackQuery struct {
 		// Unique identifier for this query
 		ID string `json:"id"`
@@ -835,38 +803,10 @@ type (
 		// by administrators that were appointed by the user)
 		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
 
-		// Administrators and restricted only. True, if the user is allowed to change the chat title, photo
-		// and other settings
-		CanChangeInfo bool `json:"can_change_info,omitempty"`
-
-		// Administrators and restricted only. True, if the user is allowed to invite new users to the chat
-		CanInviteUsers bool `json:"can_invite_users,omitempty"`
-
-		// Administrators and restricted only. True, if the user is allowed to pin messages; groups and
-		// supergroups only
-		CanPinMessages bool `json:"can_pin_messages,omitempty"`
-
 		// Restricted only. True, if the user is a member of the chat at the moment of the request
 		IsMember bool `json:"is_member,omitempty"`
 
-		// Restricted only. True, if the user can send text messages, contacts,
-		// locations and venues
-		CanSendMessages bool `json:"can_send_messages,omitempty"`
-
-		// Restricted only. True, if the user can send audios, documents, photos,
-		// videos, video notes and voice notes, implies can_send_messages
-		CanSendMediaMessages bool `json:"can_send_media_messages,omitempty"`
-
-		// Restricted only. True, if the user is allowed to send polls
-		CanSendPolls bool `json:"can_send_polls,omitempty"`
-
-		// Restricted only. True, if the user can send animations, games,
-		// stickers and use inline bots, implies can_send_media_messages
-		CanSendOtherMessages bool `json:"can_send_other_messages,omitempty"`
-
-		// Restricted only. True, if user may add web page previews to his
-		// messages, implies can_send_media_messages
-		CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
+		ChatPermissions
 	}
 
 	// ChatPermissions describes actions that a non-administrator user is allowed to take in a chat.
@@ -913,10 +853,12 @@ type (
 
 	// InputMedia represents the content of a media message to be sent.
 	InputMedia interface {
-		File() string
-		InputMediaCaption() string
-		InputMediaParseMode() string
-		InputMediaType() string
+		GetMedia() *InputFile
+	}
+
+	AlbumMedia interface {
+		GetMedia() *InputFile
+		isAlbumMedia()
 	}
 
 	// InputMediaPhoto represents a photo to be sent.
@@ -929,7 +871,7 @@ type (
 		// a file from the Internet, or pass "attach://<file_attach_name>" to
 		// upload a new one using multipart/form-data under <file_attach_name>
 		// name.
-		Media string `json:"media"`
+		Media *InputFile `json:"media"`
 
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
@@ -949,7 +891,7 @@ type (
 		// a file from the Internet, or pass "attach://<file_attach_name>" to
 		// upload a new one using multipart/form-data under <file_attach_name>
 		// name.
-		Media string `json:"media"`
+		Media *InputFile `json:"media"`
 
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
@@ -982,7 +924,7 @@ type (
 		// a file from the Internet, or pass "attach://<file_attach_name>" to
 		// upload a new one using multipart/form-data under <file_attach_name
 		// name.
-		Media string `json:"media"`
+		Media *InputFile `json:"media"`
 
 		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
 		// less than 200 kB in size. A thumbnail‘s width and height should not
@@ -991,13 +933,12 @@ type (
 		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
 		// if the thumbnail was uploaded using multipart/form-data under
 		// <file_attach_name>.
-		Thumb InputFile `json:"thumb,omitempty"`
+		Thumb *InputFile `json:"thumb,omitempty"`
 
 		// Caption of the animation to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Animation width
@@ -1015,27 +956,16 @@ type (
 		// Type of the result, must be audio
 		Type string `json:"type"`
 
-		// File to send. Pass a file_id to send a file that exists on the
-		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
-		// a file from the Internet, or pass "attach://<file_attach_name>" to
-		// upload a new one using multipart/form-data under <file_attach_name>
-		// name.
-		Media string `json:"media"`
+		// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+		Media *InputFile `json:"media"`
 
-		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
-		// less than 200 kB in size. A thumbnail‘s width and height should not
-		// exceed 90. Ignored if the file is not uploaded using
-		// multipart/form-data. Thumbnails can’t be reused and can be only
-		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
-		// if the thumbnail was uploaded using multipart/form-data under
-		// <file_attach_name>.
-		Thumb InputFile `json:"thumb,omitempty"`
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+		Thumb *InputFile `json:"thumb,omitempty"`
 
 		// Caption of the audio to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Duration of the audio in seconds
@@ -1053,1762 +983,563 @@ type (
 		// Type of the result, must be document
 		Type string `json:"type"`
 
-		// File to send. Pass a file_id to send a file that exists on the
-		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
-		// a file from the Internet, or pass "attach://<file_attach_name>" to
-		// upload a new one using multipart/form-data under <file_attach_name>
-		// name.
-		Media string `json:"media"`
+		// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
+		Media *InputFile `json:"media"`
 
-		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
-		// less than 200 kB in size. A thumbnail‘s width and height should not
-		// exceed 90. Ignored if the file is not uploaded using
-		// multipart/form-data. Thumbnails can’t be reused and can be only
-		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
-		// if the thumbnail was uploaded using multipart/form-data under
-		// <file_attach_name>.
-		Thumb InputFile `json:"thumb,omitempty"`
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+		Thumb *InputFile `json:"thumb,omitempty"`
 
 		// Caption of the document to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 	}
 
-	// InputFile represents the contents of a file to be uploaded. Must be posted
-	// using multipart/form-data in the usual way that files are uploaded via the
-	// browser.
-	InputFile interface{}
-
-	// Animation provide an animation for your game so that it looks stylish in
-	// chats (check out Lumberjack for an example). This object represents an
-	// animation file to be displayed in the message containing a game.
-	Animation struct {
-		// Unique file identifier
-		FileID string `json:"file_id"`
-
-		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-		FileUniqueID string `json:"file_unique_id"`
-
-		// Video width as defined by sender
-		Width int `json:"width"`
-
-		// Video height as defined by sender
-		Height int `json:"height"`
-
-		// Duration of the video in seconds as defined by sender
-		Duration int `json:"duration"`
-
-		// Animation thumbnail as defined by sender
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
-		// Original animation filename as defined by sender
-		FileName string `json:"file_name,omitempty"`
-
-		// MIME type of the file as defined by sender
-		MimeType string `json:"mime_type,omitempty"`
-
-		// File size
-		FileSize int `json:"file_size,omitempty"`
-	}
-
-	// Game represents a game. Use BotFather to create and edit games, their
-	// short names will act as unique identifiers.
-	Game struct {
-		// Title of the game
-		Title string `json:"title"`
-
-		// Description of the game
-		Description string `json:"description"`
-
-		// Brief description of the game or high scores included in the game
-		// message. Can be automatically edited to include current high scores
-		// for the game when the bot calls setGameScore, or manually edited
-		// using editMessageText. 0-4096 characters.
-		Text string `json:"text,omitempty"`
-
-		// Photo that will be displayed in the game message in chats.
-		Photo []PhotoSize `json:"photo"`
-
-		// Special entities that appear in text, such as usernames, URLs, bot
-		// commands, etc.
-		TextEntities []MessageEntity `json:"text_entities,omitempty"`
-
-		// Animation that will be displayed in the game message in chats. Upload
-		// via BotFather
-		Animation *Animation `json:"animation,omitempty"`
-	}
-
-	// CallbackGame a placeholder, currently holds no information. Use BotFather
-	// to set up your game.
-	CallbackGame struct{}
-
-	// GameHighScore represents one row of the high scores table for a game.
-	GameHighScore struct {
-		// Position in high score table for the game
-		Position int `json:"position"`
-
-		// Score
-		Score int `json:"score"`
-
-		// User
-		User *User `json:"user"`
-	}
-
-	// InlineQuery represents an incoming inline query. When the user sends an
-	// empty query, your bot could return some default or trending results.
-	InlineQuery struct {
-		// Unique identifier for this query
-		ID string `json:"id"`
-
-		// Text of the query (up to 512 characters)
-		Query string `json:"query"`
-
-		// Offset of the results to be returned, can be controlled by the bot
-		Offset string `json:"offset"`
-
-		// Sender
-		From *User `json:"from"`
-
-		// Sender location, only for bots that request user location
-		Location *Location `json:"location,omitempty"`
-	}
-
-	// InlineQueryResult represents one result of an inline query.
-	InlineQueryResult interface {
-		ResultID() string
-		ResultType() string
-		ResultReplyMarkup() *InlineKeyboardMarkup
-	}
-
-	// InlineQueryResultArticle represents a link to an article or web page.
-	InlineQueryResultArticle struct {
-		// Type of the result, must be article
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 Bytes
-		ID string `json:"id"`
-
-		// Title of the result
-		Title string `json:"title"`
-
-		// URL of the result
-		URL string `json:"url,omitempty"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
-
-		// Content of the message to be sent
-		InputMessageContent interface{} `json:"input_message_content"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Pass True, if you don't want the URL to be shown in the message
-		HideURL bool `json:"hide_url,omitempty"`
-
-		// Thumbnail width
-		ThumbWidth int `json:"thumb_width,omitempty"`
-
-		// Thumbnail height
-		ThumbHeight int `json:"thumb_height,omitempty"`
-	}
-
-	// InlineQueryResultPhoto represents a link to a photo. By default, this
-	// photo will be sent by the user with optional caption. Alternatively, you
-	// can use input_message_content to send a message with the specified content
-	// instead of the photo.
-	InlineQueryResultPhoto struct {
-		// Type of the result, must be photo
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL of the photo. Photo must be in jpeg format. Photo size
-		// must not exceed 5MB
-		PhotoURL string `json:"photo_url"`
-
-		// URL of the thumbnail for the photo
-		ThumbURL string `json:"thumb_url"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Caption of the photo to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Width of the photo
-		PhotoWidth int `json:"photo_width,omitempty"`
-
-		// Height of the photo
-		PhotoHeight int `json:"photo_height,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the photo
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultGif represents a link to an animated GIF file. By
-	// default, this animated GIF file will be sent by the user with optional
-	// caption. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the animation.
-	InlineQueryResultGif struct {
-		// Type of the result, must be gif
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL for the GIF file. File size must not exceed 1MB
-		GifURL string `json:"gif_url"`
-
-		// URL of the static thumbnail for the result (jpeg or gif)
-		ThumbURL string `json:"thumb_url"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Caption of the GIF file to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Width of the GIF
-		GifWidth int `json:"gif_width,omitempty"`
-
-		// Height of the GIF
-		GifHeight int `json:"gif_height,omitempty"`
-
-		// Duration of the GIF
-		GifDuration int `json:"gif_duration,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the GIF animation
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultMpeg4Gif represents a link to a video animation
-	// (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4
-	// file will be sent by the user with optional caption. Alternatively, you
-	// can use input_message_content to send a message with the specified content
-	// instead of the animation.
-	InlineQueryResultMpeg4Gif struct {
-		// Type of the result, must be mpeg4_gif
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL for the MP4 file. File size must not exceed 1MB
-		Mpeg4URL string `json:"mpeg4_url"`
-
-		// URL of the static thumbnail (jpeg or gif) for the result
-		ThumbURL string `json:"thumb_url"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Caption of the MPEG-4 file to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Video width
-		Mpeg4Width int `json:"mpeg4_width,omitempty"`
-
-		// Video height
-		Mpeg4Height int `json:"mpeg4_height,omitempty"`
-
-		// Video duration
-		Mpeg4Duration int `json:"mpeg4_duration,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the video animation
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultVideo represents a link to a page containing an embedded
-	// video player or a video file. By default, this video file will be sent by
-	// the user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the video.
-	//
-	// If an InlineQueryResultVideo message contains an embedded video (e.g.,
-	// YouTube), you must replace its content using input_message_content.
-	InlineQueryResultVideo struct {
-		// Type of the result, must be video
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL for the embedded video player or video file
-		VideoURL string `json:"video_url"`
-
-		// Mime type of the content of video url, "text/html" or "video/mp4"
-		MimeType string `json:"mime_type"`
-
-		// URL of the thumbnail (jpeg only) for the video
-		ThumbURL string `json:"thumb_url"`
-
-		// Title for the result
-		Title string `json:"title"`
-
-		// Caption of the video to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Video width
-		VideoWidth int `json:"video_width,omitempty"`
-
-		// Video height
-		VideoHeight int `json:"video_height,omitempty"`
-
-		// Video duration in seconds
-		VideoDuration int `json:"video_duration,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the video. This field is
-		// required if InlineQueryResultVideo is used to send an HTML-page as a
-		// result (e.g., a YouTube video).
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultAudio represents a link to an mp3 audio file. By default,
-	// this audio file will be sent by the user. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the audio.
-	InlineQueryResultAudio struct {
-		// Type of the result, must be audio
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL for the audio file
-		AudioURL string `json:"audio_url"`
-
-		// Title
-		Title string `json:"title"`
-
-		// Caption, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Performer
-		Performer string `json:"performer,omitempty"`
-
-		// Audio duration in seconds
-		AudioDuration int `json:"audio_duration,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the audio
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultVoice represents a link to a voice recording in an .ogg
-	// container encoded with OPUS. By default, this voice recording will be
-	// sent by the user. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the the voice message.
-	InlineQueryResultVoice struct {
-		// Type of the result, must be voice
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid URL for the voice recording
-		VoiceURL string `json:"voice_url"`
-
-		// Recording title
-		Title string `json:"title"`
-
-		// Caption, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Recording duration in seconds
-		VoiceDuration int `json:"voice_duration,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the voice recording
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultDocument represents a link to a file. By default, this
-	// file will be sent by the user with an optional caption. Alternatively,
-	// you can use input_message_content to send a message with the specified
-	// content instead of the file. Currently, only .PDF and .ZIP files can be
-	// sent using this method.
-	InlineQueryResultDocument struct {
-		// Type of the result, must be document
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// Title for the result
-		Title string `json:"title"`
-
-		// Caption of the document to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// A valid URL for the file
-		DocumentURL string `json:"document_url"`
-
-		// Mime type of the content of the file, either "application/pdf" or
-		// "application/zip"
-		MimeType string `json:"mime_type"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// URL of the thumbnail (jpeg only) for the file
-		ThumbURL string `json:"thumb_url,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the file
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Thumbnail width
-		ThumbWidth int `json:"thumb_width,omitempty"`
-
-		// Thumbnail height
-		ThumbHeight int `json:"thumb_height,omitempty"`
-	}
-
-	// InlineQueryResultLocation represents a location on a map. By default, the
-	// location will be sent by the user. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the location.
-	InlineQueryResultLocation struct {
-		// Type of the result, must be location
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 Bytes
-		ID string `json:"id"`
-
-		// Location title
-		Title string `json:"title"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
-
-		// Location latitude in degrees
-		Latitude float32 `json:"latitude"`
-
-		// Location longitude in degrees
-		Longitude float32 `json:"longitude"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the location
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Thumbnail width
-		ThumbWidth int `json:"thumb_width,omitempty"`
-
-		// Thumbnail height
-		ThumbHeight int `json:"thumb_height,omitempty"`
-	}
-
-	// InlineQueryResultVenue represents a venue. By default, the venue will be
-	// sent by the user. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the venue.
-	InlineQueryResultVenue struct {
-		// Type of the result, must be venue
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 Bytes
-		ID string `json:"id"`
-
-		// Title of the venue
-		Title string `json:"title"`
-
-		// Address of the venue
-		Address string `json:"address"`
-
-		// Foursquare identifier of the venue if known
-		FoursquareID string `json:"foursquare_id,omitempty"`
-
-		// Foursquare type of the venue, if known. (For example,
-		// "arts_entertainment/default", "arts_entertainment/aquarium" or
-		// "food/icecream".)
-		FoursquareType string `json:"foursquare_type,omitempty"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
-
-		// Latitude of the venue location in degrees
-		Latitude float32 `json:"latitude"`
-
-		// Longitude of the venue location in degrees
-		Longitude float32 `json:"longitude"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the venue
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Thumbnail width
-		ThumbWidth int `json:"thumb_width,omitempty"`
-
-		// Thumbnail height
-		ThumbHeight int `json:"thumb_height,omitempty"`
-	}
-
-	// InlineQueryResultContact represents a contact with a phone number. By
-	// default, this contact will be sent by the user. Alternatively, you can
-	// use input_message_content to send a message with the specified content
-	// instead of the contact.
-	InlineQueryResultContact struct {
-		// Type of the result, must be contact
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 Bytes
-		ID string `json:"id"`
-
-		// Contact's phone number
-		PhoneNumber string `json:"phone_number"`
-
-		// Contact's first name
-		FirstName string `json:"first_name"`
-
-		// Contact's last name
-		LastName string `json:"last_name,omitempty"`
-
-		// Additional data about the contact in the form of a vCard, 0-2048 bytes
-		VCard string `json:"vcard,omitempty"`
-
-		// Url of the thumbnail for the result
-		ThumbURL string `json:"thumb_url,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the contact
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-
-		// Thumbnail width
-		ThumbWidth int `json:"thumb_width,omitempty"`
-
-		// Thumbnail height
-		ThumbHeight int `json:"thumb_height,omitempty"`
-	}
-
-	// InlineQueryResultGame represents a Game.
-	InlineQueryResultGame struct {
-		// Type of the result, must be game
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// Short name of the game
-		GameShortName string `json:"game_short_name"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	}
-
-	// InlineQueryResultCachedPhoto represents a link to a photo stored on the
-	// Telegram servers. By default, this photo will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the photo.
-	InlineQueryResultCachedPhoto struct {
-		// Type of the result, must be photo
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier of the photo
-		PhotoFileID string `json:"photo_file_id"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Caption of the photo to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the photo
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedGif represents a link to an animated GIF file
-	// stored on the Telegram servers. By default, this animated GIF file will
-	// be sent by the user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with specified content instead of
-	// the animation.
-	InlineQueryResultCachedGif struct {
-		// Type of the result, must be gif
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier for the GIF file
-		GifFileID string `json:"gif_file_id"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Caption of the GIF file to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the GIF animation
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedMpeg4Gif represents a link to a video animation
-	// (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By
-	// default, this animated MPEG-4 file will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the animation.
-	InlineQueryResultCachedMpeg4Gif struct {
-		// Type of the result, must be mpeg4_gif
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier for the MP4 file
-		Mpeg4FileID string `json:"mpeg4_file_id"`
-
-		// Title for the result
-		Title string `json:"title,omitempty"`
-
-		// Caption of the MPEG-4 file to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the video animation
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedSticker represents a link to a sticker stored on
-	// the Telegram servers. By default, this sticker will be sent by the user.
-	// Alternatively, you can use input_message_content to send a message with
-	// the specified content instead of the sticker.
-	InlineQueryResultCachedSticker struct {
-		// Type of the result, must be sticker
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier of the sticker
-		StickerFileID string `json:"sticker_file_id"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the sticker
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedDocument represents a link to a file stored on the
-	// Telegram servers. By default, this file will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the file.
-	InlineQueryResultCachedDocument struct {
-		// Type of the result, must be document
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// Title for the result
-		Title string `json:"title"`
-
-		// A valid file identifier for the file
-		DocumentFileID string `json:"document_file_id"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Caption of the document to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the file
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedVideo represents a link to a video file stored on
-	// the Telegram servers. By default, this video file will be sent by the
-	// user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the video.
-	InlineQueryResultCachedVideo struct {
-		// Type of the result, must be video
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier for the video file
-		VideoFileID string `json:"video_file_id"`
-
-		// Title for the result
-		Title string `json:"title"`
-
-		// Short description of the result
-		Description string `json:"description,omitempty"`
-
-		// Caption of the video to be sent, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the video
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedVoice represents a link to a voice message stored
-	// on the Telegram servers. By default, this voice message will be sent by
-	// the user. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the voice message.
-	InlineQueryResultCachedVoice struct {
-		// Type of the result, must be voice
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier for the voice message
-		VoiceFileID string `json:"voice_file_id"`
-
-		// Voice message title
-		Title string `json:"title"`
-
-		// Caption, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the voice message
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InlineQueryResultCachedAudio represents a link to an mp3 audio file
-	// stored on the Telegram servers. By default, this audio file will be sent
-	// by the user. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the audio.
-	InlineQueryResultCachedAudio struct {
-		// Type of the result, must be audio
-		Type string `json:"type"`
-
-		// Unique identifier for this result, 1-64 bytes
-		ID string `json:"id"`
-
-		// A valid file identifier for the audio file
-		AudioFileID string `json:"audio_file_id"`
-
-		// Caption, 0-200 characters
-		Caption string `json:"caption,omitempty"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Inline keyboard attached to the message
-		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-
-		// Content of the message to be sent instead of the audio
-		InputMessageContent interface{} `json:"input_message_content,omitempty"`
-	}
-
-	// InputMessageContent represents the content of a message to be sent as a result
-	// of an inline query.
-	InputMessageContent interface {
-		IsInputMessageContent() bool
-	}
-
-	// InputTextMessageContent represents the content of a text message to be
-	// sent as the result of an inline query.
-	InputTextMessageContent struct {
-		// Text of the message to be sent, 1-4096 characters
-		MessageText string `json:"message_text"`
-
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in your bot's message.
-		ParseMode string `json:"parse_mode,omitempty"`
-
-		// Disables link previews for links in the sent message
-		DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
-	}
-
-	// InputLocationMessageContent represents the content of a location message
-	// to be sent as the result of an inline query.
-	InputLocationMessageContent struct {
-		// Latitude of the location in degrees
-		Latitude float32 `json:"latitude"`
-
-		// Longitude of the location in degrees
-		Longitude float32 `json:"longitude"`
-	}
-
-	// InputVenueMessageContent represents the content of a venue message to be
-	// sent as the result of an inline query.
-	InputVenueMessageContent struct {
-		// Latitude of the venue in degrees
-		Latitude float32 `json:"latitude"`
-
-		// Longitude of the venue in degrees
-		Longitude float32 `json:"longitude"`
-
-		// Name of the venue
-		Title string `json:"title"`
-
-		// Address of the venue
-		Address string `json:"address"`
-
-		// Foursquare identifier of the venue, if known
-		FoursquareID string `json:"foursquare_id,omitempty"`
-
-		// Foursquare type of the venue, if known. (For example,
-		// "arts_entertainment/default", "arts_entertainment/aquarium" or
-		// "food/icecream".)
-		FoursquareType string `json:"foursquare_type,omitempty"`
-	}
-
-	// InputContactMessageContent represents the content of a contact message to
-	// be sent as the result of an inline query.
-	InputContactMessageContent struct {
-		// Contact's phone number
-		PhoneNumber string `json:"phone_number"`
-
-		// Contact's first name
-		FirstName string `json:"first_name"`
-
-		// Contact's last name
-		LastName string `json:"last_name,omitempty"`
-
-		// Additional data about the contact in the form of a vCard, 0-2048 bytes
-		VCard string `json:"vcard,omitempty"`
-	}
-
-	// ChosenInlineResult represents a result of an inline query that was chosen
-	// by the user and sent to their chat partner.
-	ChosenInlineResult struct {
-		// The unique identifier for the result that was chosen
-		ResultID string `json:"result_id"`
-
-		// Identifier of the sent inline message. Available only if there is an
-		// inline keyboard attached to the message. Will be also received in
-		// callback queries and can be used to edit the message.
-		InlineMessageID string `json:"inline_message_id,omitempty"`
-
-		// The query that was used to obtain the result
-		Query string `json:"query"`
-
-		// The user that chose the result
-		From *User `json:"from"`
-
-		// Sender location, only for bots that require user location
-		Location *Location `json:"location,omitempty"`
-	}
-
-	// AuthParameters represent a Telegram Passport auth parameters for SDK.
-	AuthParameters struct {
-		// Unique identifier for the bot. You can get it from bot token.
-		// For example, for the bot token
-		// 1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy, the bot id is
-		// 1234567.
-		BotID int `json:"bot_id"`
-
-		// A JSON-serialized object describing the data you want to
-		// request
-		Scope PassportScope `json:"scope"`
-
-		// Public key of the bot
-		PublicKey string `json:"public_key"`
-
-		// Bot-specified nonce.
-		//
-		// Important: For security purposes it should be a
-		// cryptographically secure unique identifier of the request. In
-		// particular, it should be long enough and it should be
-		// generated using a cryptographically secure pseudorandom number
-		// generator. You should never accept credentials with the same
-		// nonce twice.
-		Nonce string `json:"nonce"`
-	}
-
-	// PassportScope represents the data to be requested.
-	PassportScope struct {
-		// List of requested elements, each type may be used only once
-		// in the entire array of PassportScopeElement objects
-		Data []PassportScopeElement `json:"data"`
-
-		// Scope version, must be 1
-		V int `json:"v"`
-	}
-
-	// PassportScopeElement represents a requested element.
-	PassportScopeElement interface {
-		PassportScopeElementTranslation() bool
-		PassportScopeElementSelfie() bool
-	}
-
-	//PassportScopeElementOneOfSeveral represents several elements one of which must be provided.
-	PassportScopeElementOneOfSeveral struct {
-		// List of elements one of which must be provided;
-		OneOf []PassportScopeElementOne `json:"one_of"`
-
-		// Use this parameter if you want to request a selfie with the
-		// document from this list that the user chooses to upload.
-		Selfie bool `json:"selfie,omitempty"`
-
-		// Use this parameter if you want to request a translation of
-		// the document from this list that the user chooses to upload.
-		// Note: We suggest to only request translations after you have
-		// received a valid document that requires one.
-		Translation bool `json:"translation,omitempty"`
-	}
-
-	// PassportScopeElementOne represents one particular element that must
-	// be provided. If no options are needed, String can be used instead of
-	// this object to specify the type of the element.
-	PassportScopeElementOne struct {
-		// Element type.
-		Type string `json:"type"`
-
-		// Use this parameter if you want to request a selfie with the
-		// document as well.
-		Selfie bool `json:"selfie,omitempty"`
-
-		//  Use this parameter if you want to request a translation of
-		// the document as well.
-		Translation bool `json:"translation,omitempty"`
-
-		// Use this parameter to request the first, last and middle name
-		// of the user in the language of the user's country of residence.
-		NativeNames bool `json:"native_names,omitempty"`
-	}
-
-	Passport struct {
-		// Personal Details
-		PersonalDetails struct {
-			Data *PersonalDetails `json:"data"`
-		} `json:"personal_details"`
-
-		// Passport
-		Passport struct {
-			Data        *IDDocumentData `json:"data"`
-			FrontSide   *PassportFile   `json:"front_side"`
-			Selfie      *PassportFile   `json:"selfie,omitempty"`
-			Translation []PassportFile  `json:"translation,omitempty"`
-		} `json:"passport"`
-
-		// Internal Passport
-		InternalPassport struct {
-			Data        *IDDocumentData `json:"data"`
-			FrontSide   *PassportFile   `json:"front_side"`
-			Selfie      *PassportFile   `json:"selfie,omitempty"`
-			Translation []PassportFile  `json:"translation,omitempty"`
-		} `json:"internal_passport"`
-
-		// Driver License
-		DriverLicense struct {
-			Data        *IDDocumentData `json:"data"`
-			FrontSide   *PassportFile   `json:"front_side"`
-			ReverseSide *PassportFile   `json:"reverse_side"`
-			Selfie      *PassportFile   `json:"selfie,omitempty"`
-			Translation []PassportFile  `json:"translation,omitempty"`
-		} `json:"driver_license"`
-
-		// Identity Card
-		IdentityCard struct {
-			Data        *IDDocumentData `json:"data"`
-			FrontSide   *PassportFile   `json:"front_side"`
-			ReverseSide *PassportFile   `json:"reverse_side"`
-			Selfie      *PassportFile   `json:"selfie,omitempty"`
-			Translation []PassportFile  `json:"translation,omitempty"`
-		} `json:"identity_card"`
-
-		// Address
-		Address struct {
-			Data *ResidentialAddress `json:"data"`
-		} `json:"address"`
-
-		// Utility Bill
-		UtilityBill struct {
-			Files       []PassportFile `json:"files"`
-			Translation []PassportFile `json:"translation,omitempty"`
-		} `json:"utility_bill"`
-
-		// Bank Statement
-		BankStatement struct {
-			Files       []PassportFile `json:"files"`
-			Translation []PassportFile `json:"translation,omitempty"`
-		} `json:"bank_statement"`
-
-		// Rental Agreement
-		RentalAgreement struct {
-			Files       []PassportFile `json:"files"`
-			Translation []PassportFile `json:"translation,omitempty"`
-		} `json:"rental_agreement"`
-
-		// Registration Page in the Internal Passport
-		PassportRegistration struct {
-			Files       []PassportFile `json:"files"`
-			Translation []PassportFile `json:"translation,omitempty"`
-		} `json:"passport_registration"`
-
-		// Temporary Registration
-		TemporaryRegistration struct {
-			Files       []PassportFile `json:"files"`
-			Translation []PassportFile `json:"translation,omitempty"`
-		} `json:"temporary_registration"`
-
-		// Phone number
-		PhoneNumber string `json:"phone_number"`
-
-		// Email
-		Email string `json:"email"`
-	}
-
-	// PersonalDetails represents personal details.
-	PersonalDetails struct {
-		// First Name
-		FirstName string `json:"first_name"`
-
-		// Last Name
-		LastName string `json:"last_name"`
-
-		// Middle Name
-		MiddleName string `json:"middle_name,omitempty"`
-
-		// Date of birth in DD.MM.YYYY format
-		BirthDate string `json:"birth_date"`
-
-		// Gender, male or female
-		Gender string `json:"gender"`
-
-		// Citizenship (ISO 3166-1 alpha-2 country code)
-		CountryCode string `json:"country_code"`
-
-		// Country of residence (ISO 3166-1 alpha-2 country code)
-		ResidenceCountryCode string `json:"residence_country_code"`
-
-		// First Name in the language of the user's country of residence
-		FirstNameNative string `json:"first_name_native"`
-
-		// Last Name in the language of the user's country of residence
-		LastNameNative string `json:"last_name_native"`
-
-		// Middle Name in the language of the user's country of residence
-		MiddleNameNative string `json:"middle_name_native,omitempty"`
-	}
-
-	// ResidentialAddress represents a residential address.
-	ResidentialAddress struct {
-		// First line for the address
-		StreetLine1 string `json:"street_line1"`
-
-		// Second line for the address
-		StreetLine2 string `json:"street_line2,omitempty"`
-
-		// City
-		City string `json:"city"`
-
-		// State
-		State string `json:"state,omitempty"`
-
-		// ISO 3166-1 alpha-2 country code
-		CountryCode string `json:"country_code"`
-
-		// Address post code
-		PostCode string `json:"post_code"`
-	}
-
-	// IDDocumentData represents the data of an identity document.
-	IDDocumentData struct {
-		// Document number
-		DocumentNo string `json:"document_no"`
-
-		// Date of expiry, in DD.MM.YYYY format
-		ExpiryDate string `json:"expiry_date,omitempty"`
-	}
-
-	// PassportData contains information about Telegram Passport data shared with
-	// the bot by the user.
-	PassportData struct {
-		// Array with information about documents and other Telegram Passport
-		// elements that was shared with the bot
-		Data []EncryptedPassportElement `json:"data"`
-
-		// Encrypted credentials required to decrypt the data
-		Credentials *EncryptedCredentials `json:"credentials"`
-	}
-
-	// PassportFile represents a file uploaded to Telegram Passport. Currently all
-	// Telegram Passport files are in JPEG format when decrypted and don't exceed
-	// 10MB.
-	PassportFile struct {
-		// Identifier for this file, which can be used to download or reuse the file
-		FileID string `json:"file_id"`
-
-		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-		FileUniqueID string `json:"file_unique_id"`
-
-		// File size
-		FileSize int `json:"file_size"`
-
-		// Unix time when the file was uploaded
-		FileDate int `json:"file_date"`
-	}
-
-	// Credentials is a JSON-serialized object.
-	Credentials struct {
-		// Credentials for encrypted data
-		SecureData *SecureData `json:"secure_data"`
-
-		// Bot-specified nonce
-		Nonce string `json:"nonce"`
-	}
-
-	// SecureData represents the credentials required to decrypt encrypted
-	// data. All fields are optional and depend on fields that were requested.
-	SecureData struct {
-		// Credentials for encrypted personal details
-		PersonalDetails *SecureValue `json:"personal_details,omitempty"`
-
-		// Credentials for encrypted passport
-		Passport *SecureValue `json:"passport,omitempty"`
-
-		// Credentials for encrypted internal passport
-		InternalPassport *SecureValue `json:"internal_passport,omitempty"`
-
-		// Credentials for encrypted driver license
-		DriverLicense *SecureValue `json:"driver_license,omitempty"`
-
-		// Credentials for encrypted ID card
-		IdentityCard *SecureValue `json:"identity_card,omitempty"`
-
-		// Credentials for encrypted residential address
-		Address *SecureValue `json:"address,omitempty"`
-
-		// Credentials for encrypted utility bill
-		UtilityBill *SecureValue `json:"utility_bill,omitempty"`
-
-		// Credentials for encrypted bank statement
-		BankStatement *SecureValue `json:"bank_statement,omitempty"`
-
-		// Credentials for encrypted rental agreement
-		RentalAgreement *SecureValue `json:"rental_agreement,omitempty"`
-
-		// Credentials for encrypted registration from internal passport
-		PassportRegistration *SecureValue `json:"passport_registration,omitempty"`
-
-		// Credentials for encrypted temporary registration
-		TemporaryRegistration *SecureValue `json:"temporary_registration,omitempty"`
-	}
-
-	// SecureValue represents the credentials required to decrypt encrypted
-	// values. All fields are optional and depend on the type of fields that
-	// were requested.
-	SecureValue struct {
-		// Credentials for encrypted Telegram Passport data.
-		Data *DataCredentials `json:"data,omitempty"`
-
-		// Credentials for an encrypted document's front side.
-		FrontSide *FileCredentials `json:"front_side,omitempty"`
-
-		// Credentials for an encrypted document's reverse side.
-		ReverseSide *FileCredentials `json:"reverse_side,omitempty"`
-
-		// Credentials for an encrypted selfie of the user with a document.
-		Selfie *FileCredentials `json:"selfie,omitempty"`
-
-		// Credentials for an encrypted translation of the document.
-		Translation []FileCredentials `json:"translation,omitempty"`
-
-		// Credentials for encrypted files.
-		Files []FileCredentials `json:"files,omitempty"`
-	}
-
-	// DataCredentials can be used to decrypt encrypted data from the data
-	// field in EncryptedPassportElement.
-	DataCredentials struct {
-		// Checksum of encrypted data
-		DataHash string `json:"data_hash"`
-
-		// Secret of encrypted data
-		Secret string `json:"secret"`
-	}
-
-	// FileCredentials can be used to decrypt encrypted files from the
-	// front_side, reverse_side, selfie, files and translation fields in
-	// EncryptedPassportElement.
-	FileCredentials struct {
-		// Checksum of encrypted file
-		FileHash string `json:"file_hash"`
-
-		// Secret of encrypted file
-		Secret string `json:"secret"`
-	}
-
-	// EncryptedPassportElement contains information about documents or other
-	// Telegram Passport elements shared with the bot by the user.
-	EncryptedPassportElement struct {
-		// Element type.
-		Type string `json:"type"`
-
-		// Base64-encoded encrypted Telegram Passport element data provided by
-		// the user, available for "personal_details", "passport",
-		// "driver_license", "identity_card", "identity_passport" and "address"
-		// types. Can be decrypted and verified using the accompanying
-		// EncryptedCredentials.
-		Data string `json:"data,omitempty"`
-
-		// User's verified phone number, available only for "phone_number" type
-		PhoneNumber string `json:"phone_number,omitempty"`
-
-		// User's verified email address, available only for "email" type
-		Email string `json:"email,omitempty"`
-
-		// Array of encrypted files with documents provided by the user,
-		// available for "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration" and "temporary_registration" types. Files can
-		// be decrypted and verified using the accompanying EncryptedCredentials.
-		Files []PassportFile `json:"files,omitempty"`
-
-		// Encrypted file with the front side of the document, provided by the
-		// user. Available for "passport", "driver_license", "identity_card" and
-		// "internal_passport". The file can be decrypted and verified using the
-		// accompanying EncryptedCredentials.
-		FrontSide *PassportFile `json:"front_side,omitempty"`
-
-		// Encrypted file with the reverse side of the document, provided by the
-		// user. Available for "driver_license" and "identity_card". The file can
-		// be decrypted and verified using the accompanying EncryptedCredentials.
-		ReverseSide *PassportFile `json:"reverse_side,omitempty"`
-
-		// Encrypted file with the selfie of the user holding a document,
-		// provided by the user; available for "passport", "driver_license",
-		// "identity_card" and "internal_passport". The file can be decrypted
-		// and verified using the accompanying EncryptedCredentials.
-		Selfie *PassportFile `json:"selfie,omitempty"`
-
-		// Array of encrypted files with translated versions of documents
-		// provided by the user. Available if requested for “passport”,
-		// “driver_license”, “identity_card”, “internal_passport”,
-		// “utility_bill”, “bank_statement”, “rental_agreement”,
-		// “passport_registration” and “temporary_registration” types.
-		// Files can be decrypted and verified using the accompanying
-		// EncryptedCredentials.
-		Translation []PassportFile `json:"translation,omitempty"`
-
-		// Base64-encoded element hash for using in PassportElementErrorUnspecified
-		Hash string `json:"hash"`
-	}
-
-	// EncryptedCredentials contains data required for decrypting and
-	// authenticating EncryptedPassportElement. See the Telegram Passport
-	// Documentation for a complete description of the data decryption and
-	// authentication processes.
-	EncryptedCredentials struct {
-		// Base64-encoded encrypted JSON-serialized data with unique user's
-		// payload, data hashes and secrets required for EncryptedPassportElement
-		// decryption and authentication
-		Data string `json:"data"`
-
-		// Base64-encoded data hash for data authentication
-		Hash string `json:"hash"`
-
-		// Base64-encoded secret, encrypted with the bot's public RSA key,
-		// required for data decryption
-		Secret string `json:"secret"`
-	}
-
-	// PassportElementError represents an error in the Telegram Passport element
-	// which was submitted that should be resolved by the user.
-	PassportElementError interface {
-		PassportElementErrorMessage() string
-		PassportElementErrorSource() string
-		PassportElementErrorType() string
-	}
-
-	// PassportElementErrorDataField represents an issue in one of the data
-	// fields that was provided by the user. The error is considered resolved
-	// when the field's value changes.
-	PassportElementErrorDataField struct {
-		// Error source, must be data
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the error, one
-		// of "personal_details", "passport", "driver_license", "identity_card",
-		// "internal_passport", "address"
-		Type string `json:"type"`
-
-		// Name of the data field which has the error
-		FieldName string `json:"field_name"`
-
-		// Base64-encoded data hash
-		DataHash string `json:"data_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorFrontSide represents an issue with the front side of
-	// a document. The error is considered resolved when the file with the front
-	// side of the document changes.
-	PassportElementErrorFrontSide struct {
-		// Error source, must be front_side
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "passport", "driver_license", "identity_card", "internal_passport"
-		Type string `json:"type"`
-
-		// Base64-encoded hash of the file with the front side of the document
-		FileHash string `json:"file_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorReverseSide represents an issue with the reverse side
-	// of a document. The error is considered resolved when the file with reverse
-	// side of the document changes.
-	PassportElementErrorReverseSide struct {
-		// Error source, must be reverse_side
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "driver_license", "identity_card"
-		Type string `json:"type"`
-
-		// Base64-encoded hash of the file with the reverse side of the document
-		FileHash string `json:"file_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorSelfie represents an issue with the selfie with a
-	// document. The error is considered resolved when the file with the selfie
-	// changes.
-	PassportElementErrorSelfie struct {
-		// Error source, must be selfie
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "passport", "driver_license", "identity_card", "internal_passport"
-		Type string `json:"type"`
-
-		// Base64-encoded hash of the file with the selfie
-		FileHash string `json:"file_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorFile represents an issue with a document scan. The
-	// error is considered resolved when the file with the document scan changes.
-	PassportElementErrorFile struct {
-		// Error source, must be file
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration", "temporary_registration"
-		Type string `json:"type"`
-
-		// Base64-encoded file hash
-		FileHash string `json:"file_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorFiles represents an issue with a list of scans. The
-	// error is considered resolved when the list of files containing the scans
-	// changes.
-	PassportElementErrorFiles struct {
-		// Error source, must be files
-		Source string `json:"source"`
-
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration", "temporary_registration"
-		Type string `json:"type"`
-
-		// List of base64-encoded file hashes
-		FileHashes []string `json:"file_hashes"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorTranslationFile represents an issue with one of the
-	// files that constitute the translation of a document. The error is
-	// considered resolved when the file changes.
-	PassportElementErrorTranslationFile struct {
-		// Error source, must be translation_file
-		Source string `json:"source"`
-
-		// Type of element of the user's Telegram Passport which has the issue,
-		// one of “passport”, “driver_license”, “identity_card”,
-		// “internal_passport”, “utility_bill”, “bank_statement”,
-		// “rental_agreement”, “passport_registration”, “temporary_registration”
-		Type string `json:"type"`
-
-		// Base64-encoded file hash
-		FileHash string `json:"file_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorTranslationFiles represents an issue with the translated
-	// version of a document. The error is considered resolved when a file with the
-	// document translation change.
-	PassportElementErrorTranslationFiles struct {
-		// Error source, must be translation_files
-		Source string `json:"source"`
-
-		// Type of element of the user's Telegram Passport which has the issue,
-		// one of “passport”, “driver_license”, “identity_card”,
-		// “internal_passport”, “utility_bill”, “bank_statement”,
-		// “rental_agreement”, “passport_registration”, “temporary_registration”
-		Type string `json:"type"`
-
-		// List of base64-encoded file hashes
-		FileHashes []string `json:"file_hashes"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// PassportElementErrorUnspecified represents an issue in an unspecified place.
-	// The error is considered resolved when new data is added.
-	PassportElementErrorUnspecified struct {
-		// Error source, must be unspecified
-		Source string `json:"source"`
-
-		// Type of element of the user's Telegram Passport which has the issue
-		Type string `json:"type"`
-
-		// Base64-encoded element hash
-		ElementHash string `json:"element_hash"`
-
-		// Error message
-		Message string `json:"message"`
-	}
-
-	// LabeledPrice represents a portion of the price for goods or services.
-	LabeledPrice struct {
-		// Portion label
-		Label string `json:"label"`
-
-		//      Price of the product in the smallest units of the currency (integer,
-		// not float/double). For example, for a price of US$ 1.45 pass amount =
-		// 145. See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
-		Amount int `json:"amount"`
-	}
-
-	// Invoice contains basic information about an invoice.
-	Invoice struct {
-		// Product name
-		Title string `json:"title"`
-
-		// Product description
-		Description string `json:"description"`
-
-		// Unique bot deep-linking parameter that can be used to generate this
-		// invoice
-		StartParameter string `json:"start_parameter"`
-
-		// Three-letter ISO 4217 currency code
-		Currency string `json:"currency"`
-
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
-		TotalAmount int `json:"total_amount"`
-	}
-
-	// ShippingAddress represents a shipping address.
-	ShippingAddress struct {
-		// ISO 3166-1 alpha-2 country code
-		CountryCode string `json:"country_code"`
-
-		// State, if applicable
-		State string `json:"state"`
-
-		// City
-		City string `json:"city"`
-
-		// First line for the address
-		StreetLine1 string `json:"street_line1"`
-
-		// Second line for the address
-		StreetLine2 string `json:"street_line2"`
-
-		// Address post code
-		PostCode string `json:"post_code"`
-	}
-
-	// OrderInfo represents information about an order.
-	OrderInfo struct {
-		// User name
-		Name string `json:"name,omitempty"`
-
-		// User's phone number
-		PhoneNumber string `json:"phone_number,omitempty"`
-
-		// User email
-		Email string `json:"email,omitempty"`
-
-		// User shipping address
-		ShippingAddress *ShippingAddress `json:"shipping_address,omitempty"`
-	}
-
-	// ShippingOption represents one shipping option.
-	ShippingOption struct {
-		// Shipping option identifier
-		ID string `json:"id"`
-
-		// Option title
-		Title string `json:"title"`
-
-		// List of price portions
-		Prices []LabeledPrice `json:"prices"`
-	}
-
-	// SuccessfulPayment contains basic information about a successful payment.
-	SuccessfulPayment struct {
-		// Three-letter ISO 4217 currency code
-		Currency string `json:"currency"`
-
-		// Bot specified invoice payload
-		InvoicePayload string `json:"invoice_payload"`
-
-		// Identifier of the shipping option chosen by the user
-		ShippingOptionID string `json:"shipping_option_id,omitempty"`
-
-		// Telegram payment identifier
-		TelegramPaymentChargeID string `json:"telegram_payment_charge_id"`
-
-		// Provider payment identifier
-		ProviderPaymentChargeID string `json:"provider_payment_charge_id"`
-
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
-		TotalAmount int `json:"total_amount"`
-
-		// Order info provided by the user
-		OrderInfo *OrderInfo `json:"order_info,omitempty"`
-	}
-
-	// ShippingQuery contains information about an incoming shipping query.
-	ShippingQuery struct {
-		// Unique query identifier
-		ID string `json:"id"`
-
-		// Bot specified invoice payload
-		InvoicePayload string `json:"invoice_payload"`
-
-		// User who sent the query
-		From *User `json:"from"`
-
-		// User specified shipping address
-		ShippingAddress *ShippingAddress `json:"shipping_address"`
-	}
-
-	// PreCheckoutQuery contains information about an incoming pre-checkout query.
-	PreCheckoutQuery struct {
-		// Unique query identifier
-		ID string `json:"id"`
-
-		// Three-letter ISO 4217 currency code
-		Currency string `json:"currency"`
-
-		// Bot specified invoice payload
-		InvoicePayload string `json:"invoice_payload"`
-
-		// Identifier of the shipping option chosen by the user
-		ShippingOptionID string `json:"shipping_option_id,omitempty"`
-
-		// User who sent the query
-		From *User `json:"from"`
-
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority of
-		// currencies).
-		TotalAmount int `json:"total_amount"`
-
-		// Order info provided by the user
-		OrderInfo *OrderInfo `json:"order_info,omitempty"`
-	}
-
-	// Sticker represents a sticker.
-	Sticker struct {
-		// Identifier for this file, which can be used to download or reuse the file
-		FileID string `json:"file_id"`
-
-		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-		FileUniqueID string `json:"file_unique_id"`
-
-		// Sticker width
-		Width int `json:"width"`
-
-		// Sticker height
-		Height int `json:"height"`
-
-		// true, if the sticker is animated
-		IsAnimated bool `json:"is_animated"`
-
-		// Sticker thumbnail in the .webp or .jpg format
-		Thumb *PhotoSize `json:"thumb,omitempty"`
-
-		// Emoji associated with the sticker
-		Emoji string `json:"emoji,omitempty"`
-
-		// Name of the sticker set to which the sticker belongs
-		SetName string `json:"set_name,omitempty"`
-
-		// For mask stickers, the position where the mask should be placed
-		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
-
-		// File size
-		FileSize int `json:"file_size,omitempty"`
-	}
-
-	// StickerSet represents a sticker set.
-	StickerSet struct {
-		// Sticker set name
-		Name string `json:"name"`
-
-		// Sticker set title
-		Title string `json:"title"`
-
-		// True, if the sticker set contains masks
-		ContainsMasks bool `json:"contains_masks"`
-
-		// List of all set stickers
-		Stickers []Sticker `json:"stickers"`
-
-		// true, if the sticker set contains animated stickers
-		IsAnimated bool `json:"is_animated"`
-	}
-
-	// MaskPosition describes the position on faces where a mask should be placed
-	// by default.
-	MaskPosition struct {
-		// The part of the face relative to which the mask should be placed. One
-		// of "forehead", "eyes", "mouth", or "chin".
-		Point string `json:"point"`
-
-		// Shift by X-axis measured in widths of the mask scaled to the face
-		// size, from left to right. For example, choosing -1.0 will place mask
-		// just to the left of the default mask position.
-		XShift float32 `json:"x_shift"`
-
-		// Shift by Y-axis measured in heights of the mask scaled to the face
-		// size, from top to bottom. For example, 1.0 will place the mask just
-		// below the default mask position.
-		YShift float32 `json:"y_shift"`
-
-		// Mask scaling coefficient. For example, 2.0 means double size.
-		Scale float32 `json:"scale"`
+	// InputFile represents the contents of a file to be uploaded. Must be poste using multipart/form-data in the usual way that files are uploaded via the browser.
+	InputFile struct {
+		ID         string    `json:"-"`
+		URI        *http.URI `json:"-"`
+		Attachment *os.File  `json:"-"`
 	}
 )
+
+// Language parse LanguageCode of current user and returns language.Tag.
+func (u User) Language() language.Tag {
+	tag, err := language.Parse(u.LanguageCode)
+	if err != nil {
+		tag = language.Und
+	}
+
+	return tag
+}
+
+// FullName returns the full name of user or FirstName if LastName is not available.
+func (u User) FullName() string {
+	if u.FirstName == "" {
+		return ""
+	}
+
+	if u.HasLastName() {
+		return u.FirstName + " " + u.LastName
+	}
+
+	return u.FirstName
+}
+
+// HaveLastName checks what the current user has a LastName.
+func (u User) HasLastName() bool { return u.LastName != "" }
+
+// HaveUsername checks what the current user has a username.
+func (u User) HasUsername() bool { return u.Username != "" }
+
+// IsPrivate checks that the current chat is a private chat with single user.
+func (c Chat) IsPrivate() bool { return strings.EqualFold(c.Type, ChatPrivate) }
+
+// IsGroup checks that the current chat is a group.
+func (c Chat) IsGroup() bool { return strings.EqualFold(c.Type, ChatGroup) }
+
+// IsSuperGroup checks that the current chat is a supergroup.
+func (c Chat) IsSuperGroup() bool { return strings.EqualFold(c.Type, ChatSuperGroup) }
+
+// IsChannel checks that the current chat is a channel.
+func (c Chat) IsChannel() bool { return strings.EqualFold(c.Type, ChatChannel) }
+
+// HasPinnedMessage checks that the current chat has a pinned message.
+func (c Chat) HasPinnedMessage() bool { return c.PinnedMessage != nil }
+
+// HasStickerSet checks that the current chat has a sticker set.
+func (c Chat) HasStickerSet() bool { return c.StickerSetName != "" }
+
+// FullName returns the full name of chat or FirstName if LastName is not available.
+func (c Chat) FullName() string {
+	if c.FirstName == "" {
+		return ""
+	}
+
+	if c.HasLastName() {
+		return c.FirstName + " " + c.LastName
+	}
+
+	return c.FirstName
+}
+
+// HaveLastName checks what the current user has a LastName.
+func (c Chat) HasLastName() bool { return c.LastName != "" }
+
+// HaveUsername checks what the current user has a username.
+func (c Chat) HasUsername() bool { return c.Username != "" }
+
+func (c Chat) HasDescription() bool { return c.Description != "" }
+
+func (c Chat) HasInviteLink() bool { return c.InviteLink != "" }
+
+// IsCommand checks that the current message is a bot command.
+func (m Message) IsCommand() bool {
+	return m.HasEntities() && m.Entities[0].IsBotCommand() && m.Entities[0].Offset == 0
+}
+
+// IsCommandEqual checks that the current message is a specific bot command.
+func (m Message) IsCommandEqual(command string) bool {
+	return m.IsCommand() && strings.EqualFold(m.Command(), command)
+}
+
+// Command returns identifier of the bot command without bot username, if it was available
+func (m Message) Command() string {
+	if !m.IsCommand() {
+		return ""
+	}
+
+	return strings.Split(m.RawCommand(), "@")[0]
+}
+
+// RawCommand returns identifier of the bot command with bot username, if it was available
+func (m Message) RawCommand() string {
+	if !m.IsCommand() {
+		return ""
+	}
+
+	return string([]rune(m.Text)[1:m.Entities[0].Length])
+}
+
+// HasCommandArgument checks that the current command message contains argument.
+func (m Message) HasCommandArgument() bool {
+	return m.IsCommand() && m.Entities[0].IsBotCommand() && len([]rune(m.Text)) != m.Entities[0].Length
+}
+
+// CommandArgument returns raw command argument.
+func (m Message) CommandArgument() string {
+	if !m.HasCommandArgument() {
+		return ""
+	}
+
+	return string([]rune(m.Text)[m.Entities[0].Length+1:])
+}
+
+// IsReply checks that the current message is a reply on other message.
+func (m Message) IsReply() bool { return m.ReplyToMessage != nil }
+
+// IsForward checks that the current message is a forward of other message.
+func (m Message) IsForward() bool { return m.ForwardDate > 0 }
+
+// Time parse current message Date and returns time.Time.
+func (m Message) Time() time.Time {
+	if m.Date <= 0 {
+		return time.Time{}
+	}
+
+	return time.Unix(m.Date, 0)
+}
+
+// ForwardTime parse current message ForwardDate and returns time.Time.
+func (m Message) ForwardTime() time.Time {
+	if !m.IsForward() {
+		return time.Time{}
+	}
+
+	return time.Unix(m.ForwardDate, 0)
+}
+
+// EditTime parse current message EditDate and returns time.Time.
+func (m Message) EditTime() time.Time {
+	if !m.HasBeenEdited() {
+		return time.Time{}
+	}
+
+	return time.Unix(m.EditDate, 0)
+}
+
+// HasBeenEdited checks that the current message has been edited.
+func (m Message) HasBeenEdited() bool { return m.EditDate > 0 }
+
+// IsText checks that the current message is just a text message.
+func (m Message) IsText() bool { return m.Text != "" }
+
+// IsAudio checks that the current message is a audio.
+func (m Message) IsAudio() bool { return m.Audio != nil }
+
+// IsDocument checks that the current message is a document.
+func (m Message) IsDocument() bool { return m.Document != nil }
+
+// IsGame checks that the current message is a game.
+func (m Message) IsGame() bool { return m.Game != nil }
+
+// IsPhoto checks that the current message is a photo.
+func (m Message) IsPhoto() bool { return len(m.Photo) > 0 }
+
+// IsSticker checks that the current message is a sticker.
+func (m Message) IsSticker() bool { return m.Sticker != nil }
+
+// IsVideo checks that the current message is a video.
+func (m Message) IsVideo() bool { return m.Video != nil }
+
+// IsVoice checks that the current message is a voice.
+func (m Message) IsVoice() bool { return m.Voice != nil }
+
+// IsVideoNote checks that the current message is a video note.
+func (m Message) IsVideoNote() bool { return m.VideoNote != nil }
+
+// IsContact checks that the current message is a contact.
+func (m Message) IsContact() bool { return m.Contact != nil }
+
+// IsLocation checks that the current message is a location.
+func (m Message) IsLocation() bool { return m.Location != nil }
+
+// IsVenue checks that the current message is a venue.
+func (m Message) IsVenue() bool { return m.Venue != nil }
+
+// IsAnimation checks that the current message is a animation.
+func (m Message) IsAnimation() bool { return m.Animation != nil }
+
+// IsNewChatMembersEvent checks that the current message is a event of entry of new members.
+func (m Message) IsNewChatMembersEvent() bool { return len(m.NewChatMembers) > 0 }
+
+// IsLeftChatMemberEvent checks that the current message is a event of members exit.
+func (m Message) IsLeftChatMemberEvent() bool { return m.LeftChatMember != nil }
+
+// IsNewChatTitleEvent checks that the current message is a event of setting a new chat title.
+func (m Message) IsNewChatTitleEvent() bool { return m.NewChatTitle != "" }
+
+// IsNewChatPhotoEvent checks that the current message is a event of setting a new chat avatar.
+func (m Message) IsNewChatPhotoEvent() bool { return len(m.NewChatPhoto) > 0 }
+
+// IsDeleteChatPhotoEvent checks that the current message is a event of deleting a chat avatar.
+func (m Message) IsDeleteChatPhotoEvent() bool { return m.DeleteChatPhoto }
+
+// IsGroupChatCreatedEvent checks that the current message is a event of creating a new group.
+func (m Message) IsGroupChatCreatedEvent() bool { return m.GroupChatCreated }
+
+// IsSupergroupChatCreatedEvent checks that the current message is a event of creating a new supergroup.
+func (m Message) IsSupergroupChatCreatedEvent() bool { return m.SupergroupChatCreated }
+
+// IsChannelChatCreatedEvent checks that the current message is a event of creating a new channel.
+func (m Message) IsChannelChatCreatedEvent() bool { return m.ChannelChatCreated }
+
+// IsPinnedMessage checks that the current message is a event of pinning another message.
+func (m Message) IsPinnedMessage() bool { return m.PinnedMessage != nil }
+
+// IsInvoice checks that the current message is a invoice.
+func (m Message) IsInvoice() bool { return m.Invoice != nil }
+
+// IsSuccessfulPayment checks that the current message is a event of successful payment.
+func (m Message) IsSuccessfulPayment() bool { return m.SuccessfulPayment != nil }
+
+// IsPoll checks that the current message is a poll.
+func (m Message) IsPoll() bool { return m.Poll != nil }
+
+// HasEntities checks that the current message contains entities.
+func (m Message) HasEntities() bool { return len(m.Entities) > 0 }
+
+// HasCaptionEntities checks that the current media contains entities in caption.
+func (m Message) HasCaptionEntities() bool { return len(m.CaptionEntities) > 0 }
+
+// HasMentions checks that the current message contains mentions.
+func (m Message) HasMentions() bool {
+	if !m.HasEntities() {
+		return false
+	}
+
+	for _, entity := range m.Entities {
+		if !entity.IsMention() && !entity.IsTextMention() {
+			continue
+		}
+
+		return true
+	}
+
+	return false
+}
+
+// HasCaptionMentions checks that the current media contains mentions in caption.
+func (m Message) HasCaptionMentions() bool {
+	if !m.HasCaptionEntities() {
+		return false
+	}
+
+	for _, entity := range m.CaptionEntities {
+		if !entity.IsMention() && !entity.IsTextMention() {
+			continue
+		}
+
+		return true
+	}
+
+	return false
+}
+
+// HasCaption checks that the current media has caption.
+func (m Message) HasCaption() bool { return m.Caption != "" }
+
+// HasAuthorSignature checks that the current channel post has author signature.
+func (m Message) HasAuthorSignature() bool { return m.AuthorSignature != "" }
+
+// IsEvent checks what current message is a any chat event.
+func (m Message) IsEvent() bool {
+	return m.IsChannelChatCreatedEvent() || m.IsDeleteChatPhotoEvent() || m.IsGroupChatCreatedEvent() ||
+		m.IsLeftChatMemberEvent() || m.IsNewChatMembersEvent() || m.IsNewChatTitleEvent() ||
+		m.IsSupergroupChatCreatedEvent() || m.IsNewChatPhotoEvent()
+}
+
+// IsBold checks that the current entity is a bold tag.
+func (e MessageEntity) IsBold() bool { return strings.EqualFold(e.Type, EntityBold) }
+
+// IsBotCommand checks that the current entity is a bot command.
+func (e MessageEntity) IsBotCommand() bool { return strings.EqualFold(e.Type, EntityBotCommand) }
+
+// IsCashtag checks that the current entity is a cashtag.
+func (e MessageEntity) IsCashtag() bool { return strings.EqualFold(e.Type, EntityCashtag) }
+
+// IsCode checks that the current entity is a code tag.
+func (e MessageEntity) IsCode() bool { return strings.EqualFold(e.Type, EntityCode) }
+
+// IsEmail checks that the current entity is a email.
+func (e MessageEntity) IsEmail() bool { return strings.EqualFold(e.Type, EntityEmail) }
+
+// IsHashtag checks that the current entity is a hashtag.
+func (e MessageEntity) IsHashtag() bool { return strings.EqualFold(e.Type, EntityHashtag) }
+
+// IsItalic checks that the current entity is a italic tag.
+func (e MessageEntity) IsItalic() bool { return strings.EqualFold(e.Type, EntityItalic) }
+
+// IsMention checks that the current entity is a username mention.
+func (e MessageEntity) IsMention() bool { return strings.EqualFold(e.Type, EntityMention) }
+
+// IsMPhoneNumberchecks that the current entity is a phone number.
+func (e MessageEntity) IsPhoneNumber() bool { return strings.EqualFold(e.Type, EntityPhoneNumber) }
+
+// IsPre checks that the current entity is a pre tag.
+func (e MessageEntity) IsPre() bool { return strings.EqualFold(e.Type, EntityPre) }
+
+// IsPre checks that the current entity is a pre tag.
+func (e MessageEntity) IsStrikethrough() bool { return strings.EqualFold(e.Type, EntityStrikethrough) }
+
+// IsTextLink checks that the current entity is a text link.
+func (e MessageEntity) IsTextLink() bool { return strings.EqualFold(e.Type, EntityTextLink) }
+
+// IsTextMention checks that the current entity is a mention without username.
+func (e MessageEntity) IsTextMention() bool { return strings.EqualFold(e.Type, EntityTextMention) }
+
+// IsUnderline checks that the current entity is a underline.
+func (e MessageEntity) IsUnderline() bool { return strings.EqualFold(e.Type, EntityUnderline) }
+
+// IsURL checks that the current entity is a URL.
+func (e MessageEntity) IsURL() bool { return strings.EqualFold(e.Type, EntityURL) }
+
+// ParseURL selects URL from message text/caption and parse it as fasthttp.URI.
+func (e MessageEntity) ParseURL(text string) *http.URI {
+	if !e.IsURL() || text == "" {
+		return nil
+	}
+
+	link := http.AcquireURI()
+	to := e.Offset + e.Length
+	src := []rune(text)
+
+	if len(src) < to {
+		return nil
+	}
+
+	link.Update(string(src[e.Offset:to]))
+
+	return link
+}
+
+// TextLink parse current text link entity as fasthttp.URI.
+func (e MessageEntity) TextLink() *http.URI {
+	if !e.IsTextLink() || e.URL == "" {
+		return nil
+	}
+
+	link := http.AcquireURI()
+
+	link.Update(e.URL)
+
+	return link
+}
+
+func (a Audio) FullName(separator string) (name string) {
+	if a.HasPerformer() {
+		if separator == "" {
+			separator = DefaultAudioSeparator
+		}
+
+		name += a.Performer + separator
+	}
+
+	title := DefaultAudioTitle
+	if a.HasTitle() {
+		title = a.Title
+	}
+
+	name += title
+
+	return
+}
+
+func (a Audio) HasPerformer() bool { return a.Performer != "" }
+
+func (a Audio) HasTitle() bool { return a.Title != "" }
+
+func (a Audio) HasThumb() bool { return a.Thumb != nil }
+
+// File returns File structure without FilePath parameter.
+func (a Audio) File() File {
+	return File{
+		FileID:       a.FileID,
+		FileSize:     a.FileSize,
+		FileUniqueID: a.FileUniqueID,
+	}
+}
+
+func (d Document) HasThumb() bool { return d.Thumb != nil }
+
+func (d Document) File() File {
+	return File{
+		FileID:       d.FileID,
+		FileUniqueID: d.FileUniqueID,
+		FileSize:     d.FileSize,
+	}
+}
+
+func (v Video) HasThumb() bool { return v.Thumb != nil }
+
+func (v Video) File() File {
+	return File{
+		FileID:       v.FileID,
+		FileUniqueID: v.FileUniqueID,
+		FileSize:     v.FileSize,
+	}
+}
+
+func (a Animation) HasThumb() bool { return a.Thumb != nil }
+
+func (a Animation) File() File {
+	return File{
+		FileID:       a.FileID,
+		FileUniqueID: a.FileUniqueID,
+		FileSize:     a.FileSize,
+	}
+}
+
+func (v Voice) File() File {
+	return File{
+		FileID:       v.FileID,
+		FileUniqueID: v.FileUniqueID,
+		FileSize:     v.FileSize,
+	}
+}
+
+func (vn VideoNote) HasThumb() bool { return vn.Thumb != nil }
+
+func (vn VideoNote) File() File {
+	return File{
+		FileID:       vn.FileID,
+		FileUniqueID: vn.FileUniqueID,
+		FileSize:     vn.FileSize,
+	}
+}
+
+// FullName returns the full name of contact or FirstName if LastName is not available.
+func (c Contact) FullName() string {
+	if c.FirstName == "" {
+		return ""
+	}
+
+	if c.HasLastName() {
+		return c.FirstName + " " + c.LastName
+	}
+
+	return c.FirstName
+}
+
+// HaveLastName checks what the current contact has a LastName.
+func (c Contact) HasLastName() bool { return c.LastName != "" }
+
+func (c Contact) InTelegram() bool { return c.UserID != 0 }
+
+func (c Contact) HasVCard() bool { return c.VCard != "" }
+
+// VotesCount returns the total number of votes.
+func (p Poll) VotesCount() int {
+	var v int
+	for i := range p.Options {
+		v += p.Options[i].VoterCount
+	}
+
+	return v
+}
+
+func (p ChatPhoto) SmallFile() File {
+	return File{
+		FileID:       p.SmallFileID,
+		FileUniqueID: p.SmallFileUniqueID,
+	}
+}
+
+func (p ChatPhoto) BigFile() File {
+	return File{
+		FileID:       p.BigFileID,
+		FileUniqueID: p.BigFileUniqueID,
+	}
+}
+
+// IsAdministrator checks that current member is administrator.
+func (m ChatMember) IsAdministrator() bool { return strings.EqualFold(m.Status, StatusAdministrator) }
+
+// IsCreator checks that current member is creator.
+func (m ChatMember) IsCreator() bool { return strings.EqualFold(m.Status, StatusCreator) }
+
+// IsKicked checks that current member has been kicked.
+func (m ChatMember) IsKicked() bool { return strings.EqualFold(m.Status, StatusKicked) }
+
+// IsLeft checks that current member has left the chat.
+func (m ChatMember) IsLeft() bool { return strings.EqualFold(m.Status, StatusLeft) }
+
+// IsRestricted checks that current member has been restricted.
+func (m ChatMember) IsRestricted() bool { return strings.EqualFold(m.Status, StatusRestricted) }
+
+// UntilTime parse UntilDate of restrictions and returns time.Time.
+func (m ChatMember) UntilTime() time.Time { return time.Unix(m.UntilDate, 0) }
+
+func (m *InputMediaAnimation) GetMedia() *InputFile { return m.Media }
+
+func (m *InputMediaAudio) GetMedia() *InputFile { return m.Media }
+
+func (m *InputMediaDocument) GetMedia() *InputFile { return m.Media }
+
+func (m *InputMediaPhoto) GetMedia() *InputFile { return m.Media }
+
+func (InputMediaPhoto) isAlbumMedia() {}
+
+func (m *InputMediaVideo) GetMedia() *InputFile { return m.Media }
+
+func (InputMediaVideo) isAlbumMedia() {}
+
+func (f *InputFile) IsFileID() bool { return f.ID != "" }
+
+func (f *InputFile) IsURI() bool { return f.URI != nil }
+
+func (f *InputFile) IsAttachment() bool { return f.Attachment != nil }
+
+func (f *InputFile) MarshalJSON() ([]byte, error) {
+	switch {
+	case f.IsFileID():
+		return []byte(f.ID), nil
+	case f.IsURI():
+		return f.URI.FullURI(), nil
+	case f.IsAttachment():
+		_, fileName := filepath.Split(f.Attachment.Name())
+
+		u := http.AcquireURI()
+		defer http.ReleaseURI(u)
+		u.SetScheme(SchemeAttach)
+		u.SetHost(fileName)
+		u.SetPathBytes(nil)
+
+		// NOTE(toby3d): remove slash on the end
+		uri := u.FullURI()
+		return uri[:len(uri)-1], nil
+	default:
+		return nil, nil
+	}
+}

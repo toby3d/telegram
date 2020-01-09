@@ -1,7 +1,9 @@
 package telegram
 
+import "github.com/Masterminds/semver"
+
 // Version represents current version of Telegram API supported by this package
-const Version string = "4.4"
+var Version = semver.MustParse("4.5.0")
 
 // Action represents available and supported status actions of bot
 const (
@@ -25,14 +27,14 @@ const (
 	ChatSuperGroup string = "supergroup"
 )
 
-// Command represents global commands which should be supported by any bot.
+// Command represents global commands which should be supported by any b.
 // You can user IsCommandEqual method of Message for checking.
 //
 // See: https://core.telegram.org/bots#global-commands
 const (
-	CommandStart    string = "start"
 	CommandHelp     string = "help"
 	CommandSettings string = "settings"
+	CommandStart    string = "start"
 )
 
 // Entity represents available and supported entity types
@@ -131,6 +133,13 @@ const (
 	ParseModeMarkdownV2 string = "MarkdownV2"
 )
 
+const (
+	PointForehead string = "forehead"
+	PointEyes     string = "eyes"
+	PointMouth    string = "mouth"
+	PointChin     string = "chin"
+)
+
 // Mime represents available and supported MIME types of data
 const (
 	MimeHTML string = "text/html"
@@ -197,4 +206,9 @@ const (
 	UpdatePoll               string = "poll"
 	UpdatePreCheckoutQuery   string = "pre_checkout_query"
 	UpdateShippingQuery      string = "shipping_query"
+)
+
+const (
+	DefaultAudioSeparator = " – "
+	DefaultAudioTitle     = "[untitled]"
 )
