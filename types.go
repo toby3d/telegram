@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +12,15 @@ import (
 )
 
 type (
+	// Response represents a response from the Telegram API with the result  stored raw. If ok equals true, the request was successful, and the result  of the query can be found in the result field. In case of an unsuccessful  request, ok equals false, and the error is explained in the error field.
+	Response struct {
+		Description string                `json:"description,omitempty"`
+		ErrorCode   int                   `json:"error_code,omitempty"`
+		Ok          bool                  `json:"ok"`
+		Parameters  []*ResponseParameters `json:"parameters,omitempty"`
+		Result      json.RawMessage       `json:"result,omitempty"`
+	}
+
 	// User represents a Telegram user or bot.
 	User struct {
 		// Unique identifier for this user or bot
