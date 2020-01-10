@@ -14,20 +14,16 @@ import "errors"
 */
 
 type (
-	// PassportData contains information about Telegram Passport data shared with
-	// the bot by the user.
+	// PassportData contains information about Telegram Passport data shared with the bot by the user.
 	PassportData struct {
-		// Array with information about documents and other Telegram Passport
-		// elements that was shared with the bot
+		// Array with information about documents and other Telegram Passport elements that was shared with the bot
 		Data []*EncryptedPassportElement `json:"data"`
 
 		// Encrypted credentials required to decrypt the data
 		Credentials *EncryptedCredentials `json:"credentials"`
 	}
 
-	// PassportFile represents a file uploaded to Telegram Passport. Currently all
-	// Telegram Passport files are in JPEG format when decrypted and don't exceed
-	// 10MB.
+	// PassportFile represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.
 	PassportFile struct {
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
@@ -42,17 +38,12 @@ type (
 		FileDate int `json:"file_date"`
 	}
 
-	// EncryptedPassportElement contains information about documents or other
-	// Telegram Passport elements shared with the bot by the user.
+	// EncryptedPassportElement contains information about documents or other Telegram Passport elements shared with the bot by the user.
 	EncryptedPassportElement struct {
 		// Element type.
 		Type string `json:"type"`
 
-		// Base64-encoded encrypted Telegram Passport element data provided by
-		// the user, available for "personal_details", "passport",
-		// "driver_license", "identity_card", "identity_passport" and "address"
-		// types. Can be decrypted and verified using the accompanying
-		// EncryptedCredentials.
+		// Base64-encoded encrypted Telegram Passport element data provided by the user, available for "personal_details", "passport", "driver_license", "identity_card", "identity_passport" and "address" types. Can be decrypted and verified using the accompanying EncryptedCredentials.
 		Data string `json:"data,omitempty"`
 
 		// User's verified phone number, available only for "phone_number" type
@@ -61,78 +52,50 @@ type (
 		// User's verified email address, available only for "email" type
 		Email string `json:"email,omitempty"`
 
-		// Array of encrypted files with documents provided by the user,
-		// available for "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration" and "temporary_registration" types. Files can
-		// be decrypted and verified using the accompanying EncryptedCredentials.
+		// Array of encrypted files with documents provided by the user, available for "utility_bill", "bank_statement", "rental_agreement", "passport_registration" and "temporary_registration" types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
 		Files []*PassportFile `json:"files,omitempty"`
 
-		// Encrypted file with the front side of the document, provided by the
-		// user. Available for "passport", "driver_license", "identity_card" and
-		// "internal_passport". The file can be decrypted and verified using the
-		// accompanying EncryptedCredentials.
+		// Encrypted file with the front side of the document, provided by the user. Available for "passport", "driver_license", "identity_card" and "internal_passport". The file can be decrypted and verified using the accompanying EncryptedCredentials.
 		FrontSide *PassportFile `json:"front_side,omitempty"`
 
-		// Encrypted file with the reverse side of the document, provided by the
-		// user. Available for "driver_license" and "identity_card". The file can
-		// be decrypted and verified using the accompanying EncryptedCredentials.
+		// Encrypted file with the reverse side of the document, provided by the user. Available for "driver_license" and "identity_card". The file can be decrypted and verified using the accompanying EncryptedCredentials.
 		ReverseSide *PassportFile `json:"reverse_side,omitempty"`
 
-		// Encrypted file with the selfie of the user holding a document,
-		// provided by the user; available for "passport", "driver_license",
-		// "identity_card" and "internal_passport". The file can be decrypted
-		// and verified using the accompanying EncryptedCredentials.
+		// Encrypted file with the selfie of the user holding a document, provided by the user; available for "passport", "driver_license", "identity_card" and "internal_passport". The file can be decrypted and verified using the accompanying EncryptedCredentials.
 		Selfie *PassportFile `json:"selfie,omitempty"`
 
-		// Array of encrypted files with translated versions of documents
-		// provided by the user. Available if requested for “passport”,
-		// “driver_license”, “identity_card”, “internal_passport”,
-		// “utility_bill”, “bank_statement”, “rental_agreement”,
-		// “passport_registration” and “temporary_registration” types.
-		// Files can be decrypted and verified using the accompanying
-		// EncryptedCredentials.
+		// Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
 		Translation []*PassportFile `json:"translation,omitempty"`
 
 		// Base64-encoded element hash for using in PassportElementErrorUnspecified
 		Hash string `json:"hash"`
 	}
 
-	// EncryptedCredentials contains data required for decrypting and
-	// authenticating EncryptedPassportElement. See the Telegram Passport
-	// Documentation for a complete description of the data decryption and
-	// authentication processes.
+	// EncryptedCredentials contains data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.
 	EncryptedCredentials struct {
-		// Base64-encoded encrypted JSON-serialized data with unique user's
-		// payload, data hashes and secrets required for EncryptedPassportElement
-		// decryption and authentication
+		// Base64-encoded encrypted JSON-serialized data with unique user's payload, data hashes and secrets required for EncryptedPassportElement decryption and authentication
 		Data string `json:"data"`
 
 		// Base64-encoded data hash for data authentication
 		Hash string `json:"hash"`
 
-		// Base64-encoded secret, encrypted with the bot's public RSA key,
-		// required for data decryption
+		// Base64-encoded secret, encrypted with the bot's public RSA key, required for data decryption
 		Secret string `json:"secret"`
 	}
 
-	// PassportElementError represents an error in the Telegram Passport element
-	// which was submitted that should be resolved by the user.
+	// PassportElementError represents an error in the Telegram Passport element which was submitted that should be resolved by the user.
 	PassportElementError interface {
 		PassportElementErrorMessage() string
 		PassportElementErrorSource() string
 		PassportElementErrorType() string
 	}
 
-	// PassportElementErrorDataField represents an issue in one of the data
-	// fields that was provided by the user. The error is considered resolved
-	// when the field's value changes.
+	// PassportElementErrorDataField represents an issue in one of the data fields that was provided by the user. The error is considered resolved when the field's value changes.
 	PassportElementErrorDataField struct {
 		// Error source, must be data
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the error, one
-		// of "personal_details", "passport", "driver_license", "identity_card",
-		// "internal_passport", "address"
+		// The section of the user's Telegram Passport which has the error, one of "personal_details", "passport", "driver_license", "identity_card", "internal_passport", "address"
 		Type string `json:"type"`
 
 		// Name of the data field which has the error
@@ -145,15 +108,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorFrontSide represents an issue with the front side of
-	// a document. The error is considered resolved when the file with the front
-	// side of the document changes.
+	// PassportElementErrorFrontSide represents an issue with the front side of a document. The error is considered resolved when the file with the front side of the document changes.
 	PassportElementErrorFrontSide struct {
 		// Error source, must be front_side
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "passport", "driver_license", "identity_card", "internal_passport"
+		// The section of the user's Telegram Passport which has the issue, one of "passport", "driver_license", "identity_card", "internal_passport"
 		Type string `json:"type"`
 
 		// Base64-encoded hash of the file with the front side of the document
@@ -163,15 +123,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorReverseSide represents an issue with the reverse side
-	// of a document. The error is considered resolved when the file with reverse
-	// side of the document changes.
+	// PassportElementErrorReverseSide represents an issue with the reverse side of a document. The error is considered resolved when the file with reverse side of the document changes.
 	PassportElementErrorReverseSide struct {
 		// Error source, must be reverse_side
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "driver_license", "identity_card"
+		// The section of the user's Telegram Passport which has the issue, one of "driver_license", "identity_card"
 		Type string `json:"type"`
 
 		// Base64-encoded hash of the file with the reverse side of the document
@@ -181,15 +138,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorSelfie represents an issue with the selfie with a
-	// document. The error is considered resolved when the file with the selfie
-	// changes.
+	// PassportElementErrorSelfie represents an issue with the selfie with a document. The error is considered resolved when the file with the selfie changes.
 	PassportElementErrorSelfie struct {
 		// Error source, must be selfie
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "passport", "driver_license", "identity_card", "internal_passport"
+		// The section of the user's Telegram Passport which has the issue, one of "passport", "driver_license", "identity_card", "internal_passport"
 		Type string `json:"type"`
 
 		// Base64-encoded hash of the file with the selfie
@@ -199,15 +153,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorFile represents an issue with a document scan. The
-	// error is considered resolved when the file with the document scan changes.
+	// PassportElementErrorFile represents an issue with a document scan. The error is considered resolved when the file with the document scan changes.
 	PassportElementErrorFile struct {
 		// Error source, must be file
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration", "temporary_registration"
+		// The section of the user's Telegram Passport which has the issue, one of "utility_bill", "bank_statement", "rental_agreement", "passport_registration", "temporary_registration"
 		Type string `json:"type"`
 
 		// Base64-encoded file hash
@@ -217,16 +168,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorFiles represents an issue with a list of scans. The
-	// error is considered resolved when the list of files containing the scans
-	// changes.
+	// PassportElementErrorFiles represents an issue with a list of scans. The error is considered resolved when the list of files containing the scans changes.
 	PassportElementErrorFiles struct {
 		// Error source, must be files
 		Source string `json:"source"`
 
-		// The section of the user's Telegram Passport which has the issue, one
-		// of "utility_bill", "bank_statement", "rental_agreement",
-		// "passport_registration", "temporary_registration"
+		// The section of the user's Telegram Passport which has the issue, one of "utility_bill", "bank_statement", "rental_agreement", "passport_registration", "temporary_registration"
 		Type string `json:"type"`
 
 		// List of base64-encoded file hashes
@@ -236,17 +183,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorTranslationFile represents an issue with one of the
-	// files that constitute the translation of a document. The error is
-	// considered resolved when the file changes.
+	// PassportElementErrorTranslationFile represents an issue with one of the files that constitute the translation of a document. The error is considered resolved when the file changes.
 	PassportElementErrorTranslationFile struct {
 		// Error source, must be translation_file
 		Source string `json:"source"`
 
-		// Type of element of the user's Telegram Passport which has the issue,
-		// one of “passport”, “driver_license”, “identity_card”,
-		// “internal_passport”, “utility_bill”, “bank_statement”,
-		// “rental_agreement”, “passport_registration”, “temporary_registration”
+		// Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
 		Type string `json:"type"`
 
 		// Base64-encoded file hash
@@ -256,17 +198,12 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorTranslationFiles represents an issue with the translated
-	// version of a document. The error is considered resolved when a file with the
-	// document translation change.
+	// PassportElementErrorTranslationFiles represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.
 	PassportElementErrorTranslationFiles struct {
 		// Error source, must be translation_files
 		Source string `json:"source"`
 
-		// Type of element of the user's Telegram Passport which has the issue,
-		// one of “passport”, “driver_license”, “identity_card”,
-		// “internal_passport”, “utility_bill”, “bank_statement”,
-		// “rental_agreement”, “passport_registration”, “temporary_registration”
+		// Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
 		Type string `json:"type"`
 
 		// List of base64-encoded file hashes
@@ -276,8 +213,7 @@ type (
 		Message string `json:"message"`
 	}
 
-	// PassportElementErrorUnspecified represents an issue in an unspecified place.
-	// The error is considered resolved when new data is added.
+	// PassportElementErrorUnspecified represents an issue in an unspecified place. The error is considered resolved when new data is added.
 	PassportElementErrorUnspecified struct {
 		// Error source, must be unspecified
 		Source string `json:"source"`
@@ -302,14 +238,10 @@ type (
 
 	// AuthParameters represent a Telegram Passport auth parameters for SDK.
 	Auth struct {
-		// Unique identifier for the b. You can get it from bot token.
-		// For example, for the bot token
-		// 1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy, the bot id is
-		// 1234567.
+		// Unique identifier for the b. You can get it from bot token. For example, for the bot token 1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy, the bot id is 1234567.
 		BotID int `json:"bot_id"`
 
-		// A JSON-serialized object describing the data you want to
-		// request
+		// A JSON-serialized object describing the data you want to request
 		Scope *PassportScope `json:"scope"`
 
 		// Public key of the bot
@@ -317,19 +249,13 @@ type (
 
 		// Bot-specified nonce.
 		//
-		// Important: For security purposes it should be a
-		// cryptographically secure unique identifier of the request. In
-		// particular, it should be long enough and it should be
-		// generated using a cryptographically secure pseudorandom number
-		// generator. You should never accept credentials with the same
-		// nonce twice.
+		// Important: For security purposes it should be a cryptographically secure unique identifier of the request. In particular, it should be long enough and it should be generated using a cryptographically secure pseudorandom number generator. You should never accept credentials with the same nonce twice.
 		Nonce string `json:"nonce"`
 	}
 
 	// PassportScope represents the data to be requested.
 	PassportScope struct {
-		// List of requested elements, each type may be used only once
-		// in the entire array of PassportScopeElement objects
+		// List of requested elements, each type may be used only once in the entire array of PassportScopeElement objects
 		Data []*PassportScopeElement `json:"data"`
 
 		// Scope version, must be 1
@@ -347,34 +273,25 @@ type (
 		// List of elements one of which must be provided;
 		OneOf []*PassportScopeElementOne `json:"one_of"`
 
-		// Use this parameter if you want to request a selfie with the
-		// document from this list that the user chooses to upload.
+		// Use this parameter if you want to request a selfie with the document from this list that the user chooses to upload.
 		Selfie bool `json:"selfie,omitempty"`
 
-		// Use this parameter if you want to request a translation of
-		// the document from this list that the user chooses to upload.
-		// Note: We suggest to only request translations after you have
-		// received a valid document that requires one.
+		// Use this parameter if you want to request a translation of the document from this list that the user chooses to upload. Note: We suggest to only request translations after you have received a valid document that requires one.
 		Translation bool `json:"translation,omitempty"`
 	}
 
-	// PassportScopeElementOne represents one particular element that must
-	// be provided. If no options are needed, String can be used instead of
-	// this object to specify the type of the element.
+	// PassportScopeElementOne represents one particular element that must be provided. If no options are needed, String can be used instead of this object to specify the type of the element.
 	PassportScopeElementOne struct {
 		// Element type.
 		Type string `json:"type"`
 
-		// Use this parameter if you want to request a selfie with the
-		// document as well.
+		// Use this parameter if you want to request a selfie with the document as well.
 		Selfie bool `json:"selfie,omitempty"`
 
-		//  Use this parameter if you want to request a translation of
-		// the document as well.
+		//  Use this parameter if you want to request a translation of the document as well.
 		Translation bool `json:"translation,omitempty"`
 
-		// Use this parameter to request the first, last and middle name
-		// of the user in the language of the user's country of residence.
+		// Use this parameter to request the first, last and middle name of the user in the language of the user's country of residence.
 		NativeNames bool `json:"native_names,omitempty"`
 	}
 
@@ -532,8 +449,7 @@ type (
 		Nonce string `json:"nonce"`
 	}
 
-	// SecureData represents the credentials required to decrypt encrypted
-	// data. All fields are optional and depend on fields that were requested.
+	// SecureData represents the credentials required to decrypt encrypted data. All fields are optional and depend on fields that were requested.
 	SecureData struct {
 		// Credentials for encrypted personal details
 		PersonalDetails *SecureValue `json:"personal_details,omitempty"`
@@ -569,9 +485,7 @@ type (
 		TemporaryRegistration *SecureValue `json:"temporary_registration,omitempty"`
 	}
 
-	// SecureValue represents the credentials required to decrypt encrypted
-	// values. All fields are optional and depend on the type of fields that
-	// were requested.
+	// SecureValue represents the credentials required to decrypt encrypted values. All fields are optional and depend on the type of fields that were requested.
 	SecureValue struct {
 		// Credentials for encrypted Telegram Passport data.
 		Data *DataCredentials `json:"data,omitempty"`
@@ -592,8 +506,7 @@ type (
 		Files []*FileCredentials `json:"files,omitempty"`
 	}
 
-	// DataCredentials can be used to decrypt encrypted data from the data
-	// field in EncryptedPassportElement.
+	// DataCredentials can be used to decrypt encrypted data from the data field in EncryptedPassportElement.
 	DataCredentials struct {
 		// Checksum of encrypted data
 		DataHash string `json:"data_hash"`
@@ -602,9 +515,7 @@ type (
 		Secret string `json:"secret"`
 	}
 
-	// FileCredentials can be used to decrypt encrypted files from the
-	// front_side, reverse_side, selfie, files and translation fields in
-	// EncryptedPassportElement.
+	// FileCredentials can be used to decrypt encrypted files from the front_side, reverse_side, selfie, files and translation fields in EncryptedPassportElement.
 	FileCredentials struct {
 		// Checksum of encrypted file
 		FileHash string `json:"file_hash"`
@@ -616,17 +527,10 @@ type (
 
 var ErrNotEqual = errors.New("credentials hash and credentials data hash is not equal")
 
-// SetPassportDataErrors informs a user that some of the Telegram Passport
-// elements they provided contains errors. The user will not be able to re-submit
-// their Passport to you until the errors are fixed (the contents of the field
-// for which you returned the error must change). Returns True on success.
+// SetPassportDataErrors informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
 //
-// Use this if the data submitted by the user doesn't satisfy the standards your
-// service requires for any reason. For example, if a birthday date seems
-// invalid, a submitted document is blurry, a scan shows evidence of tampering,
-// etc. Supply some details in the error message to make sure the user knows how
-// to correct the issues.
-func (b *Bot) SetPassportDataErrors(uid int, errors ...PassportElementError) (bool, error) {
+// Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
+func (b Bot) SetPassportDataErrors(uid int, errors ...PassportElementError) (bool, error) {
 	src, err := b.Do(MethodSetPassportDataErrors, SetPassportDataErrors{
 		UserID: uid, Errors: errors,
 	})

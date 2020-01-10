@@ -60,10 +60,7 @@ type (
 		ThumbHeight int `json:"thumb_height,omitempty"`
 	}
 
-	// InlineQueryResultPhoto represents a link to a photo. By default, this
-	// photo will be sent by the user with optional caption. Alternatively, you
-	// can use input_message_content to send a message with the specified content
-	// instead of the photo.
+	// InlineQueryResultPhoto represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
 	InlineQueryResultPhoto struct {
 		// Type of the result, must be photo
 		Type string `json:"type"`
@@ -71,8 +68,7 @@ type (
 		// Unique identifier for this result, 1-64 bytes
 		ID string `json:"id"`
 
-		// A valid URL of the photo. Photo must be in jpeg format. Photo size
-		// must not exceed 5MB
+		// A valid URL of the photo. Photo must be in jpeg format. Photo size must not exceed 5MB
 		PhotoURL string `json:"photo_url"`
 
 		// URL of the thumbnail for the photo
@@ -87,8 +83,7 @@ type (
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Width of the photo
@@ -104,10 +99,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultGif represents a link to an animated GIF file. By
-	// default, this animated GIF file will be sent by the user with optional
-	// caption. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the animation.
+	// InlineQueryResultGif represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.
 	InlineQueryResultGif struct {
 		// Type of the result, must be gif
 		Type string `json:"type"`
@@ -127,8 +119,7 @@ type (
 		// Caption of the GIF file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Width of the GIF
@@ -147,11 +138,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultMpeg4Gif represents a link to a video animation
-	// (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4
-	// file will be sent by the user with optional caption. Alternatively, you
-	// can use input_message_content to send a message with the specified content
-	// instead of the animation.
+	// InlineQueryResultMpeg4Gif represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.
 	InlineQueryResultMpeg4Gif struct {
 		// Type of the result, must be mpeg4_gif
 		Type string `json:"type"`
@@ -187,14 +174,9 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultVideo represents a link to a page containing an embedded
-	// video player or a video file. By default, this video file will be sent by
-	// the user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the video.
+	// InlineQueryResultVideo represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.
 	//
-	// If an InlineQueryResultVideo message contains an embedded video (e.g.,
-	// YouTube), you must replace its content using input_message_content.
+	// If an InlineQueryResultVideo message contains an embedded video (e.g., YouTube), you must replace its content using input_message_content.
 	InlineQueryResultVideo struct {
 		// Type of the result, must be video
 		Type string `json:"type"`
@@ -217,8 +199,7 @@ type (
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Short description of the result
@@ -236,16 +217,11 @@ type (
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 
-		// Content of the message to be sent instead of the video. This field is
-		// required if InlineQueryResultVideo is used to send an HTML-page as a
-		// result (e.g., a YouTube video).
+		// Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultAudio represents a link to an mp3 audio file. By default,
-	// this audio file will be sent by the user. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the audio.
+	// InlineQueryResultAudio represents a link to an mp3 audio file. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.
 	InlineQueryResultAudio struct {
 		// Type of the result, must be audio
 		Type string `json:"type"`
@@ -262,8 +238,7 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Performer
@@ -279,10 +254,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultVoice represents a link to a voice recording in an .ogg
-	// container encoded with OPUS. By default, this voice recording will be
-	// sent by the user. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the the voice message.
+	// InlineQueryResultVoice represents a link to a voice recording in an .ogg container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the the voice message.
 	InlineQueryResultVoice struct {
 		// Type of the result, must be voice
 		Type string `json:"type"`
@@ -299,8 +271,7 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Recording duration in seconds
@@ -313,11 +284,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultDocument represents a link to a file. By default, this
-	// file will be sent by the user with an optional caption. Alternatively,
-	// you can use input_message_content to send a message with the specified
-	// content instead of the file. Currently, only .PDF and .ZIP files can be
-	// sent using this method.
+	// InlineQueryResultDocument represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file. Currently, only .PDF and .ZIP files can be sent using this method.
 	InlineQueryResultDocument struct {
 		// Type of the result, must be document
 		Type string `json:"type"`
@@ -331,15 +298,13 @@ type (
 		// Caption of the document to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// A valid URL for the file
 		DocumentURL string `json:"document_url"`
 
-		// Mime type of the content of the file, either "application/pdf" or
-		// "application/zip"
+		// Mime type of the content of the file, either "application/pdf" or "application/zip"
 		MimeType string `json:"mime_type"`
 
 		// Short description of the result
@@ -361,10 +326,7 @@ type (
 		ThumbHeight int `json:"thumb_height,omitempty"`
 	}
 
-	// InlineQueryResultLocation represents a location on a map. By default, the
-	// location will be sent by the user. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the location.
+	// InlineQueryResultLocation represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the location.
 	InlineQueryResultLocation struct {
 		// Type of the result, must be location
 		Type string `json:"type"`
@@ -397,9 +359,7 @@ type (
 		ThumbHeight int `json:"thumb_height,omitempty"`
 	}
 
-	// InlineQueryResultVenue represents a venue. By default, the venue will be
-	// sent by the user. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the venue.
+	// InlineQueryResultVenue represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the venue.
 	InlineQueryResultVenue struct {
 		// Type of the result, must be venue
 		Type string `json:"type"`
@@ -416,9 +376,7 @@ type (
 		// Foursquare identifier of the venue if known
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
-		// Foursquare type of the venue, if known. (For example,
-		// "arts_entertainment/default", "arts_entertainment/aquarium" or
-		// "food/icecream".)
+		// Foursquare type of the venue, if known. (For example, "arts_entertainment/default", "arts_entertainment/aquarium" or "food/icecream".)
 		FoursquareType string `json:"foursquare_type,omitempty"`
 
 		// Url of the thumbnail for the result
@@ -443,10 +401,7 @@ type (
 		ThumbHeight int `json:"thumb_height,omitempty"`
 	}
 
-	// InlineQueryResultContact represents a contact with a phone number. By
-	// default, this contact will be sent by the user. Alternatively, you can
-	// use input_message_content to send a message with the specified content
-	// instead of the contact.
+	// InlineQueryResultContact represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the contact.
 	InlineQueryResultContact struct {
 		// Type of the result, must be contact
 		Type string `json:"type"`
@@ -497,10 +452,7 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
-	// InlineQueryResultCachedPhoto represents a link to a photo stored on the
-	// Telegram servers. By default, this photo will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the photo.
+	// InlineQueryResultCachedPhoto represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
 	InlineQueryResultCachedPhoto struct {
 		// Type of the result, must be photo
 		Type string `json:"type"`
@@ -520,8 +472,7 @@ type (
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -531,11 +482,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedGif represents a link to an animated GIF file
-	// stored on the Telegram servers. By default, this animated GIF file will
-	// be sent by the user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with specified content instead of
-	// the animation.
+	// InlineQueryResultCachedGif represents a link to an animated GIF file stored on the Telegram servers. By default, this animated GIF file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with specified content instead of the animation.
 	InlineQueryResultCachedGif struct {
 		// Type of the result, must be gif
 		Type string `json:"type"`
@@ -552,8 +499,7 @@ type (
 		// Caption of the GIF file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -563,11 +509,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedMpeg4Gif represents a link to a video animation
-	// (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By
-	// default, this animated MPEG-4 file will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the animation.
+	// InlineQueryResultCachedMpeg4Gif represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By default, this animated MPEG-4 file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.
 	InlineQueryResultCachedMpeg4Gif struct {
 		// Type of the result, must be mpeg4_gif
 		Type string `json:"type"`
@@ -584,8 +526,7 @@ type (
 		// Caption of the MPEG-4 file to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -595,10 +536,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedSticker represents a link to a sticker stored on
-	// the Telegram servers. By default, this sticker will be sent by the user.
-	// Alternatively, you can use input_message_content to send a message with
-	// the specified content instead of the sticker.
+	// InlineQueryResultCachedSticker represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the sticker.
 	InlineQueryResultCachedSticker struct {
 		// Type of the result, must be sticker
 		Type string `json:"type"`
@@ -616,10 +554,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedDocument represents a link to a file stored on the
-	// Telegram servers. By default, this file will be sent by the user with an
-	// optional caption. Alternatively, you can use input_message_content to
-	// send a message with the specified content instead of the file.
+	// InlineQueryResultCachedDocument represents a link to a file stored on the Telegram servers. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file.
 	InlineQueryResultCachedDocument struct {
 		// Type of the result, must be document
 		Type string `json:"type"`
@@ -639,8 +574,7 @@ type (
 		// Caption of the document to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -650,11 +584,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedVideo represents a link to a video file stored on
-	// the Telegram servers. By default, this video file will be sent by the
-	// user with an optional caption. Alternatively, you can use
-	// input_message_content to send a message with the specified content
-	// instead of the video.
+	// InlineQueryResultCachedVideo represents a link to a video file stored on the Telegram servers. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.
 	InlineQueryResultCachedVideo struct {
 		// Type of the result, must be video
 		Type string `json:"type"`
@@ -674,8 +604,7 @@ type (
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -685,10 +614,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedVoice represents a link to a voice message stored
-	// on the Telegram servers. By default, this voice message will be sent by
-	// the user. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the voice message.
+	// InlineQueryResultCachedVoice represents a link to a voice message stored on the Telegram servers. By default, this voice message will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the voice message.
 	InlineQueryResultCachedVoice struct {
 		// Type of the result, must be voice
 		Type string `json:"type"`
@@ -705,8 +631,7 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -716,10 +641,7 @@ type (
 		InputMessageContent InputMessageContent `json:"input_message_content,omitempty"`
 	}
 
-	// InlineQueryResultCachedAudio represents a link to an mp3 audio file
-	// stored on the Telegram servers. By default, this audio file will be sent
-	// by the user. Alternatively, you can use input_message_content to send a
-	// message with the specified content instead of the audio.
+	// InlineQueryResultCachedAudio represents a link to an mp3 audio file stored on the Telegram servers. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.
 	InlineQueryResultCachedAudio struct {
 		// Type of the result, must be audio
 		Type string `json:"type"`
@@ -733,8 +655,7 @@ type (
 		// Caption, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
@@ -749,22 +670,19 @@ type (
 		isInputMessageContent()
 	}
 
-	// InputTextMessageContent represents the content of a text message to be
-	// sent as the result of an inline query.
+	// InputTextMessageContent represents the content of a text message to be sent as the result of an inline query.
 	InputTextMessageContent struct {
 		// Text of the message to be sent, 1-4096 characters
 		MessageText string `json:"message_text"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in your bot's message.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in your bot's message.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Disables link previews for links in the sent message
 		DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 	}
 
-	// InputLocationMessageContent represents the content of a location message
-	// to be sent as the result of an inline query.
+	// InputLocationMessageContent represents the content of a location message to be sent as the result of an inline query.
 	InputLocationMessageContent struct {
 		// Latitude of the location in degrees
 		Latitude float32 `json:"latitude"`
@@ -776,8 +694,7 @@ type (
 		LivePeriod int `json:"live_period,omitempty"`
 	}
 
-	// InputVenueMessageContent represents the content of a venue message to be
-	// sent as the result of an inline query.
+	// InputVenueMessageContent represents the content of a venue message to be sent as the result of an inline query.
 	InputVenueMessageContent struct {
 		// Latitude of the location in degrees
 		Latitude float32 `json:"latitude"`
@@ -794,14 +711,11 @@ type (
 		// Foursquare identifier of the venue, if known
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
-		// Foursquare type of the venue, if known. (For example,
-		// "arts_entertainment/default", "arts_entertainment/aquarium" or
-		// "food/icecream".)
+		// Foursquare type of the venue, if known. (For example, "arts_entertainment/default", "arts_entertainment/aquarium" or "food/icecream".)
 		FoursquareType string `json:"foursquare_type,omitempty"`
 	}
 
-	// InputContactMessageContent represents the content of a contact message to
-	// be sent as the result of an inline query.
+	// InputContactMessageContent represents the content of a contact message to be sent as the result of an inline query.
 	InputContactMessageContent struct {
 		// Contact's phone number
 		PhoneNumber string `json:"phone_number"`
@@ -816,15 +730,12 @@ type (
 		VCard string `json:"vcard,omitempty"`
 	}
 
-	// ChosenInlineResult represents a result of an inline query that was chosen
-	// by the user and sent to their chat partner.
+	// ChosenInlineResult represents a result of an inline query that was chosen by the user and sent to their chat partner.
 	ChosenInlineResult struct {
 		// The unique identifier for the result that was chosen
 		ResultID string `json:"result_id"`
 
-		// Identifier of the sent inline message. Available only if there is an
-		// inline keyboard attached to the message. Will be also received in
-		// callback queries and can be used to edit the message.
+		// Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message.
 		InlineMessageID string `json:"inline_message_id,omitempty"`
 
 		// The query that was used to obtain the result
@@ -842,32 +753,22 @@ type (
 		// Unique identifier for the answered query
 		InlineQueryID string `json:"inline_query_id"`
 
-		// Pass the offset that a client should send in the next query with the same
-		// text to receive more results. Pass an empty string if there are no more
-		// results or if you don‘t support pagination. Offset length can’t exceed 64
-		// bytes.
+		// Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
 		NextOffset string `json:"next_offset,omitempty"`
 
-		// If passed, clients will display a button with specified text that switches
-		// the user to a private chat with the bot and sends the bot a start message
-		// with the parameter switch_pm_parameter
+		// If passed, clients will display a button with specified text that switches the user to a private chat with the bot and sends the bot a start message with the parameter switch_pm_parameter
 		SwitchPrivateMessageText string `json:"switch_pm_text,omitempty"`
 
-		// Deep-linking parameter for the /start message sent to the bot when user
-		// presses the switch button. 1-64 characters, only A-Z, a-z, 0-9, _ and -
-		// are allowed.
+		// Deep-linking parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.
 		SwitchPrivateMessageParameter string `json:"switch_pm_parameter,omitempty"`
 
 		// A JSON-serialized array of results for the inline query
 		Results []InlineQueryResult `json:"results"`
 
-		// The maximum amount of time in seconds that the result of the inline query
-		// may be cached on the server. Defaults to 300.
+		// The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
 		CacheTime int `json:"cache_time,omitempty"`
 
-		// Pass True, if results may be cached on the server side only for the user
-		// that sent the query. By default, results may be returned to any user who
-		// sends the same query
+		// Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
 		IsPersonal bool `json:"is_personal,omitempty"`
 	}
 
@@ -879,7 +780,7 @@ type (
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
-func (b *Bot) AnswerInlineQuery(p AnswerInlineQuery) (bool, error) {
+func (b Bot) AnswerInlineQuery(p AnswerInlineQuery) (bool, error) {
 	src, err := b.Do(MethodAnswerInlineQuery, p)
 	if err != nil {
 		return false, err

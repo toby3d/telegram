@@ -6,11 +6,7 @@ type (
 		// Portion label
 		Label string `json:"label"`
 
-		//      Price of the product in the smallest units of the currency (integer,
-		// not float/double). For example, for a price of US$ 1.45 pass amount =
-		// 145. See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
+		// Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 		Amount int `json:"amount"`
 	}
 
@@ -29,11 +25,7 @@ type (
 		// Three-letter ISO 4217 currency code
 		Currency string `json:"currency"`
 
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
+		// Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 		TotalAmount int `json:"total_amount"`
 	}
 
@@ -102,11 +94,7 @@ type (
 		// Provider payment identifier
 		ProviderPaymentChargeID string `json:"provider_payment_charge_id"`
 
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority
-		// of currencies).
+		// Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 		TotalAmount int `json:"total_amount"`
 
 		// Order info provided by the user
@@ -145,11 +133,7 @@ type (
 		// User who sent the query
 		From *User `json:"from"`
 
-		// Total price in the smallest units of the currency (integer, not
-		// float/double). For example, for a price of US$ 1.45 pass amount = 145.
-		// See the exp parameter in currencies.json, it shows the number of
-		// digits past the decimal point for each currency (2 for the majority of
-		// currencies).
+		// Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
 		TotalAmount int `json:"total_amount"`
 
 		// Order info provided by the user
@@ -167,32 +151,25 @@ type (
 		// Product description, 1-255 characters
 		Description string `json:"description"`
 
-		// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to
-		// the user, use for your internal processes.
+		// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
 		Payload string `json:"payload"`
 
 		// Payments provider token, obtained via Botfather
 		ProviderToken string `json:"provider_token"`
 
-		// Unique deep-linking parameter that can be used to generate this invoice
-		// when used as a start parameter
+		// Unique deep-linking parameter that can be used to generate this invoice when used as a start parameter
 		StartParameter string `json:"start_parameter"`
 
 		// Three-letter ISO 4217 currency code, see more on currencies
 		Currency string `json:"currency"`
 
-		// JSON-encoded data about the invoice, which will be shared with the payment
-		// provider. A detailed description of required fields should be provided by
-		// the payment provider.
+		// JSON-encoded data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
 		ProviderData string `json:"provider_data,omitempty"`
 
-		// URL of the product photo for the invoice. Can be a photo of the goods or a
-		// marketing image for a service. People like it better when they see what
-		// they are paying for.
+		// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
 		PhotoURL string `json:"photo_url,omitempty"`
 
-		// Price breakdown, a list of components (e.g. product price, tax, discount,
-		// delivery cost, delivery tax, bonus, etc.)
+		// Price breakdown, a list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
 		Prices []*LabeledPrice `json:"prices"`
 
 		// Photo size
@@ -216,20 +193,16 @@ type (
 		// Pass True, if you require the user's email to complete the order
 		NeedEmail bool `json:"need_email,omitempty"`
 
-		// Pass True, if you require the user's shipping address to complete the
-		// order
+		// Pass True, if you require the user's shipping address to complete the order
 		NeedShippingAddress bool `json:"need_shipping_address,omitempty"`
 
 		// Pass True, if the final price depends on the shipping method
 		IsFlexible bool `json:"is_flexible,omitempty"`
 
-		// Sends the message silently. Users will receive a notification with no
-		// sound.
+		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
-		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total
-		// price' button will be shown. If not empty, the first button must be a Pay
-		// button.
+		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
@@ -238,44 +211,31 @@ type (
 		// Unique identifier for the query to be answered
 		ShippingQueryID string `json:"shipping_query_id"`
 
-		// Required if ok is False. Error message in human readable form that
-		// explains why it is impossible to complete the order (e.g. "Sorry, delivery
-		// to your desired address is unavailable'). Telegram will display this
-		// message to the user.
+		// Required if ok is False. Error message in human readable form that explains why it is impossible to complete the order (e.g. "Sorry, delivery to your desired address is unavailable'). Telegram will display this message to the user.
 		ErrorMessage string `json:"error_message,omitempty"`
 
-		// Specify True if delivery to the specified address is possible and False
-		// if there are any problems (for example, if delivery to the specified
-		// address is not possible)
+		// Specify True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
 		Ok bool `json:"ok"`
 
-		// Required if ok is True. A JSON-serialized array of available shipping
-		// options.
+		// Required if ok is True. A JSON-serialized array of available shipping options.
 		ShippingOptions []*ShippingOption `json:"shipping_options,omitempty"`
 	}
 
-	// AnswerPreCheckoutQueryParameters represents data for AnswerPreCheckoutQuery
-	// method.
+	// AnswerPreCheckoutQueryParameters represents data for AnswerPreCheckoutQuery method.
 	AnswerPreCheckoutQuery struct {
 		// Unique identifier for the query to be answered
 		PreCheckoutQueryID string `json:"pre_checkout_query_id"`
 
-		// Required if ok is False. Error message in human readable form that
-		// explains the reason for failure to proceed with the checkout (e.g. "Sorry,
-		// somebody just bought the last of our amazing black T-shirts while you were
-		// busy filling out your payment details. Please choose a different color or
-		// garment!"). Telegram will display this message to the user.
+		// Required if ok is False. Error message in human readable form that explains the reason for failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing black T-shirts while you were busy filling out your payment details. Please choose a different color or garment!"). Telegram will display this message to the user.
 		ErrorMessage string `json:"error_message,omitempty"`
 
-		// Specify True if everything is alright (goods are available, etc.) and the
-		// bot is ready to proceed with the order. Use False if there are any
-		// problems.
+		// Specify True if everything is alright (goods are available, etc.) and the bot is ready to proceed with the order. Use False if there are any problems.
 		Ok bool `json:"ok"`
 	}
 )
 
 // SendInvoice send invoices. On success, the sent Message is returned.
-func (b *Bot) SendInvoice(p SendInvoice) (*Message, error) {
+func (b Bot) SendInvoice(p SendInvoice) (*Message, error) {
 	src, err := b.Do(MethodSendInvoice, p)
 	if err != nil {
 		return nil, err
@@ -296,10 +256,8 @@ func (b *Bot) SendInvoice(p SendInvoice) (*Message, error) {
 
 // AnswerShippingQuery reply to shipping queries.
 //
-// If you sent an invoice requesting a shipping address and the parameter
-// is_flexible was specified, the Bot API will send an Update with a
-// shipping_query field to the b. On success, True is returned.
-func (b *Bot) AnswerShippingQuery(p AnswerShippingQuery) (bool, error) {
+// If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the b. On success, True is returned.
+func (b Bot) AnswerShippingQuery(p AnswerShippingQuery) (bool, error) {
 	src, err := b.Do(MethodAnswerShippingQuery, p)
 	if err != nil {
 		return false, err
@@ -320,14 +278,10 @@ func (b *Bot) AnswerShippingQuery(p AnswerShippingQuery) (bool, error) {
 
 // AnswerPreCheckoutQuery respond to such pre-checkout queries.
 //
-// Once the user has confirmed their payment and shipping details, the Bot API
-// sends the final confirmation in the form of an Update with the field
-// pre_checkout_query. Use this method to respond to such pre-checkout queries.
-// On success, True is returned.
+// Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
 //
-// Note: The Bot API must receive an answer within 10 seconds after the
-// pre-checkout query was sent.
-func (b *Bot) AnswerPreCheckoutQuery(p AnswerShippingQuery) (bool, error) {
+// Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+func (b Bot) AnswerPreCheckoutQuery(p AnswerShippingQuery) (bool, error) {
 	src, err := b.Do(MethodAnswerPreCheckoutQuery, p)
 	if err != nil {
 		return false, err

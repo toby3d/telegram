@@ -1,12 +1,10 @@
 package login
 
-import (
-	"time"
-)
+import "time"
 
 // FullName return user first name only or full name if last name is present.
-func (u *User) FullName() string {
-	if u == nil || u.FirstName == "" {
+func (u User) FullName() string {
+	if u.FirstName == "" {
 		return ""
 	}
 
@@ -19,8 +17,8 @@ func (u *User) FullName() string {
 }
 
 // AuthTime convert AuthDate field into time.Time.
-func (u *User) AuthTime() time.Time {
-	if u == nil || u.AuthDate == 0 {
+func (u User) AuthTime() time.Time {
+	if u.AuthDate == 0 {
 		return time.Time{}
 	}
 
@@ -28,16 +26,10 @@ func (u *User) AuthTime() time.Time {
 }
 
 // HasLastName checks what the current user has a LastName.
-func (u *User) HasLastName() bool {
-	return u != nil && u.LastName != ""
-}
+func (u User) HasLastName() bool { return u.LastName != "" }
 
 // HasUsername checks what the current user has a username.
-func (u *User) HasUsername() bool {
-	return u != nil && u.Username != ""
-}
+func (u User) HasUsername() bool { return u.Username != "" }
 
 // HasPhoto checks what the current user has a photo.
-func (u *User) HasPhoto() bool {
-	return u != nil && u.PhotoURL != ""
-}
+func (u User) HasPhoto() bool { return u.PhotoURL != "" }

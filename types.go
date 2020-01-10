@@ -47,8 +47,7 @@ type (
 		// Unique identifier for this chat.
 		ID int64 `json:"id"`
 
-		// Type of chat, can be either "private", "group", "supergroup" or
-		// "channel"
+		// Type of chat, can be either "private", "group", "supergroup" or "channel"
 		Type string `json:"type"`
 
 		// Title, for supergroups, channels and group chats
@@ -69,8 +68,7 @@ type (
 		// Description, for groups, supergroups and channel chats. Returned only in getChat.
 		Description string `json:"description,omitempty"`
 
-		// Chat invite link, for supergroups and channel chats. Returned only in
-		// getChat.
+		// Chat invite link, for supergroups and channel chats. Returned only in getChat.
 		InviteLink string `json:"invite_link,omitempty"`
 
 		// Pinned message, for groups, supergroups and channels. Returned only in getChat.
@@ -85,8 +83,7 @@ type (
 		// For supergroups, name of Group sticker set. Returned only in getChat.
 		StickerSetName string `json:"sticker_set_name,omitempty"`
 
-		// True, if the bot can change group the sticker set. Returned only in
-		// getChat.
+		// True, if the bot can change group the sticker set. Returned only in getChat.
 		CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
 	}
 
@@ -107,29 +104,22 @@ type (
 		// For forwarded messages, sender of the original message
 		ForwardFrom *User `json:"forward_from,omitempty"`
 
-		// For messages forwarded from channels, information about the original
-		// channel
+		// For messages forwarded from channels, information about the original channel
 		ForwardFromChat *Chat `json:"forward_from_chat,omitempty"`
 
-		// For messages forwarded from channels, identifier of the original
-		// message in the channel
+		// For messages forwarded from channels, identifier of the original message in the channel
 		ForwardFromMessageID int `json:"forward_from_message_id,omitempty"`
 
-		// For messages forwarded from channels, signature of the post author if
-		// present
+		// For messages forwarded from channels, signature of the post author if present
 		ForwardSignature string `json:"forward_signature,omitempty"`
 
-		// Sender's name for messages forwarded from users who disallow adding a
-		// link to their account in forwarded messages
+		// Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
 		ForwardSenderName string `json:"forward_sender_name,omitempty"`
 
-		// For forwarded messages, date the original message was sent in Unix
-		// time
+		// For forwarded messages, date the original message was sent in Unix time
 		ForwardDate int64 `json:"forward_date,omitempty"`
 
-		// For replies, the original message. Note that the Message object in
-		// this field will not contain further reply_to_message fields even if it
-		// itself is a reply.
+		// For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
 		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
 
 		// Date the message was last edited in Unix time
@@ -141,16 +131,13 @@ type (
 		// Signature of the post author for messages in channels
 		AuthorSignature string `json:"author_signature,omitempty"`
 
-		// For text messages, the actual UTF-8 text of the message, 0-4096
-		// characters.
+		// For text messages, the actual UTF-8 text of the message, 0-4096 characters.
 		Text string `json:"text,omitempty"`
 
-		// For text messages, special entities like usernames, URLs, bot
-		// commands, etc. that appear in the text
+		// For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
 		Entities []*MessageEntity `json:"entities,omitempty"`
 
-		// For messages with a caption, special entities like usernames, URLs,
-		// bot commands, etc. that appear in the caption
+		// For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
 		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
 
 		// Message is an audio file, information about the file
@@ -159,9 +146,7 @@ type (
 		// Message is a general file, information about the file
 		Document *Document `json:"document,omitempty"`
 
-		// Message is an animation, information about the animation. For backward
-		// compatibility, when this field is set, the document field will also be
-		// set
+		// Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
 		Animation *Animation `json:"animation,omitempty"`
 
 		// Message is a game, information about the game.
@@ -197,12 +182,10 @@ type (
 		// Message is a native poll, information about the poll
 		Poll *Poll `json:"poll,omitempty"`
 
-		// New members that were added to the group or supergroup and information
-		// about them (the bot itself may be one of these members)
+		// New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
 		NewChatMembers []*User `json:"new_chat_members,omitempty"`
 
-		// A member was removed from the group, information about them (this
-		// member may be the bot itself)
+		// A member was removed from the group, information about them (this member may be the bot itself)
 		LeftChatMember *User `json:"left_chat_member,omitempty"`
 
 		// A chat title was changed to this value
@@ -217,38 +200,25 @@ type (
 		// Service message: the group has been created
 		GroupChatCreated bool `json:"group_chat_created,omitempty"`
 
-		// Service message: the supergroup has been created. This field can‘t be
-		// received in a message coming through updates, because bot can’t be a
-		// member of a supergroup when it is created. It can only be found in
-		// reply_to_message if someone replies to a very first message in a
-		// directly created supergroup.
+		// Service message: the supergroup has been created. This field can‘t be received in a message coming through updates, because bot can’t be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
 		SupergroupChatCreated bool `json:"supergroup_chat_created,omitempty"`
 
-		// Service message: the channel has been created. This field can‘t be
-		// received in a message coming through updates, because bot can’t be a
-		// member of a channel when it is created. It can only be found in
-		// reply_to_message if someone replies to a very first message in a
-		// channel.
+		// Service message: the channel has been created. This field can‘t be received in a message coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
 		ChannelChatCreated bool `json:"channel_chat_created,omitempty"`
 
-		// The group has been migrated to a supergroup with the specified
-		// identifier.
+		// The group has been migrated to a supergroup with the specified identifier.
 		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
 
-		// The supergroup has been migrated from a group with the specified
-		// identifier.
+		// The supergroup has been migrated from a group with the specified identifier.
 		MigrateFromChatID int64 `json:"migrate_from_chat_id,omitempty"`
 
-		// Specified message was pinned. Note that the Message object in this
-		// field will not contain further reply_to_message fields even if it is
-		// itself a reply.
+		// Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
 		PinnedMessage *Message `json:"pinned_message,omitempty"`
 
 		// Message is an invoice for a payment, information about the invoice.
 		Invoice *Invoice `json:"invoice,omitempty"`
 
-		// Message is a service message about a successful payment, information
-		// about the payment.
+		// Message is a service message about a successful payment, information about the payment.
 		SuccessfulPayment *SuccessfulPayment `json:"successful_payment,omitempty"`
 
 		// The domain name of the website on which the user has logged in.
@@ -261,17 +231,12 @@ type (
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
-	// MessageEntity represents one special entity in a text message. For
-	// example, hashtags, usernames, URLs, etc.
+	// MessageEntity represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
 	MessageEntity struct {
-		// Type of the entity. Can be mention (@username), hashtag, bot_command,
-		// url, email, bold (bold text), italic (italic text), code (monowidth
-		// string), pre (monowidth block), text_link (for clickable text URLs),
-		// text_mention (for users without usernames)
+		// Type of the entity. Can be mention (@username), hashtag, bot_command, url, email, bold (bold text), italic (italic text), code (monowidth string), pre (monowidth block), text_link (for clickable text URLs), text_mention (for users without usernames)
 		Type string `json:"type"`
 
-		// For "text_link" only, url that will be opened after user taps on the
-		// text
+		// For "text_link" only, url that will be opened after user taps on the text
 		URL string `json:"url,omitempty"`
 
 		// Offset in UTF-16 code units to the start of the entity
@@ -289,8 +254,7 @@ type (
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
 
-		// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-		// Can't be used to download or reuse the file.
+		// Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 		FileUniqueID string `json:"file_unique_id"`
 
 		// Photo width
@@ -303,8 +267,7 @@ type (
 		FileSize int `json:"file_size,omitempty"`
 	}
 
-	// Audio represents an audio file to be treated as music by the Telegram
-	// clients.
+	// Audio represents an audio file to be treated as music by the Telegram clients.
 	Audio struct {
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
@@ -331,8 +294,7 @@ type (
 		Thumb *PhotoSize `json:"thumb,omitempty"`
 	}
 
-	// Document represents a general file (as opposed to photos, voice messages
-	// and audio files).
+	// Document represents a general file (as opposed to photos, voice messages and audio files).
 	Document struct {
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
@@ -380,9 +342,7 @@ type (
 		FileSize int `json:"file_size,omitempty"`
 	}
 
-	// Animation provide an animation for your game so that it looks stylish in
-	// chats (check out Lumberjack for an example). This object represents an
-	// animation file to be displayed in the message containing a game.
+	// Animation provide an animation for your game so that it looks stylish in chats (check out Lumberjack for an example). This object represents an animation file to be displayed in the message containing a game.
 	Animation struct {
 		// Unique file identifier
 		FileID string `json:"file_id"`
@@ -430,8 +390,7 @@ type (
 		FileSize int `json:"file_size,omitempty"`
 	}
 
-	// VideoNote represents a video message (available in Telegram apps as of
-	// v.4.0).
+	// VideoNote represents a video message (available in Telegram apps as of v.4.0).
 	VideoNote struct {
 		// Identifier for this file, which can be used to download or reuse the file
 		FileID string `json:"file_id"`
@@ -530,10 +489,7 @@ type (
 		Photos [][]*PhotoSize `json:"photos"`
 	}
 
-	// File represents a file ready to be downloaded. The file can be downloaded
-	// via the link https://api.telegram.org/file/bot<token>/<file_path>. It is
-	// guaranteed that the link will be valid for at least 1 hour. When the link
-	// expires, a new one can be requested by calling getFile.
+	// File represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.
 	//
 	// Maximum file size to download is 20 MB
 	File struct {
@@ -546,91 +502,57 @@ type (
 		// File size, if known
 		FileSize int `json:"file_size,omitempty"`
 
-		// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to
-		// get the file.
+		// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
 		FilePath string `json:"file_path,omitempty"`
 	}
 
-	// ReplyKeyboardMarkup represents a custom keyboard with reply options (see
-	// Introduction to bots for details and examples).
+	// ReplyKeyboardMarkup represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 	ReplyKeyboardMarkup struct {
-		// Array of button rows, each represented by an Array of KeyboardButton
-		// objects
+		// Array of button rows, each represented by an Array of KeyboardButton objects
 		Keyboard [][]*KeyboardButton `json:"keyboard"`
 
-		// Requests clients to resize the keyboard vertically for optimal fit
-		// (e.g., make the keyboard smaller if there are just two rows of
-		// buttons). Defaults to false, in which case the custom keyboard is
-		// always of the same height as the app's standard keyboard.
+		// Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 		ResizeKeyboard bool `json:"resize_keyboard,omitempty"`
 
-		// Requests clients to hide the keyboard as soon as it's been used. The
-		// keyboard will still be available, but clients will automatically
-		// display the usual letter-keyboard in the chat – the user can press a
-		// special button in the input field to see the custom keyboard again.
-		// Defaults to false.
+		// Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
 		OneTimeKeyboard bool `json:"one_time_keyboard,omitempty"`
 
-		// Use this parameter if you want to show the keyboard to specific users
-		// only. Targets: 1) users that are @mentioned in the text of the Message
-		// object; 2) if the bot's message is a reply (has reply_to_message_id),
-		// sender of the original message.
+		// Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		//
-		// Example: A user requests to change the bot‘s language, bot replies to
-		// the request with a keyboard to select the new language. Other users in
-		// the group don’t see the keyboard.
+		// Example: A user requests to change the bot‘s language, bot replies to the request with a keyboard to select the new language. Other users in the group don’t see the keyboard.
 		Selective bool `json:"selective,omitempty"`
 	}
 
-	// KeyboardButton represents one button of the reply keyboard. For simple
-	// text buttons String can be used instead of this object to specify text of
-	// the button. Optional fields are mutually exclusive.
+	// KeyboardButton represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields are mutually exclusive.
 	KeyboardButton struct {
-		// Text of the button. If none of the optional fields are used, it will
-		// be sent to the bot as a message when the button is pressed
+		// Text of the button. If none of the optional fields are used, it will be sent to the bot as a message when the button is pressed
 		Text string `json:"text"`
 
-		// If True, the user's phone number will be sent as a contact when the
-		// button is pressed. Available in private chats only
+		// If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
 		RequestContact bool `json:"request_contact,omitempty"`
 
-		// If True, the user's current location will be sent when the button is
-		// pressed. Available in private chats only
+		// If True, the user's current location will be sent when the button is pressed. Available in private chats only
 		RequestLocation bool `json:"request_location,omitempty"`
 	}
 
-	// ReplyKeyboardRemove will remove the current custom keyboard and display
-	// the default letter-keyboard. By default, custom keyboards are displayed
-	// until a new keyboard is sent by a b. An exception is made for one-time
-	// keyboards that are hidden immediately after the user presses a button
-	// (see ReplyKeyboardMarkup).
+	// ReplyKeyboardRemove will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a b. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see ReplyKeyboardMarkup).
 	ReplyKeyboardRemove struct {
-		// Requests clients to remove the custom keyboard (user will not be able
-		// to summon this keyboard; if you want to hide the keyboard from sight
-		// but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+		// Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
 		RemoveKeyboard bool `json:"remove_keyboard"`
 
-		// Use this parameter if you want to remove the keyboard for specific
-		// users only. Targets: 1) users that are @mentioned in the text of the
-		// Message object; 2) if the bot's message is a reply (has
-		// reply_to_message_id), sender of the original message.
+		// Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		//
-		// Example: A user votes in a poll, bot returns confirmation message in
-		// reply to the vote and removes the keyboard for that user, while still
-		// showing the keyboard with poll options to users who haven't voted yet.
+		// Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.
 		Selective bool `json:"selective,omitempty"`
 	}
 
-	// InlineKeyboardMarkup represents an inline keyboard that appears right next
-	// to the message it belongs to.
+	// InlineKeyboardMarkup represents an inline keyboard that appears right next to the message it belongs to.
 	InlineKeyboardMarkup struct {
-		// Array of button rows, each represented by an Array of
-		// InlineKeyboardButton objects
+		// Array of button rows, each represented by an Array of InlineKeyboardButton objects
 		InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"`
 	}
 
-	// InlineKeyboardButton represents one button of an inline keyboard. You
-	// must use exactly one of the optional fields.
+	// InlineKeyboardButton represents one button of an inline keyboard. You must use exactly one of the optional fields.
 	InlineKeyboardButton struct {
 		// Label text on the button
 		Text string `json:"text"`
@@ -638,126 +560,82 @@ type (
 		// HTTP url to be opened when button is pressed
 		URL string `json:"url,omitempty"`
 
-		// An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram
-		// Login Widget.
+		// An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
 		LoginURL *LoginURL `json:"login_url,omitempty"`
 
-		// Data to be sent in a callback query to the bot when button is pressed,
-		// 1-64 bytes
+		// Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
 		CallbackData string `json:"callback_data,omitempty"`
 
-		// If set, pressing the button will prompt the user to select one of
-		// their chats, open that chat and insert the bot‘s username and the
-		// specified inline query in the input field. Can be empty, in which
-		// case just the bot’s username will be inserted.
+		// If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot‘s username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
 		//
-		// Note: This offers an easy way for users to start using your bot in
-		// inline mode when they are currently in a private chat with it.
-		// Especially useful when combined with switch_pm… actions – in this case
-		// the user will be automatically returned to the chat they switched
-		// from, skipping the chat selection screen.
+		// Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
 		SwitchInlineQuery string `json:"switch_inline_query,omitempty"`
 
-		// If set, pressing the button will insert the bot‘s username and the
-		// specified inline query in the current chat's input field. Can be
-		// empty, in which case only the bot’s username will be inserted.
+		// If set, pressing the button will insert the bot‘s username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot’s username will be inserted.
 		//
-		// This offers a quick way for the user to open your bot in inline mode
-		// in the same chat – good for selecting something from multiple options.
+		// This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options.
 		SwitchInlineQueryCurrentChat string `json:"switch_inline_query_current_chat,omitempty"`
 
-		// Description of the game that will be launched when the user presses
-		// the button.
+		// Description of the game that will be launched when the user presses the button.
 		//
-		// NOTE: This type of button must always be the first button in the
-		// first row.
+		// NOTE: This type of button must always be the first button in the first row.
 		CallbackGame *CallbackGame `json:"callback_game,omitempty"`
 
 		// Specify True, to send a Pay button.
 		//
-		// NOTE: This type of button must always be the first button in the
-		// first row.
+		// NOTE: This type of button must always be the first button in the first row.
 		Pay bool `json:"pay,omitempty"`
 	}
 
 	// LoginURL represents a parameter of the inline keyboard button used to automatically authorize a user.
 	LoginURL struct {
-		// An HTTP URL to be opened with user authorization data added to the query string when the button is
-		// pressed. If the user refuses to provide authorization data, the original URL without information
-		// about the user will be opened. The data added is the same as described in Receiving authorization
-		// data.
+		// An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.
 		//
-		// NOTE: You must always check the hash of the received data to verify the authentication and the
-		// integrity of the data as described in Checking authorization.
+		// NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization.
 		URL string `json:"url"`
 
 		// New text of the button in forwarded messages.
 		ForwardText string `json:"forward_text,omitempty"`
 
-		// Username of a bot, which will be used for user authorization. See Setting up a bot for more
-		// details. If not specified, the current bot's username will be assumed. The url's domain must be the
-		// same as the domain linked with the b. See Linking your domain to the bot for more details.
+		// Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the b. See Linking your domain to the bot for more details.
 		BotUsername string `json:"bot_username,omitempty"`
 
 		// Pass true to request the permission for your bot to send messages to the user.
 		RequestWriteAccess bool `json:"request_write_access,omitempty"`
 	}
 
-	// CallbackQuery represents an incoming callback query from a callback button
-	// in an inline keyboard. If the button that originated the query was
-	// attached to a message sent by the bot, the field message will be present.
-	// If the button was attached to a message sent via the bot (in inline mode),
-	// the field inline_message_id will be present. Exactly one of the fields
-	// data or game_short_name will be present.
+	// CallbackQuery represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.
 	//
-	// NOTE: After the user presses a callback button, Telegram clients will
-	// display a progress bar until you call answerCallbackQuery. It is,
-	// therefore, necessary to react by calling answerCallbackQuery even if no
-	// notification to the user is needed (e.g., without specifying any of the
-	// optional ).
+	// NOTE: After the user presses a callback button, Telegram clients will display a progress bar until you call answerCallbackQuery. It is, therefore, necessary to react by calling answerCallbackQuery even if no notification to the user is needed (e.g., without specifying any of the optional ).
 	CallbackQuery struct {
 		// Unique identifier for this query
 		ID string `json:"id"`
 
-		// Identifier of the message sent via the bot in inline mode, that
-		// originated the query.
+		// Identifier of the message sent via the bot in inline mode, that originated the query.
 		InlineMessageID string `json:"inline_message_id,omitempty"`
 
-		// Global identifier, uniquely corresponding to the chat to which the
-		// message with the callback button was sent. Useful for high scores in
-		// games.
+		// Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games.
 		ChatInstance string `json:"chat_instance"`
 
-		// Data associated with the callback button. Be aware that a bad client
-		// can send arbitrary data in this field.
+		// Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field.
 		Data string `json:"data,omitempty"`
 
-		// Short name of a Game to be returned, serves as the unique identifier
-		// for the game
+		// Short name of a Game to be returned, serves as the unique identifier for the game
 		GameShortName string `json:"game_short_name,omitempty"`
 
 		// Sender
 		From *User `json:"from"`
 
-		// Message with the callback button that originated the query. Note that
-		// message content and message date will not be available if the message
-		// is too old
+		// Message with the callback button that originated the query. Note that message content and message date will not be available if the message is too old
 		Message *Message `json:"message,omitempty"`
 	}
 
-	// ForceReply display a reply interface to the user (act as if the user has
-	// selected the bot‘s message and tapped ’Reply'). This can be extremely
-	// useful if you want to create user-friendly step-by-step interfaces without
-	// having to sacrifice privacy mode.
+	// ForceReply display a reply interface to the user (act as if the user has selected the bot‘s message and tapped ’Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode.
 	ForceReply struct {
-		// Shows reply interface to the user, as if they manually selected the
-		// bot‘s message and tapped ’Reply'
+		// Shows reply interface to the user, as if they manually selected the bot‘s message and tapped ’Reply'
 		ForceReply bool `json:"force_reply"`
 
-		// Use this parameter if you want to force reply from specific users
-		// only. Targets: 1) users that are @mentioned in the text of the Message
-		// object; 2) if the bot's message is a reply (has reply_to_message_id),
-		// sender of the original message.
+		// Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		Selective bool `json:"selective,omitempty"`
 	}
 
@@ -781,8 +659,7 @@ type (
 		// Information about the user
 		User *User `json:"user"`
 
-		// The member's status in the chat. Can be "creator", "administrator", "member", "restricted", "left"
-		// or "kicked"
+		// The member's status in the chat. Can be "creator", "administrator", "member", "restricted", "left" or "kicked"
 		Status string `json:"status"`
 
 		// Owner and administrators only. Custom title for this user
@@ -807,10 +684,7 @@ type (
 		// unban chat members
 		CanRestrictMembers bool `json:"can_restrict_members,omitempty"`
 
-		// Administrators only. True, if the administrator can add new
-		// administrators with a subset of his own privileges or demote
-		// administrators that he has promoted, directly or indirectly (promoted
-		// by administrators that were appointed by the user)
+		// Administrators only. True, if the administrator can add new administrators with a subset of his own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
 		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
 
 		// Restricted only. True, if the user is a member of the chat at the moment of the request
@@ -824,22 +698,19 @@ type (
 		// True, if the user is allowed to send text messages, contacts, locations and venues
 		CanSendMessages bool `json:"can_send_messages,omitempty"`
 
-		// True, if the user is allowed to send audios, documents, photos, videos, video notes and voice
-		// notes, implies can_send_messages
+		// True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes, implies can_send_messages
 		CanSendMediaMessages bool `json:"can_send_media_messages,omitempty"`
 
 		// True, if the user is allowed to send polls, implies can_send_messages
 		CanSendPolls bool `json:"can_send_polls,omitempty"`
 
-		// True, if the user is allowed to send animations, games, stickers and use inline bots, implies
-		// can_send_media_messages
+		// True, if the user is allowed to send animations, games, stickers and use inline bots, implies can_send_media_messages
 		CanSendOtherMessages bool `json:"can_send_other_messages,omitempty"`
 
 		// True, if the user is allowed to add web page previews to their messages, implies can_send_media_messages
 		CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
 
-		// True, if the user is allowed to change the chat title, photo and other settings. Ignored in public
-		// supergroups
+		// True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
 		CanChangeInfo bool `json:"can_change_info,omitempty"`
 
 		// True, if the user is allowed to invite new users to the chat
@@ -849,15 +720,12 @@ type (
 		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 	}
 
-	// ResponseParameters contains information about why a request was
-	// unsuccessful.
+	// ResponseParameters contains information about why a request was unsuccessful.
 	ResponseParameters struct {
-		// The group has been migrated to a supergroup with the specified
-		// identifier.
+		// The group has been migrated to a supergroup with the specified identifier.
 		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
 
-		// In case of exceeding flood control, the number of seconds left to wait
-		// before the request can be repeated
+		// In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
 		RetryAfter int `json:"retry_after,omitempty"`
 	}
 
@@ -876,18 +744,13 @@ type (
 		// Type of the result, must be photo
 		Type string `json:"type"`
 
-		// File to send. Pass a file_id to send a file that exists on the
-		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
-		// a file from the Internet, or pass "attach://<file_attach_name>" to
-		// upload a new one using multipart/form-data under <file_attach_name>
-		// name.
+		// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
 		Media *InputFile `json:"media"`
 
 		// Caption of the photo to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 	}
 
@@ -896,18 +759,13 @@ type (
 		// Type of the result, must be video
 		Type string `json:"type"`
 
-		// File to send. Pass a file_id to send a file that exists on the
-		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
-		// a file from the Internet, or pass "attach://<file_attach_name>" to
-		// upload a new one using multipart/form-data under <file_attach_name>
-		// name.
+		// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name.
 		Media *InputFile `json:"media"`
 
 		// Caption of the video to be sent, 0-200 characters
 		Caption string `json:"caption,omitempty"`
 
-		// Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-		// fixed-width text or inline URLs in the media caption.
+		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Video width
@@ -929,20 +787,10 @@ type (
 		// Type of the result, must be animation
 		Type string `json:"type"`
 
-		// File to send. Pass a file_id to send a file that exists on the
-		// Telegram servers (recommended), pass an HTTP URL for Telegram to get
-		// a file from the Internet, or pass "attach://<file_attach_name>" to
-		// upload a new one using multipart/form-data under <file_attach_name
-		// name.
+		// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name name.
 		Media *InputFile `json:"media"`
 
-		// Thumbnail of the file sent. The thumbnail should be in JPEG format and
-		// less than 200 kB in size. A thumbnail‘s width and height should not
-		// exceed 90. Ignored if the file is not uploaded using
-		// multipart/form-data. Thumbnails can’t be reused and can be only
-		// uploaded as a new file, so you can pass "attach://<file_attach_name>"
-		// if the thumbnail was uploaded using multipart/form-data under
-		// <file_attach_name>.
+		// Thumbnail of the file sent. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 90. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
 		Thumb *InputFile `json:"thumb,omitempty"`
 
 		// Caption of the animation to be sent, 0-200 characters
@@ -1525,13 +1373,13 @@ func (m *InputMediaVideo) GetMedia() *InputFile { return m.Media }
 
 func (InputMediaVideo) isAlbumMedia() {}
 
-func (f *InputFile) IsFileID() bool { return f.ID != "" }
+func (f InputFile) IsFileID() bool { return f.ID != "" }
 
-func (f *InputFile) IsURI() bool { return f.URI != nil }
+func (f InputFile) IsURI() bool { return f.URI != nil }
 
-func (f *InputFile) IsAttachment() bool { return f.Attachment != nil }
+func (f InputFile) IsAttachment() bool { return f.Attachment != nil }
 
-func (f *InputFile) MarshalJSON() ([]byte, error) {
+func (f InputFile) MarshalJSON() ([]byte, error) {
 	switch {
 	case f.IsFileID():
 		return []byte(f.ID), nil

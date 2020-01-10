@@ -97,9 +97,7 @@ type (
 		// User identifier of sticker file owner
 		UserID int `json:"user_id"`
 
-		// Png image with the sticker, must be up to 512 kilobytes in size,
-		// dimensions must not exceed 512px, and either width or height
-		// must be exactly 512px.
+		// Png image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px.
 		PNGSticker *InputFile `json:"png_sticker"`
 	}
 
@@ -107,22 +105,13 @@ type (
 		// User identifier of created sticker set owner
 		UserID int `json:"user_id"`
 
-		// Short name of sticker set, to be used in t.me/addstickers/ URLs
-		// (e.g., animals). Can contain only english letters, digits and
-		// underscores. Must begin with a letter, can't contain consecutive
-		// underscores and must end in “_by_<bot username>”. <bot_username>
-		// is case insensitive. 1-64 characters.
+		// Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_<bot username>”. <bot_username> is case insensitive. 1-64 characters.
 		Name string `json:"name"`
 
 		// Sticker set title, 1-64 characters
 		Title string `json:"title"`
 
-		// Png image with the sticker, must be up to 512 kilobytes in size,
-		// dimensions must not exceed 512px, and either width or height must
-		// be exactly 512px. Pass a file_id as a String to send a file that
-		// already exists on the Telegram servers, pass an HTTP URL as a
-		// String for Telegram to get a file from the Internet, or upload
-		// a new one using multipart/form-data.
+		// Png image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
 		PNGSticker *InputFile `json:"png_sticker"`
 
 		// One or more emoji corresponding to the sticker
@@ -131,8 +120,7 @@ type (
 		// Pass True, if a set of mask stickers should be created
 		ContainsMasks bool `json:"contains_masks,omitempty"`
 
-		// A JSON-serialized object for position where the mask should be
-		// placed on faces
+		// A JSON-serialized object for position where the mask should be placed on faces
 		MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 	}
 
@@ -170,7 +158,7 @@ type (
 )
 
 // SendSticker send .webp stickers. On success, the sent Message is returned.
-func (b *Bot) SendSticker(p SendSticker) (*Message, error) {
+func (b Bot) SendSticker(p SendSticker) (*Message, error) {
 	src, err := b.Do(MethodSendSticker, p)
 	if err != nil {
 		return nil, err
@@ -190,7 +178,7 @@ func (b *Bot) SendSticker(p SendSticker) (*Message, error) {
 }
 
 // GetStickerSet get a sticker set. On success, a StickerSet object is returned.
-func (b *Bot) GetStickerSet(name string) (*StickerSet, error) {
+func (b Bot) GetStickerSet(name string) (*StickerSet, error) {
 	src, err := b.Do(MethodGetStickerSet, GetStickerSet{Name: name})
 	if err != nil {
 		return nil, err
@@ -210,16 +198,16 @@ func (b *Bot) GetStickerSet(name string) (*StickerSet, error) {
 }
 
 // UploadStickerFile upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
-func (b *Bot) UploadStickerFile(userID int, pngSticker *InputFile) (*File, error) {
+func (b Bot) UploadStickerFile(uid int, sticker *InputFile) (*File, error) {
 	params := make(map[string]string)
-	params["user_id"] = strconv.Itoa(userID)
+	params["user_id"] = strconv.Itoa(uid)
 
 	var err error
-	if params["png_sticker"], err = b.marshler.MarshalToString(pngSticker); err != nil {
+	if params["png_sticker"], err = b.marshler.MarshalToString(sticker); err != nil {
 		return nil, err
 	}
 
-	src, err := b.Upload(MethodUploadStickerFile, params, pngSticker)
+	src, err := b.Upload(MethodUploadStickerFile, params, sticker)
 	if err != nil {
 		return nil, err
 	}

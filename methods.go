@@ -660,7 +660,7 @@ type (
 )
 
 // GetMe testing your bot's auth token. Returns basic information about the bot in form of a User object.
-func (b *Bot) GetMe() (*User, error) {
+func (b Bot) GetMe() (*User, error) {
 	src, err := b.Do(MethodGetMe, nil)
 	if err != nil {
 		return nil, err
@@ -680,7 +680,7 @@ func (b *Bot) GetMe() (*User, error) {
 }
 
 // SendMessage send text messages. On success, the sent Message is returned.
-func (b *Bot) SendMessage(p SendMessage) (*Message, error) {
+func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 	src, err := b.Do(MethodSendMessage, p)
 	if err != nil {
 		return nil, err
@@ -700,7 +700,7 @@ func (b *Bot) SendMessage(p SendMessage) (*Message, error) {
 }
 
 // ForwardMessage forward messages of any kind. On success, the sent Message is returned.
-func (b *Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
+func (b Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 	src, err := b.Do(MethodForwardMessage, p)
 	if err != nil {
 		return nil, err
@@ -720,7 +720,7 @@ func (b *Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 }
 
 // SendPhoto send photos. On success, the sent Message is returned.
-func (b *Bot) SendPhoto(p SendPhoto) (*Message, error) {
+func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["caption"] = p.Caption
@@ -764,7 +764,7 @@ func (b *Bot) SendPhoto(p SendPhoto) (*Message, error) {
 // SendAudio send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
 //
 // For sending voice messages, use the sendVoice method instead.
-func (b *Bot) SendAudio(p SendAudio) (*Message, error) {
+func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["caption"] = p.Caption
@@ -816,7 +816,7 @@ func (b *Bot) SendAudio(p SendAudio) (*Message, error) {
 }
 
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
-func (b *Bot) SendDocument(p SendDocument) (*Message, error) {
+func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["caption"] = p.Caption
@@ -857,7 +857,7 @@ func (b *Bot) SendDocument(p SendDocument) (*Message, error) {
 }
 
 // SendVideo send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
-func (b *Bot) SendVideo(p SendVideo) (*Message, error) {
+func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["duration"] = strconv.Itoa(p.Duration)
@@ -910,7 +910,7 @@ func (b *Bot) SendVideo(p SendVideo) (*Message, error) {
 }
 
 // SendAnimation send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
-func (b *Bot) SendAnimation(p SendAnimation) (*Message, error) {
+func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["duration"] = strconv.Itoa(p.Duration)
@@ -962,7 +962,7 @@ func (b *Bot) SendAnimation(p SendAnimation) (*Message, error) {
 }
 
 // SendVoice send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
-func (b *Bot) SendVoice(p SendVoice) (*Message, error) {
+func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["duration"] = strconv.Itoa(p.Duration)
@@ -1004,7 +1004,7 @@ func (b *Bot) SendVoice(p SendVoice) (*Message, error) {
 }
 
 // SendVideoNote send video messages. On success, the sent Message is returned.
-func (b *Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
+func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
 	params["duration"] = strconv.Itoa(p.Duration)
@@ -1053,7 +1053,7 @@ func (b *Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 }
 
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent Messages is returned.
-func (b *Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
+func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	media := make([]string, len(p.Media), 10)
 	files := make([]*InputFile, 0)
 
@@ -1097,7 +1097,7 @@ func (b *Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 }
 
 // SendLocation send point on the map. On success, the sent Message is returned.
-func (b *Bot) SendLocation(p SendLocation) (*Message, error) {
+func (b Bot) SendLocation(p SendLocation) (*Message, error) {
 	src, err := b.Do(MethodSendLocation, p)
 	if err != nil {
 		return nil, err
@@ -1117,7 +1117,7 @@ func (b *Bot) SendLocation(p SendLocation) (*Message, error) {
 }
 
 // EditMessageLiveLocation edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
-func (b *Bot) EditMessageLiveLocation(p *EditMessageLiveLocation) (*Message, bool, error) {
+func (b Bot) EditMessageLiveLocation(p EditMessageLiveLocation) (*Message, bool, error) {
 	src, err := b.Do(MethodEditMessageLiveLocation, p)
 	if err != nil {
 		return nil, false, err
@@ -1137,7 +1137,7 @@ func (b *Bot) EditMessageLiveLocation(p *EditMessageLiveLocation) (*Message, boo
 }
 
 // StopMessageLiveLocation stop updating a live location message before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
-func (b *Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, bool, error) {
+func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, bool, error) {
 	src, err := b.Do(MethodStopMessageLiveLocation, p)
 	if err != nil {
 		return nil, false, err
@@ -1157,7 +1157,7 @@ func (b *Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, bool
 }
 
 // SendVenue send information about a venue. On success, the sent Message is returned.
-func (b *Bot) SendVenue(p SendVenue) (*Message, error) {
+func (b Bot) SendVenue(p SendVenue) (*Message, error) {
 	src, err := b.Do(MethodSendVenue, p)
 	if err != nil {
 		return nil, err
@@ -1177,7 +1177,7 @@ func (b *Bot) SendVenue(p SendVenue) (*Message, error) {
 }
 
 // SendContact send phone contacts. On success, the sent Message is returned.
-func (b *Bot) SendContact(p SendContact) (*Message, error) {
+func (b Bot) SendContact(p SendContact) (*Message, error) {
 	src, err := b.Do(MethodSendContact, p)
 	if err != nil {
 		return nil, err
@@ -1197,7 +1197,7 @@ func (b *Bot) SendContact(p SendContact) (*Message, error) {
 }
 
 // SendPoll send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
-func (b *Bot) SendPoll(p SendPoll) (*Message, error) {
+func (b Bot) SendPoll(p SendPoll) (*Message, error) {
 	src, err := b.Do(MethodSendPoll, p)
 	if err != nil {
 		return nil, err
@@ -1219,10 +1219,8 @@ func (b *Bot) SendPoll(p SendPoll) (*Message, error) {
 // SendChatAction tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
 //
 // We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
-func (b *Bot) SendChatAction(chatID int64, action string) (bool, error) {
-	src, err := b.Do(MethodSendChatAction, SendChatAction{
-		ChatID: chatID, Action: action,
-	})
+func (b Bot) SendChatAction(cid int64, action string) (bool, error) {
+	src, err := b.Do(MethodSendChatAction, SendChatAction{ChatID: cid, Action: action})
 	if err != nil {
 		return false, err
 	}
@@ -1241,7 +1239,7 @@ func (b *Bot) SendChatAction(chatID int64, action string) (bool, error) {
 }
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
-func (b *Bot) GetUserProfilePhotos(p GetUserProfilePhotos) (*UserProfilePhotos, error) {
+func (b Bot) GetUserProfilePhotos(p GetUserProfilePhotos) (*UserProfilePhotos, error) {
 	src, err := b.Do(MethodGetUserProfilePhotos, p)
 	if err != nil {
 		return nil, err
@@ -1263,8 +1261,8 @@ func (b *Bot) GetUserProfilePhotos(p GetUserProfilePhotos) (*UserProfilePhotos, 
 // GetFile get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
 //
 // Note: This function may not preserve the original file name and MIME type. You should save the file's MIME type and name (if available) when the File object is received.
-func (b *Bot) GetFile(fileID string) (*File, error) {
-	src, err := b.Do(MethodGetFile, GetFile{FileID: fileID})
+func (b Bot) GetFile(fid string) (*File, error) {
+	src, err := b.Do(MethodGetFile, GetFile{FileID: fid})
 	if err != nil {
 		return nil, err
 	}
@@ -1285,7 +1283,7 @@ func (b *Bot) GetFile(fileID string) (*File, error) {
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
 //
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are Admins' setting is off in the target group. Otherwise members may only be removed by the group's creator or by the member that added them.
-func (b *Bot) KickChatMember(p KickChatMember) (bool, error) {
+func (b Bot) KickChatMember(p KickChatMember) (bool, error) {
 	src, err := b.Do(MethodKickChatMember, p)
 	if err != nil {
 		return false, err
@@ -1305,10 +1303,8 @@ func (b *Bot) KickChatMember(p KickChatMember) (bool, error) {
 }
 
 // UnbanChatMember unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
-func (b *Bot) UnbanChatMember(chatID int64, userID int) (bool, error) {
-	src, err := b.Do(MethodUnbanChatMember, UnbanChatMember{
-		ChatID: chatID, UserID: userID,
-	})
+func (b Bot) UnbanChatMember(cid int64, uid int) (bool, error) {
+	src, err := b.Do(MethodUnbanChatMember, UnbanChatMember{ChatID: cid, UserID: uid})
 	if err != nil {
 		return false, err
 	}
@@ -1327,7 +1323,7 @@ func (b *Bot) UnbanChatMember(chatID int64, userID int) (bool, error) {
 }
 
 // restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
-func (b *Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
+func (b Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
 	src, err := b.Do(MethodRestrictChatMember, p)
 	if err != nil {
 		return false, err
@@ -1347,7 +1343,7 @@ func (b *Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
 }
 
 // PromoteChatMember promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean  to demote a user. Returns True on success.
-func (b *Bot) PromoteChatMember(p PromoteChatMember) (bool, error) {
+func (b Bot) PromoteChatMember(p PromoteChatMember) (bool, error) {
 	src, err := b.Do(MethodPromoteChatMember, p)
 	if err != nil {
 		return false, err
@@ -1367,7 +1363,7 @@ func (b *Bot) PromoteChatMember(p PromoteChatMember) (bool, error) {
 }
 
 // SetChatAdministratorCustomTitle method to set a custom title for an administrator in a supergroup promoted by the b. Returns True on success.
-func (b *Bot) SetChatAdministratorCustomTitle(p SetChatAdministratorCustomTitle) (bool, error) {
+func (b Bot) SetChatAdministratorCustomTitle(p SetChatAdministratorCustomTitle) (bool, error) {
 	src, err := b.Do(MethodSetChatAdministratorCustomTitle, p)
 	if err != nil {
 		return false, err
@@ -1387,7 +1383,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(p SetChatAdministratorCustomTitle)
 }
 
 // SetChatPermissions set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success.
-func (b *Bot) SetChatPermissions(p SetChatPermissions) (bool, error) {
+func (b Bot) SetChatPermissions(p SetChatPermissions) (bool, error) {
 	src, err := b.Do(MethodSetChatPermissions, p)
 	if err != nil {
 		return false, err
@@ -1407,8 +1403,8 @@ func (b *Bot) SetChatPermissions(p SetChatPermissions) (bool, error) {
 }
 
 // ExportChatInviteLink export an invite link to a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns exported invite link as String on success.
-func (b *Bot) ExportChatInviteLink(chatID int64) (string, error) {
-	src, err := b.Do(MethodExportChatInviteLink, ExportChatInviteLink{ChatID: chatID})
+func (b Bot) ExportChatInviteLink(cid int64) (string, error) {
+	src, err := b.Do(MethodExportChatInviteLink, ExportChatInviteLink{ChatID: cid})
 	if err != nil {
 		return "", err
 	}
@@ -1427,18 +1423,18 @@ func (b *Bot) ExportChatInviteLink(chatID int64) (string, error) {
 }
 
 // SetChatPhoto set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b *Bot) SetChatPhoto(chatID int64, chatPhoto *InputFile) (bool, error) {
+func (b Bot) SetChatPhoto(cid int64, photo *InputFile) (bool, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(chatID, 10)
+	params["chat_id"] = strconv.FormatInt(cid, 10)
 
 	var err error
-	if params["photo"], err = b.marshler.MarshalToString(chatPhoto); err != nil {
+	if params["photo"], err = b.marshler.MarshalToString(photo); err != nil {
 		return false, err
 	}
 
 	files := make([]*InputFile, 0)
-	if chatPhoto.IsAttachment() {
-		files = append(files, chatPhoto)
+	if photo.IsAttachment() {
+		files = append(files, photo)
 	}
 
 	src, err := b.Upload(MethodSetChatPhoto, params, files...)
@@ -1460,8 +1456,8 @@ func (b *Bot) SetChatPhoto(chatID int64, chatPhoto *InputFile) (bool, error) {
 }
 
 // DeleteChatPhoto delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b *Bot) DeleteChatPhoto(chatID int64) (bool, error) {
-	src, err := b.Do(MethodDeleteChatPhoto, DeleteChatPhoto{ChatID: chatID})
+func (b Bot) DeleteChatPhoto(cid int64) (bool, error) {
+	src, err := b.Do(MethodDeleteChatPhoto, DeleteChatPhoto{ChatID: cid})
 	if err != nil {
 		return false, err
 	}
@@ -1480,10 +1476,8 @@ func (b *Bot) DeleteChatPhoto(chatID int64) (bool, error) {
 }
 
 // SetChatTitle change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b *Bot) SetChatTitle(chatID int64, title string) (bool, error) {
-	src, err := b.Do(MethodSetChatTitle, SetChatTitle{
-		ChatID: chatID, Title: title,
-	})
+func (b Bot) SetChatTitle(cid int64, title string) (bool, error) {
+	src, err := b.Do(MethodSetChatTitle, SetChatTitle{ChatID: cid, Title: title})
 	if err != nil {
 		return false, err
 	}
@@ -1502,10 +1496,8 @@ func (b *Bot) SetChatTitle(chatID int64, title string) (bool, error) {
 }
 
 // SetChatDescription change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b *Bot) SetChatDescription(chatID int64, description string) (bool, error) {
-	src, err := b.Do(MethodSetChatDescription, SetChatDescription{
-		ChatID: chatID, Description: description,
-	})
+func (b Bot) SetChatDescription(cid int64, txt string) (bool, error) {
+	src, err := b.Do(MethodSetChatDescription, SetChatDescription{ChatID: cid, Description: txt})
 	if err != nil {
 		return false, err
 	}
@@ -1524,7 +1516,7 @@ func (b *Bot) SetChatDescription(chatID int64, description string) (bool, error)
 }
 
 // PinChatMessage pin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
-func (b *Bot) PinChatMessage(p *PinChatMessage) (bool, error) {
+func (b Bot) PinChatMessage(p PinChatMessage) (bool, error) {
 	src, err := b.Do(MethodPinChatMessage, p)
 	if err != nil {
 		return false, err
@@ -1544,8 +1536,8 @@ func (b *Bot) PinChatMessage(p *PinChatMessage) (bool, error) {
 }
 
 // UnpinChatMessage unpin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
-func (b *Bot) UnpinChatMessage(chatID int64) (bool, error) {
-	src, err := b.Do(MethodUnpinChatMessage, UnpinChatMessage{ChatID: chatID})
+func (b Bot) UnpinChatMessage(cid int64) (bool, error) {
+	src, err := b.Do(MethodUnpinChatMessage, UnpinChatMessage{ChatID: cid})
 	if err != nil {
 		return false, err
 	}
@@ -1564,8 +1556,8 @@ func (b *Bot) UnpinChatMessage(chatID int64) (bool, error) {
 }
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
-func (b *Bot) LeaveChat(chatID int64) (bool, error) {
-	src, err := b.Do(MethodLeaveChat, LeaveChat{ChatID: chatID})
+func (b Bot) LeaveChat(cid int64) (bool, error) {
+	src, err := b.Do(MethodLeaveChat, LeaveChat{ChatID: cid})
 	if err != nil {
 		return false, err
 	}
@@ -1584,8 +1576,8 @@ func (b *Bot) LeaveChat(chatID int64) (bool, error) {
 }
 
 // GetChat get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
-func (b *Bot) GetChat(chatID int64) (*Chat, error) {
-	src, err := b.Do(MethodGetChat, GetChat{ChatID: chatID})
+func (b Bot) GetChat(cid int64) (*Chat, error) {
+	src, err := b.Do(MethodGetChat, GetChat{ChatID: cid})
 	if err != nil {
 		return nil, err
 	}
@@ -1604,8 +1596,8 @@ func (b *Bot) GetChat(chatID int64) (*Chat, error) {
 }
 
 // GetChatAdministrators get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
-func (b *Bot) GetChatAdministrators(chatID int64) ([]*ChatMember, error) {
-	src, err := b.Do(MethodGetChatAdministrators, GetChatAdministrators{ChatID: chatID})
+func (b Bot) GetChatAdministrators(cid int64) ([]*ChatMember, error) {
+	src, err := b.Do(MethodGetChatAdministrators, GetChatAdministrators{ChatID: cid})
 	if err != nil {
 		return nil, err
 	}
@@ -1624,8 +1616,8 @@ func (b *Bot) GetChatAdministrators(chatID int64) ([]*ChatMember, error) {
 }
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on success.
-func (b *Bot) GetChatMembersCount(chatID int64) (int, error) {
-	src, err := b.Do(MethodGetChatMembersCount, GetChatMembersCount{ChatID: chatID})
+func (b Bot) GetChatMembersCount(cid int64) (int, error) {
+	src, err := b.Do(MethodGetChatMembersCount, GetChatMembersCount{ChatID: cid})
 	if err != nil {
 		return 0, err
 	}
@@ -1644,10 +1636,8 @@ func (b *Bot) GetChatMembersCount(chatID int64) (int, error) {
 }
 
 // GetChatMember get information about a member of a chat. Returns a ChatMember object on success.
-func (b *Bot) GetChatMember(chatID int64, userID int) (*ChatMember, error) {
-	src, err := b.Do(MethodGetChatMember, GetChatMember{
-		ChatID: chatID, UserID: userID,
-	})
+func (b Bot) GetChatMember(cid int64, uid int) (*ChatMember, error) {
+	src, err := b.Do(MethodGetChatMember, GetChatMember{ChatID: cid, UserID: uid})
 	if err != nil {
 		return nil, err
 	}
@@ -1666,10 +1656,8 @@ func (b *Bot) GetChatMember(chatID int64, userID int) (*ChatMember, error) {
 }
 
 // SetChatStickerSet set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (bool, error) {
-	src, err := b.Do(MethodSetChatStickerSet, SetChatStickerSet{
-		ChatID: chatID, StickerSetName: stickerSetName,
-	})
+func (b Bot) SetChatStickerSet(cid int64, name string) (bool, error) {
+	src, err := b.Do(MethodSetChatStickerSet, SetChatStickerSet{ChatID: cid, StickerSetName: name})
 	if err != nil {
 		return false, err
 	}
@@ -1688,8 +1676,8 @@ func (b *Bot) SetChatStickerSet(chatID int64, stickerSetName string) (bool, erro
 }
 
 // DeleteChatStickerSet delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b *Bot) DeleteChatStickerSet(chatID int64) (bool, error) {
-	src, err := b.Do(MethodDeleteChatStickerSet, DeleteChatStickerSet{ChatID: chatID})
+func (b Bot) DeleteChatStickerSet(cid int64) (bool, error) {
+	src, err := b.Do(MethodDeleteChatStickerSet, DeleteChatStickerSet{ChatID: cid})
 	if err != nil {
 		return false, err
 	}
@@ -1708,7 +1696,7 @@ func (b *Bot) DeleteChatStickerSet(chatID int64) (bool, error) {
 }
 
 // AnswerCallbackQuery send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
-func (b *Bot) AnswerCallbackQuery(p AnswerCallbackQuery) (bool, error) {
+func (b Bot) AnswerCallbackQuery(p AnswerCallbackQuery) (bool, error) {
 	src, err := b.Do(MethodAnswerCallbackQuery, p)
 	if err != nil {
 		return false, err

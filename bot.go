@@ -46,7 +46,7 @@ func (b *Bot) SetClient(newClient *http.Client) {
 	b.client = newClient
 }
 
-func (b *Bot) Do(method string, payload interface{}) ([]byte, error) {
+func (b Bot) Do(method string, payload interface{}) ([]byte, error) {
 	u := http.AcquireURI()
 	defer http.ReleaseURI(u)
 	u.SetScheme("https")
@@ -75,7 +75,7 @@ func (b *Bot) Do(method string, payload interface{}) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (b *Bot) Upload(method string, payload map[string]string, files ...*InputFile) ([]byte, error) {
+func (b Bot) Upload(method string, payload map[string]string, files ...*InputFile) ([]byte, error) {
 	if len(files) == 0 {
 		return b.Do(method, payload)
 	}
@@ -134,22 +134,22 @@ func (b *Bot) Upload(method string, payload map[string]string, files ...*InputFi
 }
 
 // IsMessageFromMe checks that the input message is a message from the current bot.
-func (b *Bot) IsMessageFromMe(m *Message) bool {
-	return b != nil && b.User != nil && m != nil && m.From != nil && m.From.ID == b.ID
+func (b Bot) IsMessageFromMe(m Message) bool {
+	return b.User != nil && m.From != nil && m.From.ID == b.ID
 }
 
 // IsForwardFromMe checks that the input message is a forwarded message from the current bot.
-func (b *Bot) IsForwardFromMe(m *Message) bool {
-	return b != nil && b.User != nil && m.IsForward() && m.ForwardFrom.ID == b.ID
+func (b Bot) IsForwardFromMe(m Message) bool {
+	return b.User != nil && m.IsForward() && m.ForwardFrom.ID == b.ID
 }
 
 // IsReplyToMe checks that the input message is a reply to the current bot.
-func (b *Bot) IsReplyToMe(m *Message) bool {
-	return m.Chat.IsPrivate() || (m.IsReply() && b.IsMessageFromMe(m.ReplyToMessage))
+func (b Bot) IsReplyToMe(m Message) bool {
+	return m.Chat.IsPrivate() || (m.IsReply() && b.IsMessageFromMe(*m.ReplyToMessage))
 }
 
 // IsCommandToMe checks that the input message is a command for the current bot.
-func (b *Bot) IsCommandToMe(m *Message) bool {
+func (b Bot) IsCommandToMe(m Message) bool {
 	if !m.IsCommand() {
 		return false
 	}
@@ -167,8 +167,8 @@ func (b *Bot) IsCommandToMe(m *Message) bool {
 }
 
 // IsMessageMentionsMe checks that the input message mentions the current bot.
-func (b *Bot) IsMessageMentionsMe(m *Message) bool {
-	if b == nil || b.User == nil || m == nil {
+func (b Bot) IsMessageMentionsMe(m Message) bool {
+	if b.User == nil {
 		return false
 	}
 
@@ -195,30 +195,22 @@ func (b *Bot) IsMessageMentionsMe(m *Message) bool {
 }
 
 // IsForwardMentionsMe checks that the input forwarded message mentions the current bot.
-func (b *Bot) IsForwardMentionsMe(m *Message) bool { return m.IsForward() && b.IsMessageMentionsMe(m) }
+func (b Bot) IsForwardMentionsMe(m Message) bool { return m.IsForward() && b.IsMessageMentionsMe(m) }
 
 // IsReplyMentionsMe checks that the input message mentions the current b.
-func (b *Bot) IsReplyMentionsMe(m *Message) bool {
-	return m.IsReply() && b.IsMessageMentionsMe(m.ReplyToMessage)
+func (b Bot) IsReplyMentionsMe(m Message) bool {
+	return m.IsReply() && b.IsMessageMentionsMe(*m.ReplyToMessage)
 }
 
 // IsMessageToMe checks that the input message is addressed to the current b.
-func (b *Bot) IsMessageToMe(m *Message) bool {
-	if m == nil || m.Chat == nil {
-		return false
-	}
-
-	if m.Chat.IsPrivate() || b.IsCommandToMe(m) || b.IsReplyToMe(m) || b.IsMessageMentionsMe(m) {
-		return true
-	}
-
-	return false
+func (b Bot) IsMessageToMe(m Message) bool {
+	return m.Chat != nil && (m.Chat.IsPrivate() || b.IsCommandToMe(m) || b.IsReplyToMe(m) ||
+		b.IsMessageMentionsMe(m))
 }
 
-// NewFileURL creates a url.URL to file with path getted from GetFile method.
-func (b *Bot) NewFileURL(filePath string) *http.URI {
-	if b == nil || b.AccessToken == "" ||
-		filePath == "" {
+// NewFileURL creates a fasthttp.URI to file with path getted from GetFile method.
+func (b Bot) NewFileURL(filePath string) *http.URI {
+	if b.AccessToken == "" || filePath == "" {
 		return nil
 	}
 
@@ -230,9 +222,9 @@ func (b *Bot) NewFileURL(filePath string) *http.URI {
 	return result
 }
 
-// NewRedirectURL creates new url.URL for redirecting from one chat to another.
-func (b *Bot) NewRedirectURL(param string, group bool) *http.URI {
-	if b == nil || b.User == nil || b.User.Username == "" {
+// NewRedirectURL creates new fasthttp.URI for redirecting from one chat to another.
+func (b Bot) NewRedirectURL(param string, group bool) *http.URI {
+	if b.User == nil || b.User.Username == "" {
 		return nil
 	}
 
