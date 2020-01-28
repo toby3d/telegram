@@ -211,3 +211,8 @@ const (
 	DefaultAudioSeparator = " – "
 	DefaultAudioTitle     = "[untitled]"
 )
+
+const (
+	PollQuiz    string = "quiz"
+	PollRegular string = "regular"
+)

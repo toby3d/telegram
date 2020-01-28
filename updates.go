@@ -43,6 +43,10 @@ type (
 
 		// New poll state. Bots receive only updates about polls, which are sent or stopped by the bot
 		Poll *Poll `json:"poll,omitempty"`
+
+		// A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were
+		// sent by the bot itself.
+		PollAnswer *PollAnswer `json:"poll_answer,omitempty"`
 	}
 
 	// WebhookInfo contains information about the current status of a webhook.
