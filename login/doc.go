@@ -1,3 +1,2 @@
-// Package login contains methods for obtaining structure of the user data and
-// its validation.
-package login
+// Package login contains methods for obtaining structure of the user data and its validation.
+package login // import "gitlab.com/toby3d/telegram/login"
