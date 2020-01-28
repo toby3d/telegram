@@ -3,7 +3,7 @@ package telegram
 import "github.com/Masterminds/semver"
 
 // Version represents current version of Telegram API supported by this package
-var Version = semver.MustParse("4.5.0") //nolint: gochecknoglobals
+var Version = semver.MustParse("4.6.0") //nolint: gochecknoglobals
 
 // Action represents available and supported status actions of bot
 const (
