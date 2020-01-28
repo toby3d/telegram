@@ -407,6 +407,21 @@ type (
 		// List of answer options, 2-10 strings 1-100 characters each
 		Options []string `json:"options"`
 
+		// True, if the poll needs to be anonymous, defaults to True
+		IsAnonymous bool `json:"is_anonymous,omitempty"`
+
+		// Poll type, “quiz” or “regular”, defaults to “regular”
+		Type string `json:"type,omitempty"`
+
+		// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
+		AllowsMultipleAnswers bool `json:"allows_multiple_answers,omitempty"`
+
+		// 0-based identifier of the correct answer option, required for polls in quiz mode
+		CorrectOptionID int `json:"correct_option_id,omitempty"`
+
+		// Pass True, if the poll needs to be immediately closed
+		IsClosed bool `json:"is_closed,omitempty"`
+
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 

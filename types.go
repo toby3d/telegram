@@ -40,6 +40,15 @@ type (
 
 		// IETF language tag of the user's language
 		LanguageCode string `json:"language_code,omitempty"`
+
+		// True, if the bot can be invited to groups. Returned only in getMe.
+		CanJoinGroups bool `json:"can_join_groups,omitempty"`
+
+		// True, if privacy mode is disabled for the bot. Returned only in getMe.
+		CanReadAllGroupMessages bool `json:"can_read_all_group_messages,omitempty"`
+
+		// True, if the bot supports inline queries. Returned only in getMe.
+		SupportsInlineQueries bool `json:"supports_inline_queries,omitempty"`
 	}
 
 	// Chat represents a chat.
@@ -247,6 +256,9 @@ type (
 
 		// For "text_mention" only, the mentioned user
 		User *User `json:"user,omitempty"`
+
+		// For “pre” only, the programming language of the entity text
+		Language string `json:"language"`
 	}
 
 	// PhotoSize represents one size of a photo or a file / sticker thumbnail.
@@ -465,6 +477,19 @@ type (
 		VoterCount int `json:"voter_count"`
 	}
 
+	// PollAnswer represents an answer of a user in a non-anonymous poll.
+	PollAnswer struct {
+		// Unique poll identifier
+		PollID string `json:"poll_id"`
+
+		// The user, who changed the answer to the poll
+		User *User `json:"user"`
+
+		// 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their
+		// vote.
+		OptionIDs []int `json:"option_ids"`
+	}
+
 	// This object contains information about a poll.
 	Poll struct {
 		// Unique poll identifier
@@ -476,8 +501,23 @@ type (
 		// List of poll options
 		Options []*PollOption `json:"options"`
 
+		// Total number of users that voted in the poll
+		TotalVoterCount int `json:"total_voter_count"`
+
 		// True, if the poll is closed
 		IsClosed bool `json:"is_closed"`
+
+		// True, if the poll is anonymous
+		IsAnonymous bool `json:"is_anonymous"`
+
+		// Poll type, currently can be “regular” or “quiz”
+		Type string `json:"type"`
+
+		// True, if the poll allows multiple answers
+		AllowsMultipleAnswers bool `json:"allows_multiple_answers"`
+
+		// 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
+		CorrectOptionID int `json:"correct_option_id,omitempty"`
 	}
 
 	// UserProfilePhotos represent a user's profile pictures.
@@ -533,6 +573,18 @@ type (
 
 		// If True, the user's current location will be sent when the button is pressed. Available in private chats only
 		RequestLocation bool `json:"request_location,omitempty"`
+
+		// If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+		RequestPoll *KeyboardButtonPollType `json:"request_poll,omitempty"`
+	}
+
+	// KeyboardButtonPollType represents type of a poll, which is allowed to be created and sent when the
+	// corresponding button is pressed.
+	KeyboardButtonPollType struct {
+		// If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is
+		// passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of
+		// any type.
+		Type string `json:"type,omitempty"`
 	}
 
 	// ReplyKeyboardRemove will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a b. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see ReplyKeyboardMarkup).
