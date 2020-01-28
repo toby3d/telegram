@@ -162,7 +162,7 @@ type (
 		Game *Game `json:"game,omitempty"`
 
 		// Message is a photo, available sizes of the photo
-		Photo []*PhotoSize `json:"photo,omitempty"`
+		Photo Photo `json:"photo,omitempty"`
 
 		// Message is a sticker, information about the sticker
 		Sticker *Sticker `json:"sticker,omitempty"`
@@ -201,7 +201,7 @@ type (
 		NewChatTitle string `json:"new_chat_title,omitempty"`
 
 		// A chat photo was change to this value
-		NewChatPhoto []*PhotoSize `json:"new_chat_photo,omitempty"`
+		NewChatPhoto Photo `json:"new_chat_photo,omitempty"`
 
 		// Service message: the chat photo was deleted
 		DeleteChatPhoto bool `json:"delete_chat_photo,omitempty"`
@@ -526,7 +526,7 @@ type (
 		TotalCount int `json:"total_count"`
 
 		// Requested profile pictures (in up to 4 sizes each)
-		Photos [][]*PhotoSize `json:"photos"`
+		Photos []Photo `json:"photos"`
 	}
 
 	// File represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.
@@ -912,6 +912,8 @@ type (
 		URI        *http.URI `json:"-"`
 		Attachment *os.File  `json:"-"`
 	}
+
+	Photo []*PhotoSize
 )
 
 // Language parse LanguageCode of current user and returns language.Tag.

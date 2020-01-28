@@ -58,7 +58,7 @@ type (
 		InlineMessageID string `json:"inline_message_id,omitempty"`
 
 		// A JSON-serialized object for a new media content of the message
-		Media interface{} `json:"media"`
+		Media InputMedia `json:"media"`
 
 		// A JSON-serialized object for a new inline keyboard.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -100,6 +100,10 @@ type (
 	}
 )
 
+func NewEditText(text string) EditMessageText {
+	return EditMessageText{Text: text}
+}
+
 // EditMessageText edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
 func (b Bot) EditMessageText(p *EditMessageText) (*Message, error) {
 	src, err := b.Do(MethodEditMessageText, p)
@@ -140,6 +144,10 @@ func (b Bot) EditMessageCaption(p *EditMessageCaption) (*Message, error) {
 	return result, nil
 }
 
+func NewEditMedia(media InputMedia) EditMessageMedia {
+	return EditMessageMedia{Media: media}
+}
+
 // EditMessageMedia edit audio, document, photo, or video messages. If a message is a part of a message album, then it can be edited only to a photo or a video. Otherwise, message type can be changed arbitrarily. When inline message is edited, new file can't be uploaded. Use previously uploaded file via its file_id or specify a URL. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
 func (b Bot) EditMessageMedia(p EditMessageMedia) (*Message, error) {
 	src, err := b.Do(MethodEditMessageMedia, p)
@@ -178,6 +186,10 @@ func (b Bot) EditMessageReplyMarkup(p EditMessageReplyMarkup) (*Message, error) 
 	}
 
 	return result, nil
+}
+
+func NewStopPoll(chatID int64, messageID int) StopPoll {
+	return StopPoll{ChatID: chatID, MessageID: messageID}
 }
 
 // StopPoll stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.

@@ -234,6 +234,20 @@ type (
 	}
 )
 
+func NewInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string,
+	prices ...*LabeledPrice) SendInvoice {
+	return SendInvoice{
+		ChatID:         chatID,
+		Title:          title,
+		Description:    description,
+		Payload:        payload,
+		ProviderToken:  providerToken,
+		StartParameter: startParameter,
+		Currency:       currency,
+		Prices:         prices,
+	}
+}
+
 // SendInvoice send invoices. On success, the sent Message is returned.
 func (b Bot) SendInvoice(p SendInvoice) (*Message, error) {
 	src, err := b.Do(MethodSendInvoice, p)
@@ -252,6 +266,13 @@ func (b Bot) SendInvoice(p SendInvoice) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewAnswerShipping(shippingQueryID string, ok bool) AnswerShippingQuery {
+	return AnswerShippingQuery{
+		ShippingQueryID: shippingQueryID,
+		Ok:              ok,
+	}
 }
 
 // AnswerShippingQuery reply to shipping queries.
@@ -274,6 +295,13 @@ func (b Bot) AnswerShippingQuery(p AnswerShippingQuery) (bool, error) {
 	}
 
 	return result, nil
+}
+
+func NewAnswerPreCheckout(preCheckoutQueryID string, ok bool) AnswerPreCheckoutQuery {
+	return AnswerPreCheckoutQuery{
+		PreCheckoutQueryID: preCheckoutQueryID,
+		Ok:                 ok,
+	}
 }
 
 // AnswerPreCheckoutQuery respond to such pre-checkout queries.

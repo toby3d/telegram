@@ -573,7 +573,7 @@ func TestMessageIsGame(t *testing.T) {
 
 func TestMessageIsPhoto(t *testing.T) {
 	t.Run("true", func(t *testing.T) {
-		m := Message{Photo: []*PhotoSize{{FileID: "abc"}}}
+		m := Message{Photo: Photo{{FileID: "abc"}}}
 		assert.True(t, m.IsPhoto())
 	})
 	t.Run("false", func(t *testing.T) {
@@ -709,7 +709,7 @@ func TestMessageIsNewChatTitleEvent(t *testing.T) {
 
 func TestMessageIsNewChatPhotoEvent(t *testing.T) {
 	t.Run("true", func(t *testing.T) {
-		m := Message{NewChatPhoto: []*PhotoSize{{FileID: "abc"}}}
+		m := Message{NewChatPhoto: Photo{{FileID: "abc"}}}
 		assert.True(t, m.IsNewChatPhotoEvent())
 	})
 	t.Run("false", func(t *testing.T) {
@@ -1002,7 +1002,7 @@ func TestMessageIsEvent(t *testing.T) {
 		expResult: true,
 	}, {
 		name:      "NewChatPhoto",
-		message:   Message{NewChatPhoto: []*PhotoSize{{FileID: "abc"}}},
+		message:   Message{NewChatPhoto: Photo{{FileID: "abc"}}},
 		expResult: true,
 	}, {
 		name:      "false",

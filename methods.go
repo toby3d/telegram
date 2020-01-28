@@ -694,6 +694,13 @@ func (b Bot) GetMe() (*User, error) {
 	return result, nil
 }
 
+func NewMessage(chatID int64, text string) SendMessage {
+	return SendMessage{
+		ChatID: chatID,
+		Text:   text,
+	}
+}
+
 // SendMessage send text messages. On success, the sent Message is returned.
 func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 	src, err := b.Do(MethodSendMessage, p)
@@ -714,6 +721,14 @@ func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 	return result, nil
 }
 
+func NewForward(fromChatID, toChatID int64, messageID int) ForwardMessage {
+	return ForwardMessage{
+		FromChatID: fromChatID,
+		ChatID:     toChatID,
+		MessageID:  messageID,
+	}
+}
+
 // ForwardMessage forward messages of any kind. On success, the sent Message is returned.
 func (b Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 	src, err := b.Do(MethodForwardMessage, p)
@@ -732,6 +747,13 @@ func (b Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 	}
 
 	return result, err
+}
+
+func NewPhoto(chatID int64, photo *InputFile) SendPhoto {
+	return SendPhoto{
+		ChatID: chatID,
+		Photo:  photo,
+	}
 }
 
 // SendPhoto send photos. On success, the sent Message is returned.
@@ -774,6 +796,13 @@ func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewAudio(chatID int64, audio *InputFile) SendAudio {
+	return SendAudio{
+		ChatID: chatID,
+		Audio:  audio,
+	}
 }
 
 // SendAudio send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -830,6 +859,13 @@ func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 	return result, nil
 }
 
+func NewDocument(chatID int64, document *InputFile) SendDocument {
+	return SendDocument{
+		ChatID:   chatID,
+		Document: document,
+	}
+}
+
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	params := make(map[string]string)
@@ -869,6 +905,13 @@ func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewVideo(chatID int64, video *InputFile) SendVideo {
+	return SendVideo{
+		ChatID: chatID,
+		Video:  video,
+	}
 }
 
 // SendVideo send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -924,6 +967,13 @@ func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 	return result, nil
 }
 
+func NewAnimation(chatID int64, animation *InputFile) SendAnimation {
+	return SendAnimation{
+		ChatID:    chatID,
+		Animation: animation,
+	}
+}
+
 // SendAnimation send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	params := make(map[string]string)
@@ -976,6 +1026,13 @@ func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	return result, nil
 }
 
+func NewVoice(chatID int64, voice *InputFile) SendVoice {
+	return SendVoice{
+		ChatID: chatID,
+		Voice:  voice,
+	}
+}
+
 // SendVoice send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	params := make(map[string]string)
@@ -1016,6 +1073,13 @@ func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewVideoNote(chatID int64, videoNote *InputFile) SendVideoNote {
+	return SendVideoNote{
+		ChatID:    chatID,
+		VideoNote: videoNote,
+	}
 }
 
 // SendVideoNote send video messages. On success, the sent Message is returned.
@@ -1067,6 +1131,13 @@ func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 	return result, nil
 }
 
+func NewMediaGroup(chatID int64, media ...AlbumMedia) SendMediaGroup {
+	return SendMediaGroup{
+		ChatID: chatID,
+		Media:  media,
+	}
+}
+
 // SendMediaGroup send a group of photos or videos as an album. On success, an array of the sent Messages is returned.
 func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	media := make([]string, len(p.Media), 10)
@@ -1111,6 +1182,14 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	return result, nil
 }
 
+func NewLocation(chatID int64, latitude, longitude float32) SendLocation {
+	return SendLocation{
+		ChatID:    chatID,
+		Latitude:  latitude,
+		Longitude: longitude,
+	}
+}
+
 // SendLocation send point on the map. On success, the sent Message is returned.
 func (b Bot) SendLocation(p SendLocation) (*Message, error) {
 	src, err := b.Do(MethodSendLocation, p)
@@ -1129,6 +1208,13 @@ func (b Bot) SendLocation(p SendLocation) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewLiveLocation(latitude, longitude float32) EditMessageLiveLocation {
+	return EditMessageLiveLocation{
+		Latitude:  latitude,
+		Longitude: longitude,
+	}
 }
 
 // EditMessageLiveLocation edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -1171,6 +1257,16 @@ func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, bool,
 	return result, resp.Ok, nil
 }
 
+func NewVenue(chatID int64, latitude, longitude float32, title, address string) SendVenue {
+	return SendVenue{
+		ChatID:    chatID,
+		Latitude:  latitude,
+		Longitude: longitude,
+		Title:     title,
+		Address:   address,
+	}
+}
+
 // SendVenue send information about a venue. On success, the sent Message is returned.
 func (b Bot) SendVenue(p SendVenue) (*Message, error) {
 	src, err := b.Do(MethodSendVenue, p)
@@ -1191,6 +1287,14 @@ func (b Bot) SendVenue(p SendVenue) (*Message, error) {
 	return result, nil
 }
 
+func NewContact(chatID int64, phoneNumber, firstName string) SendContact {
+	return SendContact{
+		ChatID:      chatID,
+		PhoneNumber: phoneNumber,
+		FirstName:   firstName,
+	}
+}
+
 // SendContact send phone contacts. On success, the sent Message is returned.
 func (b Bot) SendContact(p SendContact) (*Message, error) {
 	src, err := b.Do(MethodSendContact, p)
@@ -1209,6 +1313,14 @@ func (b Bot) SendContact(p SendContact) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewPoll(chatID int64, question string, options ...string) SendPoll {
+	return SendPoll{
+		ChatID:   chatID,
+		Question: question,
+		Options:  options,
+	}
 }
 
 // SendPoll send a native poll. A native poll can't be sent to a private chat. On success, the sent Message is returned.
@@ -1295,6 +1407,13 @@ func (b Bot) GetFile(fid string) (*File, error) {
 	return result, nil
 }
 
+func NewKick(chatID int64, userID int) KickChatMember {
+	return KickChatMember{
+		ChatID: chatID,
+		UserID: userID,
+	}
+}
+
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
 //
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are Admins' setting is off in the target group. Otherwise members may only be removed by the group's creator or by the member that added them.
@@ -1337,6 +1456,14 @@ func (b Bot) UnbanChatMember(cid int64, uid int) (bool, error) {
 	return result, nil
 }
 
+func NewRestrict(chatID int64, userID int, permissions ChatPermissions) RestrictChatMember {
+	return RestrictChatMember{
+		ChatID:      chatID,
+		UserID:      userID,
+		Permissions: &permissions,
+	}
+}
+
 // restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
 func (b Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
 	src, err := b.Do(MethodRestrictChatMember, p)
@@ -1355,6 +1482,13 @@ func (b Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
 	}
 
 	return result, nil
+}
+
+func NewPromote(chatID int64, userID int) PromoteChatMember {
+	return PromoteChatMember{
+		ChatID: chatID,
+		UserID: userID,
+	}
 }
 
 // PromoteChatMember promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean  to demote a user. Returns True on success.
@@ -1528,6 +1662,13 @@ func (b Bot) SetChatDescription(cid int64, txt string) (bool, error) {
 	}
 
 	return result, nil
+}
+
+func NewPin(chatID int64, messageID int) PinChatMessage {
+	return PinChatMessage{
+		ChatID:    chatID,
+		MessageID: messageID,
+	}
 }
 
 // PinChatMessage pin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
@@ -1708,6 +1849,10 @@ func (b Bot) DeleteChatStickerSet(cid int64) (bool, error) {
 	}
 
 	return result, nil
+}
+
+func NewAnswerCallback(callbackQueryID string) AnswerCallbackQuery {
+	return AnswerCallbackQuery{CallbackQueryID: callbackQueryID}
 }
 
 // AnswerCallbackQuery send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.

@@ -1,6 +1,9 @@
 package telegram
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 type (
 	// Sticker represents a sticker.
@@ -45,7 +48,7 @@ type (
 		Title string `json:"title"`
 
 		// List of all set stickers
-		Stickers []Sticker `json:"stickers"`
+		Stickers []*Sticker `json:"stickers"`
 
 		// True, if the sticker set contains masks
 		ContainsMasks bool `json:"contains_masks"`
@@ -75,7 +78,7 @@ type (
 		ChatID int64 `json:"chat_id"`
 
 		// Sticker to send
-		Sticker InputFile `json:"sticker"`
+		Sticker *InputFile `json:"sticker"`
 
 		// Sends the message silently. Users will receive a notification with no sound
 		DisableNotification bool `json:"disable_notification,omitempty"`
@@ -157,6 +160,13 @@ type (
 	}
 )
 
+func NewSticker(chatID int64, sticker *InputFile) SendSticker {
+	return SendSticker{
+		ChatID:  chatID,
+		Sticker: sticker,
+	}
+}
+
 // SendSticker send .webp stickers. On success, the sent Message is returned.
 func (b Bot) SendSticker(p SendSticker) (*Message, error) {
 	src, err := b.Do(MethodSendSticker, p)
@@ -223,6 +233,16 @@ func (b Bot) UploadStickerFile(uid int, sticker *InputFile) (*File, error) {
 	}
 
 	return result, nil
+}
+
+func NewStickerSet(userID int, name, title string, pngSticker *InputFile, emojis ...string) CreateNewStickerSet {
+	return CreateNewStickerSet{
+		UserID:     userID,
+		Name:       name,
+		Title:      title,
+		PNGSticker: pngSticker,
+		Emojis:     strings.Join(emojis, ""),
+	}
 }
 
 // CreateNewStickerSet create new sticker set owned by a user. The bot will be able to edit the created sticker set. Returns True on success.

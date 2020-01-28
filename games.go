@@ -13,7 +13,7 @@ type (
 		Text string `json:"text,omitempty"`
 
 		// Photo that will be displayed in the game message in chats.
-		Photo []*PhotoSize `json:"photo"`
+		Photo Photo `json:"photo"`
 
 		// Special entities that appear in text, such as usernames, URLs, bot commands, etc.
 		TextEntities []*MessageEntity `json:"text_entities,omitempty"`
@@ -95,6 +95,13 @@ type (
 	}
 )
 
+func NewGame(chatID int64, gameShortName string) SendGame {
+	return SendGame{
+		ChatID:        chatID,
+		GameShortName: gameShortName,
+	}
+}
+
 // SendGame send a game. On success, the sent Message is returned.
 func (b Bot) SendGame(p SendGame) (*Message, error) {
 	src, err := b.Do(MethodSendGame, p)
@@ -113,6 +120,13 @@ func (b Bot) SendGame(p SendGame) (*Message, error) {
 	}
 
 	return result, nil
+}
+
+func NewGameScore(userID int, score int) SetGameScore {
+	return SetGameScore{
+		UserID: userID,
+		Score:  score,
+	}
 }
 
 // SetGameScore set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.

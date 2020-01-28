@@ -777,6 +777,13 @@ type (
 	}
 )
 
+func NewAnswerInline(inlineQueryID string, results ...InlineQueryResult) AnswerInlineQuery {
+	return AnswerInlineQuery{
+		InlineQueryID: inlineQueryID,
+		Results:       results,
+	}
+}
+
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
@@ -797,6 +804,49 @@ func (b Bot) AnswerInlineQuery(p AnswerInlineQuery) (bool, error) {
 	}
 
 	return ok, nil
+}
+
+func NewReplyKeyboardRemove(selective bool) ReplyKeyboardRemove {
+	return ReplyKeyboardRemove{
+		RemoveKeyboard: true,
+		Selective:      selective,
+	}
+}
+
+func NewInlineKeyboardButton(text, data string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
+		Text:         text,
+		CallbackData: data,
+	}
+}
+
+func NewInlineKeyboardButtonSwitch(text, sw string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
+		Text:              text,
+		SwitchInlineQuery: sw,
+	}
+}
+
+func NewInlineKeyboardButtonSwitchSelf(text, sw string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
+		Text:                         text,
+		SwitchInlineQueryCurrentChat: sw,
+	}
+}
+
+func NewInlineKeyboardButtonURL(text, url string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
+		Text: text,
+		URL:  url,
+	}
+}
+
+func NewInlineKeyboardMarkup(rows ...[]*InlineKeyboardButton) InlineKeyboardMarkup {
+	return InlineKeyboardMarkup{InlineKeyboard: rows}
+}
+
+func NewInlineKeyboardRow(buttons ...*InlineKeyboardButton) []*InlineKeyboardButton {
+	return buttons
 }
 
 func (iq InlineQuery) HasQuery() bool { return iq.Query != "" }
