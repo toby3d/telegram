@@ -60,9 +60,11 @@ func (b Bot) Do(method string, payload interface{}) ([]byte, error) {
 
 	req := http.AcquireRequest()
 	defer http.ReleaseRequest(req)
+	req.Header.SetUserAgent("toby3d/telegram")
 	req.Header.SetMethod(http.MethodPost)
-	req.SetRequestURIBytes(u.RequestURI())
 	req.Header.SetContentType("application/json")
+	req.SetHostBytes(u.Host())
+	req.SetRequestURI(u.String())
 	req.SetBody(buf.Bytes())
 
 	resp := http.AcquireResponse()
