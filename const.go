@@ -3,7 +3,7 @@ package telegram
 import "github.com/Masterminds/semver"
 
 // Version represents current version of Telegram API supported by this package
-var Version = semver.MustParse("4.6.0") //nolint: gochecknoglobals
+var Version = semver.MustParse("4.7.0") //nolint: gochecknoglobals
 
 // Action represents available and supported status actions of bot
 const (
@@ -82,6 +82,7 @@ const (
 	MethodGetFile                         string = "getFile"
 	MethodGetGameHighScores               string = "getGameHighScores"
 	MethodGetMe                           string = "getMe"
+	MethodGetMyCommands                   string = "getMyCommands"
 	MethodGetStickerSet                   string = "getStickerSet"
 	MethodGetUpdates                      string = "getUpdates"
 	MethodGetUserProfilePhotos            string = "getUserProfilePhotos"
@@ -95,6 +96,7 @@ const (
 	MethodSendAudio                       string = "sendAudio"
 	MethodSendChatAction                  string = "sendChatAction"
 	MethodSendContact                     string = "sendContact"
+	MethodSendDice                        string = "sendDice"
 	MethodSendDocument                    string = "sendDocument"
 	MethodSendGame                        string = "sendGame"
 	MethodSendInvoice                     string = "sendInvoice"
@@ -115,8 +117,10 @@ const (
 	MethodSetChatStickerSet               string = "setChatStickerSet"
 	MethodSetChatTitle                    string = "setChatTitle"
 	MethodSetGameScore                    string = "setGameScore"
+	MethodSetMyCommands                   string = "setMyCommands"
 	MethodSetPassportDataErrors           string = "setPassportDataErrors"
 	MethodSetStickerPositionInSet         string = "setStickerPositionInSet"
+	MethodSetStickerSetThumb              string = "setStickerSetThumb"
 	MethodSetWebhook                      string = "setWebhook"
 	MethodStopMessageLiveLocation         string = "stopMessageLiveLocation"
 	MethodStopPoll                        string = "stopPoll"

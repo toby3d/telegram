@@ -55,6 +55,9 @@ type (
 
 		// true, if the sticker set contains animated stickers
 		IsAnimated bool `json:"is_animated"`
+
+		// Sticker set thumbnail in the .WEBP or .TGS format
+		Thumb *PhotoSize `json:"thumb,omitempty"`
 	}
 
 	// MaskPosition describes the position on faces where a mask should be placed by default.
@@ -114,8 +117,12 @@ type (
 		// Sticker set title, 1-64 characters
 		Title string `json:"title"`
 
-		// Png image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
-		PNGSticker *InputFile `json:"png_sticker"`
+		// PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
+		PNGSticker *InputFile `json:"png_sticker,omitempty"`
+
+		// TGS animation with the sticker, uploaded using multipart/form-data.
+		// See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
+		TGSSticker *InputFile `json:"tgs_sticker,omitempty"`
 
 		// One or more emoji corresponding to the sticker
 		Emojis string `json:"emojis"`
@@ -134,8 +141,12 @@ type (
 		// Sticker set name
 		Name string `json:"name"`
 
-		// Png image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+		// PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
 		PNGSticker *InputFile `json:"png_sticker"`
+
+		// TGS animation with the sticker, uploaded using multipart/form-data.
+		// See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
+		TGSSticker *InputFile `json:"tgs_sticker,omitempty"`
 
 		// One or more emoji corresponding to the sticker
 		Emojis string `json:"emojis"`
@@ -157,6 +168,24 @@ type (
 	DeleteStickerFromSet struct {
 		// File identifier of the sticker
 		Sticker string `json:"sticker"`
+	}
+
+	// SetStickerSetThumb represents data for SetStickerSetThumb method.
+	SetStickerSetThumb struct {
+		// Sticker set name
+		Name string `json:"name"`
+
+		// User identifier of the sticker set owner
+		UserID int `json:"user_id"`
+
+		// A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height
+		// exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size;
+		// see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker
+		// technical requirements. Pass a file_id as a String to send a file that already exists on the
+		// Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or
+		// upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set
+		// thumbnail can't be uploaded via HTTP URL.
+		Thumb *InputFile `json:"thumb,omitempty"`
 	}
 )
 
@@ -351,6 +380,41 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error
 // DeleteStickerFromSet delete a sticker from a set created by the b. Returns True on success.
 func (b *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
 	src, err := b.Do(MethodDeleteStickerFromSet, DeleteStickerFromSet{Sticker: sticker})
+	if err != nil {
+		return false, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return false, err
+	}
+
+	var result bool
+	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// SetStickerSetThumb set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets
+// only. Returns True on success.
+func (b *Bot) SetStickerSetThumb(p SetStickerSetThumb) (bool, error) {
+	params := make(map[string]string)
+	params["name"] = p.Name
+	params["user_id"] = strconv.Itoa(p.UserID)
+
+	var err error
+	if params["thumb"], err = b.marshler.MarshalToString(p.Thumb); err != nil {
+		return false, err
+	}
+
+	files := make([]*InputFile, 0)
+	if p.Thumb.IsAttachment() {
+		files = append(files, p.Thumb)
+	}
+
+	src, err := b.Upload(MethodSetStickerSetThumb, params, files...)
 	if err != nil {
 		return false, err
 	}

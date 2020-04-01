@@ -191,6 +191,9 @@ type (
 		// Message is a native poll, information about the poll
 		Poll *Poll `json:"poll,omitempty"`
 
+		// Message is a dice with random value from 1 to 6
+		Dice *Dice `json:"dice,omitempty"`
+
 		// New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
 		NewChatMembers []*User `json:"new_chat_members,omitempty"`
 
@@ -520,6 +523,13 @@ type (
 		CorrectOptionID int `json:"correct_option_id,omitempty"`
 	}
 
+	// Dice represents a dice with random value from 1 to 6. (Yes, we're aware of the “proper” singular of die.
+	// But it's awkward, and we decided to help it change. One dice at a time!)
+	Dice struct {
+		// Value of the dice, 1-6
+		Value int `json:"value"`
+	}
+
 	// UserProfilePhotos represent a user's profile pictures.
 	UserProfilePhotos struct {
 		// Total number of profile pictures the target user has
@@ -770,6 +780,16 @@ type (
 
 		// True, if the user is allowed to pin messages. Ignored in public supergroups
 		CanPinMessages bool `json:"can_pin_messages,omitempty"`
+	}
+
+	// BotCommand represents a bot command.
+	BotCommand struct {
+		// Text of the command, 1-32 characters. Can contain only lowercase English letters, digits and
+		// underscores.
+		Command string `json:"command"`
+
+		// Description of the command, 3-256 characters.
+		Description string `json:"description"`
 	}
 
 	// ResponseParameters contains information about why a request was unsuccessful.
@@ -1191,6 +1211,8 @@ func (m Message) IsEvent() bool {
 		m.IsLeftChatMemberEvent() || m.IsNewChatMembersEvent() || m.IsNewChatTitleEvent() ||
 		m.IsSupergroupChatCreatedEvent() || m.IsNewChatPhotoEvent()
 }
+
+func (m Message) IsDice() bool { return m.Dice != nil }
 
 // IsBold checks that the current entity is a bold tag.
 func (e MessageEntity) IsBold() bool { return strings.EqualFold(e.Type, EntityBold) }

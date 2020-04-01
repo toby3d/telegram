@@ -432,7 +432,22 @@ type (
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
-	// SendChatAction represents data for SendChatAction method.
+	// SendDice represents data for SendDice method.
+	SendDice struct {
+		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+		ChatID int64 `json:"chat_id"`
+
+		// Sends the message silently. Users will receive a notification with no sound.
+		DisableNotification bool `json:"disable_notification,omitempty"`
+
+		// If the message is a reply, ID of the original message
+		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
+	}
+
+	// SendChatAction represents data for SendChat method.
 	SendChatAction struct {
 		// Unique identifier for the target chat
 		ChatID int64 `json:"chat_id"`
@@ -671,6 +686,13 @@ type (
 
 		// The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
 		CacheTime int `json:"cache_time,omitempty"`
+	}
+
+	// SetMyCommands represents data for SetMyCommands method.
+	SetMyCommands struct {
+		// A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100
+		// commands can be specified.
+		Commands []*BotCommand `json:"commands"`
 	}
 )
 
@@ -1343,6 +1365,28 @@ func (b Bot) SendPoll(p SendPoll) (*Message, error) {
 	return result, nil
 }
 
+// SendDice send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned. (Yes,
+// we're aware of the “proper” singular of die. But it's awkward, and we decided to help it change. One dice at a
+// time!)
+func (b Bot) SendDice(p SendDice) (*Message, error) {
+	src, err := b.Do(MethodSendDice, p)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(Message)
+	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 // SendChatAction tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
 //
 // We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
@@ -1870,6 +1914,47 @@ func (b Bot) AnswerCallbackQuery(p AnswerCallbackQuery) (bool, error) {
 	var result bool
 	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
 		return false, err
+	}
+
+	return result, nil
+}
+
+// SetMyCommands change the list of the bot's commands. Returns True on success.
+func (b Bot) SetMyCommands(p SetMyCommands) (bool, error) {
+	src, err := b.Do(MethodSetMyCommands, p)
+	if err != nil {
+		return false, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return false, err
+	}
+
+	var result bool
+	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// GetMyCommands get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on
+// success.
+func (b Bot) GetMyCommands() ([]*BotCommand, error) {
+	src, err := b.Do(MethodGetMyCommands, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	var result []*BotCommand
+	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+		return nil, err
 	}
 
 	return result, nil
