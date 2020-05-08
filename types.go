@@ -521,11 +521,27 @@ type (
 
 		// 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
 		CorrectOptionID int `json:"correct_option_id,omitempty"`
+
+		// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
+		// poll, 0-200 characters
+		Explanation string `json:"explanation,omitempty"`
+
+		// Special entities like usernames, URLs, bot commands, etc. that appear in the explanation
+		ExplanationEntities []*MessageEntity `json:"explanation_entities,omitempty"`
+
+		// Amount of time in seconds the poll will be active after creation
+		OpenPeriod int `json:"open_period,omitempty"`
+
+		// Point in time (Unix timestamp) when the poll will be automatically closed
+		CloseDate int64 `json:"close_date,omitempty"`
 	}
 
-	// Dice represents a dice with random value from 1 to 6. (Yes, we're aware of the “proper” singular of die.
-	// But it's awkward, and we decided to help it change. One dice at a time!)
+	// Dice represents a dice with random value from 1 to 6 for currently supported base emoji. (Yes, we're aware
+	// of the “proper” singular of die. But it's awkward, and we decided to help it change. One dice at a time!)
 	Dice struct {
+		// Emoji on which the dice throw animation is based
+		Emoji string `json:"emoji"`
+
 		// Value of the dice, 1-6
 		Value int `json:"value"`
 	}
@@ -1212,6 +1228,7 @@ func (m Message) IsEvent() bool {
 		m.IsSupergroupChatCreatedEvent() || m.IsNewChatPhotoEvent()
 }
 
+// IsDice checks what current message is a dice.
 func (m Message) IsDice() bool { return m.Dice != nil }
 
 // IsBold checks that the current entity is a bold tag.
@@ -1477,3 +1494,6 @@ func (f InputFile) MarshalJSON() ([]byte, error) {
 		return nil, nil
 	}
 }
+
+// CloseTime parse CloseDate and returns time.Time.
+func (p Poll) CloseTime() time.Time { return time.Unix(p.CloseDate, 0) }

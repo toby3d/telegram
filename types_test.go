@@ -2126,3 +2126,21 @@ func TestInputFileMarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestMessageIsDice(t *testing.T) {
+	t.Run("true", func(t *testing.T) {
+		f := Message{Dice: &Dice{Value: 3}}
+		assert.True(t, f.IsDice())
+	})
+	t.Run("false", func(t *testing.T) {
+		f := new(Message)
+		assert.False(t, f.IsDice())
+	})
+}
+
+func TestPollCloseTime(t *testing.T) {
+	now := time.Now().Round(time.Second)
+	p := Poll{CloseDate: now.Unix()}
+
+	assert.Equal(t, now, p.CloseTime())
+}

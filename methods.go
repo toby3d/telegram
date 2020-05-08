@@ -419,6 +419,19 @@ type (
 		// 0-based identifier of the correct answer option, required for polls in quiz mode
 		CorrectOptionID int `json:"correct_option_id,omitempty"`
 
+		// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
+		// poll, 0-200 characters with at most 2 line feeds after entities parsing
+		Explanation string `json:"explanation,omitempty"`
+
+		// Mode for parsing entities in the explanation. See formatting options for more details.
+		ExplanationParseMode string `json:"explanation_parse_mode,omitempty"`
+
+		// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
+		OpenPeriod int `json:"open_period,omitempty"`
+
+		// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
+		CloseDate int64 `json:"close_date,omitempty"`
+
 		// Pass True, if the poll needs to be immediately closed
 		IsClosed bool `json:"is_closed,omitempty"`
 
@@ -436,6 +449,10 @@ type (
 	SendDice struct {
 		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 		ChatID int64 `json:"chat_id"`
+
+		// Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to
+		// “🎲”
+		Emoji string `json:"emoji,omitempty"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
