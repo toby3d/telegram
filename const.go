@@ -136,6 +136,7 @@ const (
 	ParseModeMarkdownV2 string = "MarkdownV2"
 )
 
+// Point represent a type of point on face
 const (
 	PointForehead string = "forehead"
 	PointEyes     string = "eyes"
@@ -211,11 +212,13 @@ const (
 	UpdateShippingQuery      string = "shipping_query"
 )
 
+// Default represents a default values for some helpers
 const (
 	DefaultAudioSeparator = " – "
 	DefaultAudioTitle     = "[untitled]"
 )
 
+// Poll represents a poll types
 const (
 	PollQuiz    string = "quiz"
 	PollRegular string = "regular"
