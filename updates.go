@@ -1,6 +1,8 @@
 package telegram
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	http "github.com/valyala/fasthttp"
@@ -132,10 +134,16 @@ func (b Bot) GetUpdates(p *GetUpdates) ([]*Update, error) {
 //
 // If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
 func (b Bot) SetWebhook(p SetWebhook) (bool, error) {
-	// TODO(toby3d)
-	// if p.Certificate != nil {
-	// 	src, err = b.Upload(MethodSetWebhook, "certificate", "cert.pem", params.Certificate, args)
-	// }
+	if p.Certificate.IsAttachment() {
+		_, err := b.Upload(MethodSetWebhook, map[string]string{
+			"allowed_updates": strings.Join(p.AllowedUpdates, ","),
+			"max_connections": strconv.Itoa(p.MaxConnections),
+			"url":             p.URL,
+		}, &p.Certificate)
+
+		return err == nil, err
+	}
+
 	src, err := b.Do(MethodSetWebhook, p)
 	if err != nil {
 		return false, err
