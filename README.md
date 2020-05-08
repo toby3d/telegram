@@ -1,14 +1,16 @@
-# GoLang bindings for the Telegram Bot API
-> This package is in active development and going to freeze the first version of it's API. Stay tuned!
+# GoLang bindings for [Telegram Bot API](https://core.telegram.org/bots/api)
+All-in-one package with a huge range of additional helpers for designing your bot for Telegram. [Login widget](login) support included.
 
+## Install
+`go get -u gitlab.com/toby3d/telegram`
 
-## Start using telegram
-Download/install:  
-`$ go get -u gitlab.com/toby3d/telegram`
-
-Import it in your code:  
+## Use
 `import "gitlab.com/toby3d/telegram"`
+
+## Related projects
+* [**MyPackBot**](https://gitlab.com/toby3d/mypackbot): bot for collecting and reusing any Telegram-media;
 
 ## Need help?
 - [Open new issue](https://gitlab.com/toby3d/telegram/issues/new)
+- [Join to Telegram-group](https://t.me/joinchat/AkuYY0fYSls8bf6H5ap9Rg)
 - [Discuss in Discord](https://discord.gg/dCWkgSS)
