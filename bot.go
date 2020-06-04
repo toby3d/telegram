@@ -20,7 +20,7 @@ import (
 type Bot struct {
 	*User
 	AccessToken string
-	Updates     chan *Update
+	Updates     UpdatesChannel
 
 	client   *http.Client
 	marshler json.API
@@ -249,7 +249,7 @@ func (b Bot) NewRedirectURL(param string, group bool) *http.URI {
 }
 
 // NewLongPollingChannel creates channel for receive incoming updates using long polling.
-func (b *Bot) NewLongPollingChannel(params *GetUpdates) chan *Update {
+func (b *Bot) NewLongPollingChannel(params *GetUpdates) UpdatesChannel {
 	if params == nil {
 		params = &GetUpdates{
 			Offset:  0,
@@ -258,7 +258,7 @@ func (b *Bot) NewLongPollingChannel(params *GetUpdates) chan *Update {
 		}
 	}
 
-	b.Updates = make(chan *Update, params.Limit)
+	b.Updates = make(UpdatesChannel, params.Limit)
 
 	go func() {
 		for {
@@ -284,16 +284,20 @@ func (b *Bot) NewLongPollingChannel(params *GetUpdates) chan *Update {
 	return b.Updates
 }
 
-// NewWebhookChannel creates channel for receive incoming updates via an outgoing webhook.
+// NewWebhookChannel creates channel for receive incoming updates via an outgoing webhook. Returns updates channel and
+// shutdown func.
 //
-// If cert argument is provided by two strings (["path/to/cert.file", "path/to/cert.key"]), then TLS server will be created by this filepaths.
-func (b *Bot) NewWebhookChannel(u *http.URI, p SetWebhook, ln net.Listener, crt ...string) (chan *Update, func() error) {
-	b.Updates = make(chan *Update, 100)
+// If cert argument is provided by two strings (["path/to/cert.file", "path/to/cert.key"]), then TLS server will be
+// created by this filepaths.
+func (b *Bot) NewWebhookChannel(u *http.URI, p SetWebhook, ln net.Listener, crt ...string) (UpdatesChannel,
+	func() error) {
+	b.Updates = make(UpdatesChannel, 100) // NOTE(toby3d): channel size by default GetUpdates.Limit parameter
 	handleFunc := func(ctx *http.RequestCtx) {
 		dlog.Ln("Request path:", string(ctx.Path()))
 
 		if !bytes.HasPrefix(ctx.Path(), u.Path()) {
 			dlog.Ln("Unsupported request path:", string(ctx.Path()))
+
 			return
 		}
 
@@ -314,9 +318,9 @@ func (b *Bot) NewWebhookChannel(u *http.URI, p SetWebhook, ln net.Listener, crt 
 		ReduceMemoryUsage: true,
 	}
 
-	var err error
-
 	go func() {
+		var err error
+
 		switch {
 		case len(crt) == 2:
 			dlog.Ln("Creating TLS router...")
@@ -331,7 +335,7 @@ func (b *Bot) NewWebhookChannel(u *http.URI, p SetWebhook, ln net.Listener, crt 
 		}
 	}()
 
-	if _, err = b.SetWebhook(p); err != nil {
+	if _, err := b.SetWebhook(p); err != nil {
 		log.Fatalln(err.Error())
 	}
 

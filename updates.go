@@ -108,6 +108,9 @@ type (
 		// Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
 		AllowedUpdates []string `json:"allowed_updates,omitempty"`
 	}
+
+	// UpdatesChannel represents channel for incoming updates.
+	UpdatesChannel chan<- *Update
 )
 
 // GetUpdates receive incoming updates using long polling. An Array of Update objects is returned.
