@@ -110,7 +110,7 @@ type (
 	}
 
 	// UpdatesChannel represents channel for incoming updates.
-	UpdatesChannel chan<- *Update
+	UpdatesChannel chan *Update
 )
 
 // GetUpdates receive incoming updates using long polling. An Array of Update objects is returned.
