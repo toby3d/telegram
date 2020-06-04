@@ -223,3 +223,10 @@ const (
 	PollQuiz    string = "quiz"
 	PollRegular string = "regular"
 )
+
+// Emoji represents emoji supported by SendDice method
+const (
+	EmojiGameDie    string = "🎲"
+	EmojiDart       string = "🎯"
+	EmojiBasketball string = "🏀"
+)
