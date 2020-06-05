@@ -111,13 +111,8 @@ func (b Bot) EditMessageText(p *EditMessageText) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -131,13 +126,8 @@ func (b Bot) EditMessageCaption(p *EditMessageCaption) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -155,13 +145,8 @@ func (b Bot) EditMessageMedia(p EditMessageMedia) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -175,13 +160,8 @@ func (b Bot) EditMessageReplyMarkup(p EditMessageReplyMarkup) (*Message, error) 
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -199,13 +179,8 @@ func (b Bot) StopPoll(p StopPoll) (*Poll, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Poll)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -222,21 +197,20 @@ func (b Bot) StopPoll(p StopPoll) (*Poll, error) {
 // - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
 //
 // Returns True on success.
-func (b Bot) DeleteMessage(cid int64, mid int) (bool, error) {
+func (b Bot) DeleteMessage(cid int64, mid int) (ok bool, err error) {
 	src, err := b.Do(MethodDeleteMessage, DeleteMessage{ChatID: cid, MessageID: mid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }

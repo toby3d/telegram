@@ -720,13 +720,8 @@ func (b Bot) GetMe() (*User, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(User)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -747,13 +742,8 @@ func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -775,13 +765,8 @@ func (b Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -824,13 +809,8 @@ func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -885,13 +865,8 @@ func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -933,13 +908,8 @@ func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -993,13 +963,8 @@ func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1052,13 +1017,8 @@ func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1101,13 +1061,8 @@ func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1157,13 +1112,8 @@ func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1208,13 +1158,8 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := make([]*Message, 0)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, &result); err != nil {
 		return nil, err
 	}
 
@@ -1236,13 +1181,8 @@ func (b Bot) SendLocation(p SendLocation) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1257,43 +1197,33 @@ func NewLiveLocation(latitude, longitude float32) EditMessageLiveLocation {
 }
 
 // EditMessageLiveLocation edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
-func (b Bot) EditMessageLiveLocation(p EditMessageLiveLocation) (*Message, bool, error) {
+func (b Bot) EditMessageLiveLocation(p EditMessageLiveLocation) (*Message, error) {
 	src, err := b.Do(MethodEditMessageLiveLocation, p)
 	if err != nil {
-		return nil, false, err
-	}
-
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, false, err
+		return nil, err
 	}
 
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return nil, resp.Ok, err
+	if err = parseResponseError(b.marshler, src, result); err != nil {
+		return nil, err
 	}
 
-	return result, resp.Ok, nil
+	return result, nil
 }
 
 // StopMessageLiveLocation stop updating a live location message before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned.
-func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, bool, error) {
+func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, error) {
 	src, err := b.Do(MethodStopMessageLiveLocation, p)
 	if err != nil {
-		return nil, false, err
-	}
-
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, false, err
+		return nil, err
 	}
 
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
-		return nil, resp.Ok, err
+	if err = parseResponseError(b.marshler, src, result); err != nil {
+		return nil, err
 	}
 
-	return result, resp.Ok, nil
+	return result, nil
 }
 
 func NewVenue(chatID int64, latitude, longitude float32, title, address string) SendVenue {
@@ -1313,13 +1243,8 @@ func (b Bot) SendVenue(p SendVenue) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1341,13 +1266,8 @@ func (b Bot) SendContact(p SendContact) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1369,13 +1289,8 @@ func (b Bot) SendPoll(p SendPoll) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1391,13 +1306,8 @@ func (b Bot) SendDice(p SendDice) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1407,23 +1317,22 @@ func (b Bot) SendDice(p SendDice) (*Message, error) {
 // SendChatAction tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
 //
 // We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
-func (b Bot) SendChatAction(cid int64, action string) (bool, error) {
+func (b Bot) SendChatAction(cid int64, action string) (ok bool, err error) {
 	src, err := b.Do(MethodSendChatAction, SendChatAction{ChatID: cid, Action: action})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // GetUserProfilePhotos get a list of profile pictures for a user. Returns a UserProfilePhotos object.
@@ -1433,13 +1342,8 @@ func (b Bot) GetUserProfilePhotos(p GetUserProfilePhotos) (*UserProfilePhotos, e
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(UserProfilePhotos)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1455,13 +1359,8 @@ func (b Bot) GetFile(fid string) (*File, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(File)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1478,43 +1377,41 @@ func NewKick(chatID int64, userID int) KickChatMember {
 // KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
 //
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are Admins' setting is off in the target group. Otherwise members may only be removed by the group's creator or by the member that added them.
-func (b Bot) KickChatMember(p KickChatMember) (bool, error) {
+func (b Bot) KickChatMember(p KickChatMember) (ok bool, err error) {
 	src, err := b.Do(MethodKickChatMember, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // UnbanChatMember unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
-func (b Bot) UnbanChatMember(cid int64, uid int) (bool, error) {
+func (b Bot) UnbanChatMember(cid int64, uid int) (ok bool, err error) {
 	src, err := b.Do(MethodUnbanChatMember, UnbanChatMember{ChatID: cid, UserID: uid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 func NewRestrict(chatID int64, userID int, permissions ChatPermissions) RestrictChatMember {
@@ -1526,23 +1423,22 @@ func NewRestrict(chatID int64, userID int, permissions ChatPermissions) Restrict
 }
 
 // restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
-func (b Bot) RestrictChatMember(p RestrictChatMember) (bool, error) {
+func (b Bot) RestrictChatMember(p RestrictChatMember) (ok bool, err error) {
 	src, err := b.Do(MethodRestrictChatMember, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 func NewPromote(chatID int64, userID int) PromoteChatMember {
@@ -1553,63 +1449,60 @@ func NewPromote(chatID int64, userID int) PromoteChatMember {
 }
 
 // PromoteChatMember promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean  to demote a user. Returns True on success.
-func (b Bot) PromoteChatMember(p PromoteChatMember) (bool, error) {
+func (b Bot) PromoteChatMember(p PromoteChatMember) (ok bool, err error) {
 	src, err := b.Do(MethodPromoteChatMember, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // SetChatAdministratorCustomTitle method to set a custom title for an administrator in a supergroup promoted by the b. Returns True on success.
-func (b Bot) SetChatAdministratorCustomTitle(p SetChatAdministratorCustomTitle) (bool, error) {
+func (b Bot) SetChatAdministratorCustomTitle(p SetChatAdministratorCustomTitle) (ok bool, err error) {
 	src, err := b.Do(MethodSetChatAdministratorCustomTitle, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // SetChatPermissions set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success.
-func (b Bot) SetChatPermissions(p SetChatPermissions) (bool, error) {
+func (b Bot) SetChatPermissions(p SetChatPermissions) (ok bool, err error) {
 	src, err := b.Do(MethodSetChatPermissions, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // ExportChatInviteLink export an invite link to a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns exported invite link as String on success.
@@ -1633,13 +1526,12 @@ func (b Bot) ExportChatInviteLink(cid int64) (string, error) {
 }
 
 // SetChatPhoto set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) SetChatPhoto(cid int64, photo *InputFile) (bool, error) {
+func (b Bot) SetChatPhoto(cid int64, photo *InputFile) (ok bool, err error) {
 	params := make(map[string]string)
 	params["chat_id"] = strconv.FormatInt(cid, 10)
 
-	var err error
 	if params["photo"], err = b.marshler.MarshalToString(photo); err != nil {
-		return false, err
+		return
 	}
 
 	files := make([]*InputFile, 0)
@@ -1649,80 +1541,76 @@ func (b Bot) SetChatPhoto(cid int64, photo *InputFile) (bool, error) {
 
 	src, err := b.Upload(MethodSetChatPhoto, params, files...)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // DeleteChatPhoto delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) DeleteChatPhoto(cid int64) (bool, error) {
+func (b Bot) DeleteChatPhoto(cid int64) (ok bool, err error) {
 	src, err := b.Do(MethodDeleteChatPhoto, DeleteChatPhoto{ChatID: cid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // SetChatTitle change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) SetChatTitle(cid int64, title string) (bool, error) {
+func (b Bot) SetChatTitle(cid int64, title string) (ok bool, err error) {
 	src, err := b.Do(MethodSetChatTitle, SetChatTitle{ChatID: cid, Title: title})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // SetChatDescription change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) SetChatDescription(cid int64, txt string) (bool, error) {
+func (b Bot) SetChatDescription(cid int64, txt string) (ok bool, err error) {
 	src, err := b.Do(MethodSetChatDescription, SetChatDescription{ChatID: cid, Description: txt})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 func NewPin(chatID int64, messageID int) PinChatMessage {
@@ -1733,63 +1621,60 @@ func NewPin(chatID int64, messageID int) PinChatMessage {
 }
 
 // PinChatMessage pin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
-func (b Bot) PinChatMessage(p PinChatMessage) (bool, error) {
+func (b Bot) PinChatMessage(p PinChatMessage) (ok bool, err error) {
 	src, err := b.Do(MethodPinChatMessage, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // UnpinChatMessage unpin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
-func (b Bot) UnpinChatMessage(cid int64) (bool, error) {
+func (b Bot) UnpinChatMessage(cid int64) (ok bool, err error) {
 	src, err := b.Do(MethodUnpinChatMessage, UnpinChatMessage{ChatID: cid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
-func (b Bot) LeaveChat(cid int64) (bool, error) {
+func (b Bot) LeaveChat(cid int64) (ok bool, err error) {
 	src, err := b.Do(MethodLeaveChat, LeaveChat{ChatID: cid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // GetChat get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
@@ -1799,13 +1684,8 @@ func (b Bot) GetChat(cid int64) (*Chat, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Chat)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1819,13 +1699,8 @@ func (b Bot) GetChatAdministrators(cid int64) ([]*ChatMember, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := make([]*ChatMember, 0)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, &result); err != nil {
 		return nil, err
 	}
 
@@ -1859,13 +1734,8 @@ func (b Bot) GetChatMember(cid int64, uid int) (*ChatMember, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(ChatMember)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -1873,43 +1743,41 @@ func (b Bot) GetChatMember(cid int64, uid int) (*ChatMember, error) {
 }
 
 // SetChatStickerSet set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b Bot) SetChatStickerSet(cid int64, name string) (bool, error) {
+func (b Bot) SetChatStickerSet(cid int64, name string) (ok bool, err error) {
 	src, err := b.Do(MethodSetChatStickerSet, SetChatStickerSet{ChatID: cid, StickerSetName: name})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // DeleteChatStickerSet delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b Bot) DeleteChatStickerSet(cid int64) (bool, error) {
+func (b Bot) DeleteChatStickerSet(cid int64) (ok bool, err error) {
 	src, err := b.Do(MethodDeleteChatStickerSet, DeleteChatStickerSet{ChatID: cid})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 func NewAnswerCallback(callbackQueryID string) AnswerCallbackQuery {
@@ -1917,43 +1785,41 @@ func NewAnswerCallback(callbackQueryID string) AnswerCallbackQuery {
 }
 
 // AnswerCallbackQuery send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
-func (b Bot) AnswerCallbackQuery(p AnswerCallbackQuery) (bool, error) {
+func (b Bot) AnswerCallbackQuery(p AnswerCallbackQuery) (ok bool, err error) {
 	src, err := b.Do(MethodAnswerCallbackQuery, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // SetMyCommands change the list of the bot's commands. Returns True on success.
-func (b Bot) SetMyCommands(p SetMyCommands) (bool, error) {
+func (b Bot) SetMyCommands(p SetMyCommands) (ok bool, err error) {
 	src, err := b.Do(MethodSetMyCommands, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
 	resp := new(Response)
 	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
 	}
 
-	return result, nil
+	return
 }
 
 // GetMyCommands get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on
@@ -1964,13 +1830,8 @@ func (b Bot) GetMyCommands() ([]*BotCommand, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
-	var result []*BotCommand
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	result := make([]*BotCommand, 0)
+	if err = parseResponseError(b.marshler, src, &result); err != nil {
 		return nil, err
 	}
 

@@ -109,13 +109,8 @@ func (b Bot) SendGame(p SendGame) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -136,13 +131,8 @@ func (b Bot) SetGameScore(p SetGameScore) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -156,13 +146,8 @@ func (b Bot) GetGameHighScores(p GetGameHighScores) ([]*GameHighScore, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := make([]*GameHighScore, 0)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, &result); err != nil {
 		return nil, err
 	}
 

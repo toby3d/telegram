@@ -255,13 +255,8 @@ func (b Bot) SendInvoice(p SendInvoice) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -278,23 +273,17 @@ func NewAnswerShipping(shippingQueryID string, ok bool) AnswerShippingQuery {
 // AnswerShippingQuery reply to shipping queries.
 //
 // If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the b. On success, True is returned.
-func (b Bot) AnswerShippingQuery(p AnswerShippingQuery) (bool, error) {
+func (b Bot) AnswerShippingQuery(p AnswerShippingQuery) (ok bool, err error) {
 	src, err := b.Do(MethodAnswerShippingQuery, p)
 	if err != nil {
 		return false, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 func NewAnswerPreCheckout(preCheckoutQueryID string, ok bool) AnswerPreCheckoutQuery {
@@ -309,21 +298,15 @@ func NewAnswerPreCheckout(preCheckoutQueryID string, ok bool) AnswerPreCheckoutQ
 // Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
 //
 // Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
-func (b Bot) AnswerPreCheckoutQuery(p AnswerShippingQuery) (bool, error) {
+func (b Bot) AnswerPreCheckoutQuery(p AnswerShippingQuery) (ok bool, err error) {
 	src, err := b.Do(MethodAnswerPreCheckoutQuery, p)
 	if err != nil {
 		return false, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }

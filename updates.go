@@ -120,13 +120,8 @@ func (b Bot) GetUpdates(p *GetUpdates) ([]*Update, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := make([]*Update, 0)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, &result); err != nil {
 		return nil, err
 	}
 
@@ -136,7 +131,7 @@ func (b Bot) GetUpdates(p *GetUpdates) ([]*Update, error) {
 // SetWebhook specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns true.
 //
 // If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot‘s token, you can be pretty sure it’s us.
-func (b Bot) SetWebhook(p SetWebhook) (bool, error) {
+func (b Bot) SetWebhook(p SetWebhook) (ok bool, err error) {
 	if p.Certificate.IsAttachment() {
 		_, err := b.Upload(MethodSetWebhook, map[string]string{
 			"allowed_updates": strings.Join(p.AllowedUpdates, ","),
@@ -149,40 +144,28 @@ func (b Bot) SetWebhook(p SetWebhook) (bool, error) {
 
 	src, err := b.Do(MethodSetWebhook, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // DeleteWebhook remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
-func (b Bot) DeleteWebhook() (bool, error) {
+func (b Bot) DeleteWebhook() (ok bool, err error) {
 	src, err := b.Do(MethodDeleteWebhook, nil)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // GetWebhookInfo get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
@@ -192,13 +175,8 @@ func (b Bot) GetWebhookInfo() (*WebhookInfo, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(WebhookInfo)
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 

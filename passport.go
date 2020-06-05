@@ -530,25 +530,19 @@ var ErrNotEqual = errors.New("credentials hash and credentials data hash is not 
 // SetPassportDataErrors informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
 //
 // Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
-func (b Bot) SetPassportDataErrors(uid int, errors ...PassportElementError) (bool, error) {
+func (b Bot) SetPassportDataErrors(uid int, errors ...PassportElementError) (ok bool, err error) {
 	src, err := b.Do(MethodSetPassportDataErrors, SetPassportDataErrors{
 		UserID: uid, Errors: errors,
 	})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 /* TODO(toby3d)

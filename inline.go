@@ -798,23 +798,17 @@ func NewAnswerInline(inlineQueryID string, results ...InlineQueryResult) AnswerI
 // AnswerInlineQuery send answers to an inline query. On success, True is returned.
 //
 // No more than 50 results per query are allowed.
-func (b Bot) AnswerInlineQuery(p AnswerInlineQuery) (bool, error) {
+func (b Bot) AnswerInlineQuery(p AnswerInlineQuery) (ok bool, err error) {
 	src, err := b.Do(MethodAnswerInlineQuery, p)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var ok bool
-	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
-		return false, err
-	}
-
-	return ok, nil
+	return
 }
 
 func NewReplyKeyboardRemove(selective bool) ReplyKeyboardRemove {

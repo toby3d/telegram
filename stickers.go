@@ -203,13 +203,8 @@ func (b Bot) SendSticker(p SendSticker) (*Message, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(Message)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -223,13 +218,8 @@ func (b Bot) GetStickerSet(name string) (*StickerSet, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(StickerSet)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -251,13 +241,8 @@ func (b Bot) UploadStickerFile(uid int, sticker *InputFile) (*File, error) {
 		return nil, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return nil, err
-	}
-
 	result := new(File)
-	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+	if err = parseResponseError(b.marshler, src, result); err != nil {
 		return nil, err
 	}
 
@@ -275,7 +260,7 @@ func NewStickerSet(userID int, name, title string, pngSticker *InputFile, emojis
 }
 
 // CreateNewStickerSet create new sticker set owned by a user. The bot will be able to edit the created sticker set. Returns True on success.
-func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (bool, error) {
+func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (ok bool, err error) {
 	params := make(map[string]string)
 	params["user_id"] = strconv.Itoa(p.UserID)
 	params["name"] = p.Name
@@ -283,13 +268,12 @@ func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (bool, error) {
 	params["emojis"] = p.Emojis
 	params["contains_masks"] = strconv.FormatBool(p.ContainsMasks)
 
-	var err error
 	if params["png_sticker"], err = b.marshler.MarshalToString(p.PNGSticker); err != nil {
-		return false, err
+		return
 	}
 
 	if params["mask_position"], err = b.marshler.MarshalToString(p.MaskPosition); err != nil {
-		return false, err
+		return
 	}
 
 	files := make([]*InputFile, 0)
@@ -299,36 +283,29 @@ func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (bool, error) {
 
 	src, err := b.Upload(MethodCreateNewStickerSet, params, files...)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // AddStickerToSet add a new sticker to a set created by the b. Returns True on success.
-func (b *Bot) AddStickerToSet(p AddStickerToSet) (bool, error) {
+func (b *Bot) AddStickerToSet(p AddStickerToSet) (ok bool, err error) {
 	params := make(map[string]string)
 	params["user_id"] = strconv.Itoa(p.UserID)
 	params["name"] = p.Name
 	params["emojis"] = p.Emojis
 
-	var err error
 	if params["png_sticker"], err = b.marshler.MarshalToString(p.PNGSticker); err != nil {
-		return false, err
+		return
 	}
 
 	if params["mask_position"], err = b.marshler.MarshalToString(p.MaskPosition); err != nil {
-		return false, err
+		return
 	}
 
 	files := make([]*InputFile, 0)
@@ -338,75 +315,56 @@ func (b *Bot) AddStickerToSet(p AddStickerToSet) (bool, error) {
 
 	src, err := b.Upload(MethodAddStickerToSet, params, files...)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // SetStickerPositionInSet move a sticker in a set created by the bot to a specific position. Returns True on success.
-func (b *Bot) SetStickerPositionInSet(sticker string, position int) (bool, error) {
+func (b *Bot) SetStickerPositionInSet(sticker string, position int) (ok bool, err error) {
 	src, err := b.marshler.Marshal(&SetStickerPositionInSet{
 		Sticker:  sticker,
 		Position: position,
 	})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // DeleteStickerFromSet delete a sticker from a set created by the b. Returns True on success.
-func (b *Bot) DeleteStickerFromSet(sticker string) (bool, error) {
+func (b *Bot) DeleteStickerFromSet(sticker string) (ok bool, err error) {
 	src, err := b.Do(MethodDeleteStickerFromSet, DeleteStickerFromSet{Sticker: sticker})
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // SetStickerSetThumb set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets
 // only. Returns True on success.
-func (b *Bot) SetStickerSetThumb(p SetStickerSetThumb) (bool, error) {
+func (b *Bot) SetStickerSetThumb(p SetStickerSetThumb) (ok bool, err error) {
 	params := make(map[string]string)
 	params["name"] = p.Name
 	params["user_id"] = strconv.Itoa(p.UserID)
 
-	var err error
 	if params["thumb"], err = b.marshler.MarshalToString(p.Thumb); err != nil {
-		return false, err
+		return
 	}
 
 	files := make([]*InputFile, 0)
@@ -416,20 +374,14 @@ func (b *Bot) SetStickerSetThumb(p SetStickerSetThumb) (bool, error) {
 
 	src, err := b.Upload(MethodSetStickerSetThumb, params, files...)
 	if err != nil {
-		return false, err
+		return ok, err
 	}
 
-	resp := new(Response)
-	if err = b.marshler.Unmarshal(src, resp); err != nil {
-		return false, err
+	if err = parseResponseError(b.marshler, src, &ok); err != nil {
+		return
 	}
 
-	var result bool
-	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
-		return false, err
-	}
-
-	return result, nil
+	return
 }
 
 // InSet checks that the current sticker in the stickers set.
