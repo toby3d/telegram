@@ -131,6 +131,9 @@ type (
 		// For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
 		ReplyToMessage *Message `json:"reply_to_message,omitempty"`
 
+		// Bot through which the message was sent
+		ViaBot *User `json:"via_bot,omitempty"`
+
 		// Date the message was last edited in Unix time
 		EditDate int64 `json:"edit_date,omitempty"`
 

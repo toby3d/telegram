@@ -113,6 +113,10 @@ type (
 		// URL of the static thumbnail for the result (jpeg or gif)
 		ThumbURL string `json:"thumb_url"`
 
+		// MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to
+		// “image/jpeg”
+		ThumbMimeType string `json:"thumb_mime_type,omitempty"`
+
 		// Title for the result
 		Title string `json:"title,omitempty"`
 
@@ -152,6 +156,10 @@ type (
 		// URL of the static thumbnail (jpeg or gif) for the result
 		ThumbURL string `json:"thumb_url"`
 
+		// MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to
+		// “image/jpeg”
+		ThumbMimeType string `json:"thumb_mime_type,omitempty"`
+
 		// Title for the result
 		Title string `json:"title,omitempty"`
 
@@ -166,6 +174,9 @@ type (
 
 		// Video duration
 		Mpeg4Duration int `json:"mpeg4_duration,omitempty"`
+
+		// Mode for parsing entities in the caption. See formatting options for more details.
+		ParseMode string `json:"parse_mode,omitempty"`
 
 		// Inline keyboard attached to the message
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`

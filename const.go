@@ -3,7 +3,7 @@ package telegram
 import "github.com/Masterminds/semver"
 
 // Version represents current version of Telegram API supported by this package
-var Version = semver.MustParse("4.8.0") //nolint: gochecknoglobals
+var Version = semver.MustParse("4.9.0") //nolint: gochecknoglobals
 
 // Action represents available and supported status actions of bot
 const (
@@ -146,7 +146,9 @@ const (
 
 // Mime represents available and supported MIME types of data
 const (
+	MimeGIF  string = "image/gif"
 	MimeHTML string = "text/html"
+	MimeJPEG string = "image/jpeg"
 	MimeMP4  string = "video/mp4"
 	MimePDF  string = "application/pdf"
 	MimeZIP  string = "application/zip"
