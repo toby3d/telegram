@@ -1,54 +1,38 @@
-package login
+package login_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/toby3d/telegram/login"
+	"golang.org/x/text/language"
 )
 
-func TestNew(t *testing.T) {
-	assert.NotNil(t, NewWidget("hackme"))
+func TestClientID(t *testing.T) {
+	c := login.Config{ClientSecret: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"}
+	assert.Equal(t, "123456", c.ClientID())
 }
 
-func TestGenerateHash(t *testing.T) {
-	w := NewWidget("hackme")
-	hash, err := w.GenerateHash(User{
-		ID:        123,
-		Username:  "toby3d",
-		FirstName: "Maxim",
-		LastName:  "Lebedev",
-		AuthDate:  time.Now().UTC().Unix(),
-	})
-	assert.NoError(t, err)
-	assert.NotEmpty(t, hash)
-}
-
-func TestCheckAuthorization(t *testing.T) {
-	w := NewWidget("hackme")
-	u := User{
-		ID:        123,
-		Username:  "toby3d",
-		FirstName: "Maxim",
-		LastName:  "Lebedev",
-		PhotoURL:  "https://toby3d.me/avatar.jpg",
-		AuthDate:  time.Now().UTC().Unix(),
+func TestAuthCodeURL(t *testing.T) {
+	c := login.Config{
+		ClientSecret:       "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+		RedirectURL:        "https://example.site/callback",
+		RequestWriteAccess: true,
 	}
 
-	t.Run("invalid", func(t *testing.T) {
-		u.Hash = "wtf"
-		ok, err := w.CheckAuthorization(u)
-		assert.NoError(t, err)
-		assert.False(t, ok)
-	})
-	t.Run("valid", func(t *testing.T) {
-		var err error
-		u.Hash, err = w.GenerateHash(u)
-		assert.NoError(t, err)
-		assert.NotEmpty(t, u.Hash)
+	assert.Equal(t, "https://oauth.telegram.org/auth?bot_id=123456&origin=https%3A%2F%2Fexample.site"+
+		"&embed=0&lang=ru&request_access=write", c.AuthCodeURL(language.Russian))
+}
 
-		ok, err := w.CheckAuthorization(u)
-		assert.NoError(t, err)
-		assert.True(t, ok)
-	})
+func TestVerify(t *testing.T) {
+	c := login.Config{ClientSecret: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"}
+	assert.True(t, c.Verify(&login.User{
+		ID:        123456,
+		Username:  "toby3d",
+		FirstName: "Maxim",
+		LastName:  "Lebedev",
+		PhotoURL:  "https://t.me/i/userpic/320/ABC-DEF1234ghIkl-zyx57W2v1u123ew11.jpg",
+		AuthDate:  1410696795,
+		Hash:      "d9b74e929cd4cfa7299031421db61949ecd49641c3b06e3a0361f593cf1fe064",
+	}))
 }
