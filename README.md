@@ -2,10 +2,10 @@
 All-in-one package with a huge range of additional helpers for designing your bot for Telegram. [Login widget](login) support included.
 
 ## Install
-`go get -u gitlab.com/toby3d/telegram`
+`go get -u gitlab.com/toby3d/telegram/v5`
 
 ## Use
-`import "gitlab.com/toby3d/telegram"`
+`import "gitlab.com/toby3d/telegram/v5"`
 
 ## Related projects
 * [**MyPackBot**](https://gitlab.com/toby3d/mypackbot): bot for collecting and reusing any Telegram-media;
