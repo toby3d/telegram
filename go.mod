@@ -1,4 +1,4 @@
-module gitlab.com/toby3d/telegram
+module gitlab.com/toby3d/telegram/v5
 
 go 1.12
 
