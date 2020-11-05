@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/toby3d/telegram/login"
+	"gitlab.com/toby3d/telegram/v5/login"
 	"golang.org/x/text/language"
 )
 

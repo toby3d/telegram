@@ -6,7 +6,7 @@ import (
 
 	"github.com/fasthttp/router"
 	http "github.com/valyala/fasthttp"
-	"gitlab.com/toby3d/telegram/login"
+	"gitlab.com/toby3d/telegram/v5/login"
 )
 
 const htmlTemplate string = `<!DOCTYPE html>
