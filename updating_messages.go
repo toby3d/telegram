@@ -3,8 +3,7 @@ package telegram
 type (
 	// EditMessageTextParameters represents data for EditMessageText method.
 	EditMessageText struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
 		MessageID int `json:"message_id,omitempty"`
@@ -18,6 +17,9 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in your bot's message.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		Entities []*MessageEntity `json:"entities,omitempty"`
+
 		// Disables link previews for links in this message
 		DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 
@@ -27,8 +29,7 @@ type (
 
 	// EditMessageCaptionParameters represents data for EditMessageCaption method.
 	EditMessageCaption struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
 		MessageID int `json:"message_id,omitempty"`
@@ -42,14 +43,16 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
 		// A JSON-serialized object for an inline keyboard.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// EditMessageMediaParameters represents data for EditMessageMedia method.
 	EditMessageMedia struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
 		MessageID int `json:"message_id,omitempty"`
@@ -66,8 +69,7 @@ type (
 
 	// EditMessageReplyMarkupParameters represents data for EditMessageReplyMarkup method.
 	EditMessageReplyMarkup struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
 		MessageID int `json:"message_id,omitempty"`
@@ -80,8 +82,7 @@ type (
 	}
 
 	StopPoll struct {
-		// Unique identifier for the target chat. A native poll can't be sent to a private chat.
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of the original message with the poll
 		MessageID int `json:"message_id"`
@@ -92,8 +93,7 @@ type (
 
 	// DeleteMessageParameters represents data for DeleteMessage method.
 	DeleteMessage struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of the message to delete
 		MessageID int `json:"message_id"`
@@ -105,7 +105,7 @@ func NewEditText(text string) EditMessageText {
 }
 
 // EditMessageText edit text and game messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
-func (b Bot) EditMessageText(p *EditMessageText) (*Message, error) {
+func (b Bot) EditMessageText(p EditMessageText) (*Message, error) {
 	src, err := b.Do(MethodEditMessageText, p)
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (b Bot) EditMessageText(p *EditMessageText) (*Message, error) {
 }
 
 // EditMessageCaption edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.
-func (b Bot) EditMessageCaption(p *EditMessageCaption) (*Message, error) {
+func (b Bot) EditMessageCaption(p EditMessageCaption) (*Message, error) {
 	src, err := b.Do(MethodEditMessageCaption, p)
 	if err != nil {
 		return nil, err
@@ -135,7 +135,9 @@ func (b Bot) EditMessageCaption(p *EditMessageCaption) (*Message, error) {
 }
 
 func NewEditMedia(media InputMedia) EditMessageMedia {
-	return EditMessageMedia{Media: media}
+	return EditMessageMedia{
+		Media: media,
+	}
 }
 
 // EditMessageMedia edit audio, document, photo, or video messages. If a message is a part of a message album, then it can be edited only to a photo or a video. Otherwise, message type can be changed arbitrarily. When inline message is edited, new file can't be uploaded. Use previously uploaded file via its file_id or specify a URL. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned.
@@ -168,8 +170,11 @@ func (b Bot) EditMessageReplyMarkup(p EditMessageReplyMarkup) (*Message, error) 
 	return result, nil
 }
 
-func NewStopPoll(chatID int64, messageID int) StopPoll {
-	return StopPoll{ChatID: chatID, MessageID: messageID}
+func NewStopPoll(chatID ChatID, messageID int) StopPoll {
+	return StopPoll{
+		ChatID:    chatID,
+		MessageID: messageID,
+	}
 }
 
 // StopPoll stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
@@ -197,8 +202,8 @@ func (b Bot) StopPoll(p StopPoll) (*Poll, error) {
 // - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
 //
 // Returns True on success.
-func (b Bot) DeleteMessage(cid int64, mid int) (ok bool, err error) {
-	src, err := b.Do(MethodDeleteMessage, DeleteMessage{ChatID: cid, MessageID: mid})
+func (b Bot) DeleteMessage(p DeleteMessage) (ok bool, err error) {
+	src, err := b.Do(MethodDeleteMessage, p)
 	if err != nil {
 		return ok, err
 	}

@@ -77,8 +77,7 @@ type (
 
 	// SendStickerParameters represents data for SetSticker method.
 	SendSticker struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Sticker to send
 		Sticker *InputFile `json:"sticker"`
@@ -88,6 +87,9 @@ type (
 
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
 
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
@@ -189,7 +191,7 @@ type (
 	}
 )
 
-func NewSticker(chatID int64, sticker *InputFile) SendSticker {
+func NewSticker(chatID ChatID, sticker *InputFile) SendSticker {
 	return SendSticker{
 		ChatID:  chatID,
 		Sticker: sticker,

@@ -8,14 +8,16 @@ import (
 type (
 	// SendMessage represents data for SendMessage method.
 	SendMessage struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Text of the message to be sent
 		Text string `json:"text"`
 
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in your bot's message.
 		ParseMode string `json:"parse_mode,omitempty"`
+
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		Entities []*MessageEntity `json:"entities,omitempty"`
 
 		// Disables link previews for links in this message
 		DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
@@ -26,17 +28,19 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// ForwardMessage represents data for ForwardMessage method.
 	ForwardMessage struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
-		FromChatID int64 `json:"from_chat_id"`
+		FromChatID ChatID `json:"from_chat_id"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
@@ -45,10 +49,44 @@ type (
 		MessageID int `json:"message_id"`
 	}
 
+	// CopyMessage represents data for CopyMessage method.
+	CopyMessage struct {
+		ChatID ChatID `json:"chat_id"`
+
+		// Unique identifier for the chat where the original message was sent
+		FromChatID ChatID `json:"from_chat_id"`
+
+		// Message identifier in the chat specified in from_chat_id
+		MessageID int `json:"message_id"`
+
+		// New caption for media, 0-1024 characters after entities parsing. If not specified, the original
+		// caption is kept
+		Caption string `json:"caption,omitempty"`
+
+		// Mode for parsing entities in the new caption. See formatting options for more details.
+		ParseMode string `json:"parse_mode,omitempty"`
+
+		// List of special entities that appear in the new caption, which can be specified instead of
+		// parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
+		// Sends the message silently. Users will receive a notification with no sound.
+		DisableNotification bool `json:"disable_notification,omitempty"`
+
+		// If the message is a reply, ID of the original message
+		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
+		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply
+		// keyboard, instructions to remove reply keyboard or to force a reply from the user.
+		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
+	}
+
 	// SendPhoto represents data for SendPhoto method.
 	SendPhoto struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data.
 		Photo *InputFile `json:"photo"`
@@ -59,8 +97,8 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
-		// Disables link previews for links in this message
-		DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
@@ -68,14 +106,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
-	// SendAudio represents data for SendVenue method.
+	// SendAudio represents data for SendAudio method.
 	SendAudio struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data.
 		Audio *InputFile `json:"audio"`
@@ -85,6 +125,9 @@ type (
 
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
+
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
 
 		// Duration of the audio in seconds
 		Duration int `json:"duration,omitempty"`
@@ -104,17 +147,27 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendDocument represents data for SendDocument method.
 	SendDocument struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
 		Document *InputFile `json:"document"`
+
+		// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
+		// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
+		// width and height should not exceed 320. Ignored if the file is not uploaded using
+		// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
+		// pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under
+		// <file_attach_name>.
+		Thumb *InputFile `json:"thumb,omitempty"`
 
 		// Document caption (may also be used when resending documents by file_id), 0-200 characters
 		Caption string `json:"caption,omitempty"`
@@ -122,11 +175,20 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
+		// Disables automatic server-side content type detection for files uploaded using multipart/form-data
+		DisableContentTypeDetection bool `json:"disable_content_type_detection,omitempty"`
+
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
 
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
@@ -134,8 +196,7 @@ type (
 
 	// SendDocument represents data for SendVideo method.
 	SendVideo struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data.
 		Video *InputFile `json:"video"`
@@ -158,6 +219,9 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
 		// Pass True, if the uploaded video is suitable for streaming
 		SupportsStreaming bool `json:"supports_streaming,omitempty"`
 
@@ -167,14 +231,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendAnimation represents data for SendAnimation method.
 	SendAnimation struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data.
 		Animation *InputFile `json:"animation"`
@@ -197,11 +263,17 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
 
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
@@ -209,8 +281,7 @@ type (
 
 	// SendVoice represents data for SendVoice method.
 	SendVoice struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
 		Voice *InputFile `json:"voice"`
@@ -221,6 +292,9 @@ type (
 		// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in the media caption.
 		ParseMode string `json:"parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"`
+
 		// Duration of the voice message in seconds
 		Duration int `json:"duration,omitempty"`
 
@@ -230,14 +304,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendVideoNote represents data for SendVideoNote method.
 	SendVideoNote struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data.. Sending video notes by a URL is currently unsupported
 		VideoNote *InputFile `json:"video_note"`
@@ -257,14 +333,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendMediaGroup represents data for SendMediaGroup method.
 	SendMediaGroup struct {
-		// Unique identifier for the target chat.
-		ChatID int64 `json:"chat_id" form:"chat_id"`
+		ChatID ChatID `json:"chat_id" form:"chat_id"`
 
 		// A JSON-serialized array describing photos and videos to be sent, must include 2–10 items
 		Media []AlbumMedia `json:"media" form:"media"`
@@ -274,12 +352,14 @@ type (
 
 		// If the messages are a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty" form:"reply_to_message_id"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty" form:"reply_to_message_id"`
 	}
 
 	// SendLocation represents data for SendLocation method.
 	SendLocation struct {
-		// Unique identifier for the target private chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Latitude of the location
 		Latitude float32 `json:"latitude"`
@@ -287,23 +367,38 @@ type (
 		// Longitude of the location
 		Longitude float32 `json:"longitude"`
 
-		// Period in seconds for which the location will be updated (see Live Locations), should be between 60 and 86400.
+		// The radius of uncertainty for the location, measured in meters; 0-1500
+		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+
+		// Period in seconds for which the location will be updated (see Live Locations), should be between 60
+		// and 86400.
 		LivePeriod int `json:"live_period,omitempty"`
 
-		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		// For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360
+		// if specified.
+		Heading int `json:"heading,omitempty"`
+
+		// For live locations, a maximum distance for proximity alerts about approaching another chat member,
+		// in meters. Must be between 1 and 100000 if specified.
+		ProximityAlertRadius int `json:"proximity_alert_radius,omitempty"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
-		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
+		// If the message is a reply, ID of the original message
+		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
+		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be
+		// shown. If not empty, the first button must be a Pay button.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// EditMessageLiveLocation represents data for EditMessageLiveLocation method.
 	EditMessageLiveLocation struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
 		MessageID int `json:"message_id,omitempty"`
@@ -317,14 +412,23 @@ type (
 		// Longitude of new location
 		Longitude float32 `json:"longitude"`
 
+		// The radius of uncertainty for the location, measured in meters; 0-1500
+		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+
+		// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
+		Heading int `json:"heading,omitempty"`
+
+		// Maximum distance for proximity alerts about approaching another chat member, in meters. Must be
+		// between 1 and 100000 if specified.
+		ProximityAlertRadius int `json:"proximity_alert_radius,omitempty"`
+
 		// A JSON-serialized object for a new inline keyboard.
-		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
+		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// StopMessageLiveLocation represents data for StopMessageLiveLocation method.
 	StopMessageLiveLocation struct {
-		// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id,omitempty"`
+		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the message with live location to stop
 		MessageID int `json:"message_id,omitempty"`
@@ -338,8 +442,7 @@ type (
 
 	// SendVenue represents data for SendVenue method.
 	SendVenue struct {
-		// Unique identifier for the target private chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Latitude of the venue
 		Latitude float32 `json:"latitude"`
@@ -356,8 +459,15 @@ type (
 		// Foursquare identifier of the venue
 		FoursquareID string `json:"foursquare_id,omitempty"`
 
-		// Foursquare type of the venue, if known. (For example, "arts_entertainment/default", "arts_entertainment/aquarium" or "food/icecream".)
+		// Foursquare type of the venue, if known. (For example, "arts_entertainment/default",
+		// "arts_entertainment/aquarium" or "food/icecream".)
 		FoursquareType string `json:"foursquare_type,omitempty"`
+
+		// Google Places identifier of the venue
+		GooglePlaceID string `json:"google_place_id,omitempty"`
+
+		// Google Places type of the venue.
+		GooglePlaceType string `json:"google_place_type,omitempty"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
@@ -365,14 +475,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendContact represents data for SendContact method.
 	SendContact struct {
-		// Unique identifier for the target private chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Contact's phone number
 		PhoneNumber string `json:"phone_number"`
@@ -392,16 +504,18 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendPoll represents data for SendPoll method.
 	SendPoll struct {
-		// Unique identifier for the target chat. A native poll can't be sent to a private chat.
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
-		// Poll question, 1-255 characters
+		// Poll question, 1-300 characters
 		Question string `json:"question"`
 
 		// List of answer options, 2-10 strings 1-100 characters each
@@ -426,6 +540,9 @@ type (
 		// Mode for parsing entities in the explanation. See formatting options for more details.
 		ExplanationParseMode string `json:"explanation_parse_mode,omitempty"`
 
+		// List of special entities that appear in the caption, which can be specified instead of parse_mode
+		ExplanationEntities []*MessageEntity `json:"explanation_entities,omitempty"`
+
 		// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
 		OpenPeriod int `json:"open_period,omitempty"`
 
@@ -441,17 +558,20 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendDice represents data for SendDice method.
 	SendDice struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
-		// Emoji on which the dice throw animation is based. Currently, must be one of “🎲” or “🎯”. Defauts to
-		// “🎲”
+		// Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”,
+		// “⚽”, or “🎰”. Dice can have values 1-6 for “🎲” and “🎯”, values 1-5 for “🏀” and “⚽”, and values
+		// 1-64 for “🎰”. Defaults to “🎲”
 		Emoji string `json:"emoji,omitempty"`
 
 		// Sends the message silently. Users will receive a notification with no sound.
@@ -460,14 +580,16 @@ type (
 		// If the message is a reply, ID of the original message
 		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
 	// SendChatAction represents data for SendChat method.
 	SendChatAction struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Type of action to broadcast
 		Action string `json:"action"`
@@ -493,8 +615,7 @@ type (
 
 	// KickChatMember represents data for KickChatMember method.
 	KickChatMember struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
 		UserID int `json:"user_id"`
@@ -505,16 +626,18 @@ type (
 
 	// UnbanChatMember represents data for UnbanChatMember method.
 	UnbanChatMember struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
+		// Unique identifier of the target user
 		UserID int `json:"user_id"`
+
+		// Do nothing if the user is not banned
+		OnlyIfBanned bool `json:"only_if_banned,omitempty"`
 	}
 
 	// RestrictChatMember represents data for RestrictChatMember method.
 	RestrictChatMember struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
 		UserID int `json:"user_id"`
@@ -528,11 +651,13 @@ type (
 
 	// PromoteChatMember represents data for PromoteChatMember method.
 	PromoteChatMember struct {
-		// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
 		UserID int `json:"user_id"`
+
+		// Pass True, if the administrator's presence in the chat is hidden
+		IsAnonymous bool `json:"is_anonymous,omitempty"`
 
 		// Pass True, if the administrator can change chat title, photo and other settings
 		CanChangeInfo bool `json:"can_change_info,omitempty"`
@@ -555,14 +680,15 @@ type (
 		// Pass True, if the administrator can pin messages, supergroups only
 		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 
-		// Pass True, if the administrator can add new administrators with a subset of his own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)
+		// Pass True, if the administrator can add new administrators with a subset of his own privileges or
+		// demote administrators that he has promoted, directly or indirectly (promoted by administrators that
+		// were appointed by him)
 		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
 	}
 
 	// SetChatAdministratorCustomTitle represents data for SetChatAdministratorCustomTitle method.
 	SetChatAdministratorCustomTitle struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
 		UserID int `json:"user_id"`
@@ -573,8 +699,7 @@ type (
 
 	// SetChatPermissions represents data for SetChatPermissions method.
 	SetChatPermissions struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// New default chat permissions
 		Permissions ChatPermissions `json:"permissions"`
@@ -582,14 +707,12 @@ type (
 
 	// ExportChatInviteLink represents data for ExportChatInviteLink method.
 	ExportChatInviteLink struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// SetChatPhoto represents data for SetChatPhoto method.
 	SetChatPhoto struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// New chat photo, uploaded using multipart/form-data
 		ChatPhoto InputFile `json:"chat_photo"`
@@ -597,14 +720,12 @@ type (
 
 	// DeleteChatPhoto represents data for DeleteChatPhoto method.
 	DeleteChatPhoto struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// SetChatTitle represents data for SetChatTitle method.
 	SetChatTitle struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// New chat title, 1-255 characters
 		Title string `json:"title"`
@@ -612,8 +733,7 @@ type (
 
 	// SetChatDescription represents data for SetChatDescription method.
 	SetChatDescription struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// New chat description, 0-255 characters
 		Description string `json:"description"`
@@ -621,8 +741,7 @@ type (
 
 	// PinChatMessage represents data for PinChatMessage method.
 	PinChatMessage struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of a message to pin
 		MessageID int `json:"message_id"`
@@ -633,38 +752,41 @@ type (
 
 	// UnpinChatMessage represents data for UnpinChatMessage method.
 	UnpinChatMessage struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
+
+		// Identifier of a message to unpin. If not specified, the most recent pinned message (by sending
+		// date) will be unpinned.
+		MessageID int `json:"messge_id,omitempty"`
+	}
+
+	// UnpinAllChatMessages represents data for UnpinAllChatMessages method.
+	UnpinAllChatMessages struct {
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// LeaveChat represents data for LeaveChat method.
 	LeaveChat struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// GetChat represents data for GetChat method.
 	GetChat struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// GetChatAdministrators represents data for GetChatAdministrators method.
 	GetChatAdministrators struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// GetChatMembersCount represents data for GetChatMembersCount method.
 	GetChatMembersCount struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// GetChatMember represents data for GetChatMember method.
 	GetChatMember struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
 		UserID int `json:"user_id"`
@@ -672,8 +794,7 @@ type (
 
 	// SetChatStickerSet represents data for SetChatStickerSet method.
 	SetChatStickerSet struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 
 		// Name of the sticker set to be set as the group sticker set
 		StickerSetName string `json:"sticker_set_name"`
@@ -681,8 +802,7 @@ type (
 
 	// DeleteChatStickerSet represents data for DeleteChatStickerSet method.
 	DeleteChatStickerSet struct {
-		// Unique identifier for the target chat
-		ChatID int64 `json:"chat_id"`
+		ChatID ChatID `json:"chat_id"`
 	}
 
 	// AnswerCallbackQuery represents data for AnswerCallbackQuery method.
@@ -728,7 +848,51 @@ func (b Bot) GetMe() (*User, error) {
 	return result, nil
 }
 
-func NewMessage(chatID int64, text string) SendMessage {
+// LogOut method to log out from the cloud Bot API server before launching the bot locally. You must log out the bot
+// before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful
+// call, you will not be able to log in again using the same token for 10 minutes. Returns True on success. Requires
+// no parameters.
+func (b Bot) LogOut() (ok bool, err error) {
+	src, err := b.Do(MethodLogOut, nil)
+	if err != nil {
+		return false, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return
+	}
+
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
+	}
+
+	return
+}
+
+// Close method to close the bot instance before moving it from one local server to another. You need to delete the
+// webhook before calling this method to ensure that the bot isn't launched again after server restart. The method
+// will return error 429 in the first 10 minutes after the bot is launched. Returns True on success. Requires no
+// parameters.
+func (b Bot) Close() (ok bool, err error) {
+	src, err := b.Do(MethodClose, nil)
+	if err != nil {
+		return false, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return
+	}
+
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
+	}
+
+	return
+}
+
+func NewMessage(chatID ChatID, text string) SendMessage {
 	return SendMessage{
 		ChatID: chatID,
 		Text:   text,
@@ -750,7 +914,7 @@ func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 	return result, nil
 }
 
-func NewForward(fromChatID, toChatID int64, messageID int) ForwardMessage {
+func NewForward(fromChatID, toChatID ChatID, messageID int) ForwardMessage {
 	return ForwardMessage{
 		FromChatID: fromChatID,
 		ChatID:     toChatID,
@@ -773,7 +937,23 @@ func (b Bot) ForwardMessage(p ForwardMessage) (*Message, error) {
 	return result, err
 }
 
-func NewPhoto(chatID int64, photo *InputFile) SendPhoto {
+// CopyMessage copy messages of any kind. The method is analogous to the method forwardMessages, but the copied
+// message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+func (b Bot) CopyMessage(p CopyMessage) (*MessageID, error) {
+	src, err := b.Do(MethodCopyMessage, p)
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(MessageID)
+	if err = parseResponseError(b.marshler, src, result); err != nil {
+		return nil, err
+	}
+
+	return result, err
+}
+
+func NewPhoto(chatID ChatID, photo *InputFile) SendPhoto {
 	return SendPhoto{
 		ChatID: chatID,
 		Photo:  photo,
@@ -783,10 +963,10 @@ func NewPhoto(chatID int64, photo *InputFile) SendPhoto {
 // SendPhoto send photos. On success, the sent Message is returned.
 func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
-	params["disable_web_page_preview"] = strconv.FormatBool(p.DisableWebPagePreview)
+	params["allow_sending_without_reply"] = strconv.FormatBool(p.AllowSendingWithoutReply)
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
 	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
 
@@ -817,7 +997,7 @@ func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 	return result, nil
 }
 
-func NewAudio(chatID int64, audio *InputFile) SendAudio {
+func NewAudio(chatID ChatID, audio *InputFile) SendAudio {
 	return SendAudio{
 		ChatID: chatID,
 		Audio:  audio,
@@ -829,7 +1009,7 @@ func NewAudio(chatID int64, audio *InputFile) SendAudio {
 // For sending voice messages, use the sendVoice method instead.
 func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
 	params["duration"] = strconv.Itoa(p.Duration)
@@ -873,7 +1053,7 @@ func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 	return result, nil
 }
 
-func NewDocument(chatID int64, document *InputFile) SendDocument {
+func NewDocument(chatID ChatID, document *InputFile) SendDocument {
 	return SendDocument{
 		ChatID:   chatID,
 		Document: document,
@@ -883,7 +1063,7 @@ func NewDocument(chatID int64, document *InputFile) SendDocument {
 // SendDocument send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
@@ -916,7 +1096,7 @@ func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	return result, nil
 }
 
-func NewVideo(chatID int64, video *InputFile) SendVideo {
+func NewVideo(chatID ChatID, video *InputFile) SendVideo {
 	return SendVideo{
 		ChatID: chatID,
 		Video:  video,
@@ -926,7 +1106,7 @@ func NewVideo(chatID int64, video *InputFile) SendVideo {
 // SendVideo send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["duration"] = strconv.Itoa(p.Duration)
 	params["width"] = strconv.Itoa(p.Width)
 	params["height"] = strconv.Itoa(p.Height)
@@ -971,7 +1151,7 @@ func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 	return result, nil
 }
 
-func NewAnimation(chatID int64, animation *InputFile) SendAnimation {
+func NewAnimation(chatID ChatID, animation *InputFile) SendAnimation {
 	return SendAnimation{
 		ChatID:    chatID,
 		Animation: animation,
@@ -981,7 +1161,7 @@ func NewAnimation(chatID int64, animation *InputFile) SendAnimation {
 // SendAnimation send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["duration"] = strconv.Itoa(p.Duration)
 	params["width"] = strconv.Itoa(p.Width)
 	params["height"] = strconv.Itoa(p.Height)
@@ -1025,7 +1205,7 @@ func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	return result, nil
 }
 
-func NewVoice(chatID int64, voice *InputFile) SendVoice {
+func NewVoice(chatID ChatID, voice *InputFile) SendVoice {
 	return SendVoice{
 		ChatID: chatID,
 		Voice:  voice,
@@ -1035,7 +1215,7 @@ func NewVoice(chatID int64, voice *InputFile) SendVoice {
 // SendVoice send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
 func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["duration"] = strconv.Itoa(p.Duration)
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
@@ -1069,7 +1249,7 @@ func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	return result, nil
 }
 
-func NewVideoNote(chatID int64, videoNote *InputFile) SendVideoNote {
+func NewVideoNote(chatID ChatID, videoNote *InputFile) SendVideoNote {
 	return SendVideoNote{
 		ChatID:    chatID,
 		VideoNote: videoNote,
@@ -1079,7 +1259,7 @@ func NewVideoNote(chatID int64, videoNote *InputFile) SendVideoNote {
 // SendVideoNote send video messages. On success, the sent Message is returned.
 func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["duration"] = strconv.Itoa(p.Duration)
 	params["length"] = strconv.Itoa(p.Length)
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
@@ -1120,7 +1300,7 @@ func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 	return result, nil
 }
 
-func NewMediaGroup(chatID int64, media ...AlbumMedia) SendMediaGroup {
+func NewMediaGroup(chatID ChatID, media ...AlbumMedia) SendMediaGroup {
 	return SendMediaGroup{
 		ChatID: chatID,
 		Media:  media,
@@ -1148,7 +1328,7 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	}
 
 	params := make(map[string]string)
-	params["chat_id"] = strconv.FormatInt(p.ChatID, 10)
+	params["chat_id"] = p.ChatID.String()
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
 	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
 	params["media"] = "[" + strings.Join(media, ",") + "]"
@@ -1166,7 +1346,7 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	return result, nil
 }
 
-func NewLocation(chatID int64, latitude, longitude float32) SendLocation {
+func NewLocation(chatID ChatID, latitude, longitude float32) SendLocation {
 	return SendLocation{
 		ChatID:    chatID,
 		Latitude:  latitude,
@@ -1226,7 +1406,7 @@ func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, error
 	return result, nil
 }
 
-func NewVenue(chatID int64, latitude, longitude float32, title, address string) SendVenue {
+func NewVenue(chatID ChatID, latitude, longitude float32, title, address string) SendVenue {
 	return SendVenue{
 		ChatID:    chatID,
 		Latitude:  latitude,
@@ -1251,7 +1431,7 @@ func (b Bot) SendVenue(p SendVenue) (*Message, error) {
 	return result, nil
 }
 
-func NewContact(chatID int64, phoneNumber, firstName string) SendContact {
+func NewContact(chatID ChatID, phoneNumber, firstName string) SendContact {
 	return SendContact{
 		ChatID:      chatID,
 		PhoneNumber: phoneNumber,
@@ -1274,7 +1454,7 @@ func (b Bot) SendContact(p SendContact) (*Message, error) {
 	return result, nil
 }
 
-func NewPoll(chatID int64, question string, options ...string) SendPoll {
+func NewPoll(chatID ChatID, question string, options ...string) SendPoll {
 	return SendPoll{
 		ChatID:   chatID,
 		Question: question,
@@ -1317,8 +1497,8 @@ func (b Bot) SendDice(p SendDice) (*Message, error) {
 // SendChatAction tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
 //
 // We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
-func (b Bot) SendChatAction(cid int64, action string) (ok bool, err error) {
-	src, err := b.Do(MethodSendChatAction, SendChatAction{ChatID: cid, Action: action})
+func (b Bot) SendChatAction(p SendChatAction) (ok bool, err error) {
+	src, err := b.Do(MethodSendChatAction, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1367,7 +1547,7 @@ func (b Bot) GetFile(fid string) (*File, error) {
 	return result, nil
 }
 
-func NewKick(chatID int64, userID int) KickChatMember {
+func NewKick(chatID ChatID, userID int) KickChatMember {
 	return KickChatMember{
 		ChatID: chatID,
 		UserID: userID,
@@ -1396,8 +1576,8 @@ func (b Bot) KickChatMember(p KickChatMember) (ok bool, err error) {
 }
 
 // UnbanChatMember unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
-func (b Bot) UnbanChatMember(cid int64, uid int) (ok bool, err error) {
-	src, err := b.Do(MethodUnbanChatMember, UnbanChatMember{ChatID: cid, UserID: uid})
+func (b Bot) UnbanChatMember(p UnbanChatMember) (ok bool, err error) {
+	src, err := b.Do(MethodUnbanChatMember, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1414,7 +1594,7 @@ func (b Bot) UnbanChatMember(cid int64, uid int) (ok bool, err error) {
 	return
 }
 
-func NewRestrict(chatID int64, userID int, permissions ChatPermissions) RestrictChatMember {
+func NewRestrict(chatID ChatID, userID int, permissions ChatPermissions) RestrictChatMember {
 	return RestrictChatMember{
 		ChatID:      chatID,
 		UserID:      userID,
@@ -1441,7 +1621,7 @@ func (b Bot) RestrictChatMember(p RestrictChatMember) (ok bool, err error) {
 	return
 }
 
-func NewPromote(chatID int64, userID int) PromoteChatMember {
+func NewPromote(chatID ChatID, userID int) PromoteChatMember {
 	return PromoteChatMember{
 		ChatID: chatID,
 		UserID: userID,
@@ -1506,8 +1686,8 @@ func (b Bot) SetChatPermissions(p SetChatPermissions) (ok bool, err error) {
 }
 
 // ExportChatInviteLink export an invite link to a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns exported invite link as String on success.
-func (b Bot) ExportChatInviteLink(cid int64) (string, error) {
-	src, err := b.Do(MethodExportChatInviteLink, ExportChatInviteLink{ChatID: cid})
+func (b Bot) ExportChatInviteLink(p ExportChatInviteLink) (string, error) {
+	src, err := b.Do(MethodExportChatInviteLink, p)
 	if err != nil {
 		return "", err
 	}
@@ -1557,8 +1737,8 @@ func (b Bot) SetChatPhoto(cid int64, photo *InputFile) (ok bool, err error) {
 }
 
 // DeleteChatPhoto delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) DeleteChatPhoto(cid int64) (ok bool, err error) {
-	src, err := b.Do(MethodDeleteChatPhoto, DeleteChatPhoto{ChatID: cid})
+func (b Bot) DeleteChatPhoto(p DeleteChatPhoto) (ok bool, err error) {
+	src, err := b.Do(MethodDeleteChatPhoto, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1576,8 +1756,8 @@ func (b Bot) DeleteChatPhoto(cid int64) (ok bool, err error) {
 }
 
 // SetChatTitle change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) SetChatTitle(cid int64, title string) (ok bool, err error) {
-	src, err := b.Do(MethodSetChatTitle, SetChatTitle{ChatID: cid, Title: title})
+func (b Bot) SetChatTitle(p SetChatTitle) (ok bool, err error) {
+	src, err := b.Do(MethodSetChatTitle, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1595,8 +1775,8 @@ func (b Bot) SetChatTitle(cid int64, title string) (ok bool, err error) {
 }
 
 // SetChatDescription change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
-func (b Bot) SetChatDescription(cid int64, txt string) (ok bool, err error) {
-	src, err := b.Do(MethodSetChatDescription, SetChatDescription{ChatID: cid, Description: txt})
+func (b Bot) SetChatDescription(p SetChatDescription) (ok bool, err error) {
+	src, err := b.Do(MethodSetChatDescription, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1613,7 +1793,7 @@ func (b Bot) SetChatDescription(cid int64, txt string) (ok bool, err error) {
 	return
 }
 
-func NewPin(chatID int64, messageID int) PinChatMessage {
+func NewPin(chatID ChatID, messageID int) PinChatMessage {
 	return PinChatMessage{
 		ChatID:    chatID,
 		MessageID: messageID,
@@ -1640,8 +1820,29 @@ func (b Bot) PinChatMessage(p PinChatMessage) (ok bool, err error) {
 }
 
 // UnpinChatMessage unpin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the ‘can_pin_messages’ admin right in the supergroup or ‘can_edit_messages’ admin right in the channel. Returns True on success.
-func (b Bot) UnpinChatMessage(cid int64) (ok bool, err error) {
-	src, err := b.Do(MethodUnpinChatMessage, UnpinChatMessage{ChatID: cid})
+func (b Bot) UnpinChatMessage(p UnpinChatMessage) (ok bool, err error) {
+	src, err := b.Do(MethodUnpinChatMessage, p)
+	if err != nil {
+		return ok, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return
+	}
+
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
+	}
+
+	return
+}
+
+// UnpinChatMessage method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot
+// must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a
+// supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.
+func (b Bot) UnpinAllChatMessages(p UnpinAllChatMessages) (ok bool, err error) {
+	src, err := b.Do(MethodUnpinAllChatMessages, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1659,8 +1860,8 @@ func (b Bot) UnpinChatMessage(cid int64) (ok bool, err error) {
 }
 
 // LeaveChat leave a group, supergroup or channel. Returns True on success.
-func (b Bot) LeaveChat(cid int64) (ok bool, err error) {
-	src, err := b.Do(MethodLeaveChat, LeaveChat{ChatID: cid})
+func (b Bot) LeaveChat(p LeaveChat) (ok bool, err error) {
+	src, err := b.Do(MethodLeaveChat, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1678,8 +1879,8 @@ func (b Bot) LeaveChat(cid int64) (ok bool, err error) {
 }
 
 // GetChat get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
-func (b Bot) GetChat(cid int64) (*Chat, error) {
-	src, err := b.Do(MethodGetChat, GetChat{ChatID: cid})
+func (b Bot) GetChat(p GetChat) (*Chat, error) {
+	src, err := b.Do(MethodGetChat, p)
 	if err != nil {
 		return nil, err
 	}
@@ -1693,8 +1894,8 @@ func (b Bot) GetChat(cid int64) (*Chat, error) {
 }
 
 // GetChatAdministrators get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
-func (b Bot) GetChatAdministrators(cid int64) ([]*ChatMember, error) {
-	src, err := b.Do(MethodGetChatAdministrators, GetChatAdministrators{ChatID: cid})
+func (b Bot) GetChatAdministrators(p GetChatAdministrators) ([]*ChatMember, error) {
+	src, err := b.Do(MethodGetChatAdministrators, p)
 	if err != nil {
 		return nil, err
 	}
@@ -1708,8 +1909,8 @@ func (b Bot) GetChatAdministrators(cid int64) ([]*ChatMember, error) {
 }
 
 // GetChatMembersCount get the number of members in a chat. Returns Int on success.
-func (b Bot) GetChatMembersCount(cid int64) (int, error) {
-	src, err := b.Do(MethodGetChatMembersCount, GetChatMembersCount{ChatID: cid})
+func (b Bot) GetChatMembersCount(p GetChatMembersCount) (int, error) {
+	src, err := b.Do(MethodGetChatMembersCount, p)
 	if err != nil {
 		return 0, err
 	}
@@ -1728,8 +1929,8 @@ func (b Bot) GetChatMembersCount(cid int64) (int, error) {
 }
 
 // GetChatMember get information about a member of a chat. Returns a ChatMember object on success.
-func (b Bot) GetChatMember(cid int64, uid int) (*ChatMember, error) {
-	src, err := b.Do(MethodGetChatMember, GetChatMember{ChatID: cid, UserID: uid})
+func (b Bot) GetChatMember(p GetChatMember) (*ChatMember, error) {
+	src, err := b.Do(MethodGetChatMember, p)
 	if err != nil {
 		return nil, err
 	}
@@ -1743,8 +1944,8 @@ func (b Bot) GetChatMember(cid int64, uid int) (*ChatMember, error) {
 }
 
 // SetChatStickerSet set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b Bot) SetChatStickerSet(cid int64, name string) (ok bool, err error) {
-	src, err := b.Do(MethodSetChatStickerSet, SetChatStickerSet{ChatID: cid, StickerSetName: name})
+func (b Bot) SetChatStickerSet(p SetChatStickerSet) (ok bool, err error) {
+	src, err := b.Do(MethodSetChatStickerSet, p)
 	if err != nil {
 		return ok, err
 	}
@@ -1762,8 +1963,8 @@ func (b Bot) SetChatStickerSet(cid int64, name string) (ok bool, err error) {
 }
 
 // DeleteChatStickerSet delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-func (b Bot) DeleteChatStickerSet(cid int64) (ok bool, err error) {
-	src, err := b.Do(MethodDeleteChatStickerSet, DeleteChatStickerSet{ChatID: cid})
+func (b Bot) DeleteChatStickerSet(p DeleteChatStickerSet) (ok bool, err error) {
+	src, err := b.Do(MethodDeleteChatStickerSet, p)
 	if err != nil {
 		return ok, err
 	}

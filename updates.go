@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"net"
 	"strconv"
 	"strings"
 	"time"
@@ -14,7 +15,7 @@ type (
 	// At most one of the optional parameters can be present in any given update.
 	Update struct {
 		// The update‘s unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you’re using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order.
-		UpdateID int `json:"update_id"`
+		ID int `json:"update_id"`
 
 		// New incoming message of any kind — text, photo, sticker, etc.
 		Message *Message `json:"message,omitempty"`
@@ -56,14 +57,18 @@ type (
 		// Webhook URL, may be empty if webhook is not set up
 		URL string `json:"url"`
 
-		// Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook
-		LastErrorMessage string `json:"last_error_message,omitempty"`
-
 		// True, if a custom certificate was provided for webhook certificate checks
 		HasCustomCertificate bool `json:"has_custom_certificate"`
 
 		// Number of updates awaiting delivery
 		PendingUpdateCount int `json:"pending_update_count"`
+
+		// Currently used webhook IP address
+		IpAddress net.IP `json:"ip_address,omitempty"`
+
+		// Error message in human-readable format for the most recent error that happened when trying to
+		// deliver an update via webhook
+		LastErrorMessage string `json:"last_error_message,omitempty"`
 
 		// Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
 		MaxConnections int `json:"max_connections,omitempty"`
@@ -100,6 +105,10 @@ type (
 		// Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
 		Certificate InputFile `json:"certificate,omitempty"`
 
+		// The fixed IP address which will be used to send webhook requests instead of the IP address resolved
+		// through DNS
+		IpAddress net.IP `json:"ip_address,omitempty"`
+
 		// Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot‘s server, and higher values to increase your bot’s throughput.
 		MaxConnections int `json:"max_connections,omitempty"`
 
@@ -107,6 +116,14 @@ type (
 		//
 		// Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
 		AllowedUpdates []string `json:"allowed_updates,omitempty"`
+
+		// Pass True to drop all pending updates
+		DropPendingUpdates bool `json:"drop_pending_updates,omitempty"`
+	}
+
+	DeleteWebhook struct {
+		// Pass True to drop all pending updates
+		DropPendingUpdates bool `json:"drop_pending_updates,omitempty"`
 	}
 
 	// UpdatesChannel represents channel for incoming updates.
@@ -134,9 +151,11 @@ func (b Bot) GetUpdates(p *GetUpdates) ([]*Update, error) {
 func (b Bot) SetWebhook(p SetWebhook) (ok bool, err error) {
 	if p.Certificate.IsAttachment() {
 		_, err := b.Upload(MethodSetWebhook, map[string]string{
-			"allowed_updates": strings.Join(p.AllowedUpdates, ","),
-			"max_connections": strconv.Itoa(p.MaxConnections),
-			"url":             p.URL,
+			"url":                  p.URL,
+			"ip_address":           p.IpAddress.String(),
+			"max_connections":      strconv.Itoa(p.MaxConnections),
+			"allowed_updates":      strings.Join(p.AllowedUpdates, ","),
+			"drop_pending_updates": strconv.FormatBool(p.DropPendingUpdates),
 		}, &p.Certificate)
 
 		return err == nil, err
@@ -155,8 +174,8 @@ func (b Bot) SetWebhook(p SetWebhook) (ok bool, err error) {
 }
 
 // DeleteWebhook remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters.
-func (b Bot) DeleteWebhook() (ok bool, err error) {
-	src, err := b.Do(MethodDeleteWebhook, nil)
+func (b Bot) DeleteWebhook(p DeleteWebhook) (ok bool, err error) {
+	src, err := b.Do(MethodDeleteWebhook, p)
 	if err != nil {
 		return ok, err
 	}

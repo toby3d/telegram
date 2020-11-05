@@ -271,11 +271,11 @@ func (b *Bot) NewLongPollingChannel(params *GetUpdates) UpdatesChannel {
 			}
 
 			for _, update := range updates {
-				if update.UpdateID < params.Offset {
+				if update.ID < params.Offset {
 					continue
 				}
 
-				params.Offset = update.UpdateID + 1
+				params.Offset = update.ID + 1
 				b.Updates <- update
 			}
 		}

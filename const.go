@@ -1,9 +1,7 @@
 package telegram
 
-import "github.com/Masterminds/semver"
-
 // Version represents current version of Telegram API supported by this package
-var Version = semver.MustParse("4.9.0") //nolint: gochecknoglobals
+const Version = "5.0.0"
 
 // Action represents available and supported status actions of bot
 const (
@@ -27,7 +25,8 @@ const (
 	ChatSuperGroup string = "supergroup"
 )
 
-// Command represents global commands which should be supported by any bot. You can user IsCommandEqual method of Message for checking.
+// Command represents global commands which should be supported by any bot. You can user IsCommandEqual method of
+// Message for checking.
 //
 // See: https://core.telegram.org/bots#global-commands
 const (
@@ -62,6 +61,8 @@ const (
 	MethodAnswerInlineQuery               string = "answerInlineQuery"
 	MethodAnswerPreCheckoutQuery          string = "answerPreCheckoutQuery"
 	MethodAnswerShippingQuery             string = "answerShippingQuery"
+	MethodClose                           string = "close"
+	MethodCopyMessage                     string = "copyMessage"
 	MethodCreateNewStickerSet             string = "createNewStickerSet"
 	MethodDeleteChatPhoto                 string = "deleteChatPhoto"
 	MethodDeleteChatStickerSet            string = "deleteChatStickerSet"
@@ -89,6 +90,7 @@ const (
 	MethodGetWebhookInfo                  string = "getWebhookInfo"
 	MethodKickChatMember                  string = "kickChatMember"
 	MethodLeaveChat                       string = "leaveChat"
+	MethodLogOut                          string = "logOut"
 	MethodPinChatMessage                  string = "pinChatMessage"
 	MethodPromoteChatMember               string = "promoteChatMember"
 	MethodRestrictChatMember              string = "restrictChatMember"
@@ -125,6 +127,7 @@ const (
 	MethodStopMessageLiveLocation         string = "stopMessageLiveLocation"
 	MethodStopPoll                        string = "stopPoll"
 	MethodUnbanChatMember                 string = "unbanChatMember"
+	MethodUnpinAllChatMessages            string = "unpinAllChatMessages"
 	MethodUnpinChatMessage                string = "unpinChatMessage"
 	MethodUploadStickerFile               string = "uploadStickerFile"
 )
@@ -228,7 +231,16 @@ const (
 
 // Emoji represents emoji supported by SendDice method
 const (
-	EmojiGameDie    string = "🎲"
-	EmojiDart       string = "🎯"
-	EmojiBasketball string = "🏀"
+	EmojiBasketball  string = "🏀" // 1-5
+	EmojiDart        string = "🎯" // 1-6
+	EmojiGameDie     string = "🎲" // 1-6
+	EmojiSlotMachine string = "🎰" // 1-64
+	EmojiSoccer      string = "⚽" // 1-5
+)
+
+const (
+	// FromAnonymous is a User ID for messages from anonymous group administrators.
+	FromAnonymous int = 1087968824 // @GroupAnonymousBot
+	// FromForwarder is a User ID for messages automatically forwarded to the discussion group.
+	FromForwarder int = 777000
 )

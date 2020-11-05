@@ -202,6 +202,9 @@ type (
 		// Sends the message silently. Users will receive a notification with no sound.
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
+		// Pass True, if the message should be sent even if the specified replied-to message is not found
+		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
+
 		// A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}

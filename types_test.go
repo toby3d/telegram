@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
@@ -2143,4 +2144,35 @@ func TestPollCloseTime(t *testing.T) {
 	p := Poll{CloseDate: now.Unix()}
 
 	assert.Equal(t, now, p.CloseTime())
+}
+
+func TestChatIDMarshalJSON(t *testing.T) {
+	for _, tc := range []struct {
+		name      string
+		input     ChatID
+		expResult []byte
+	}{{
+		name:      "chat id",
+		input:     ChatID{ID: 123456},
+		expResult: strconv.AppendInt(nil, 123456, 10),
+	}, {
+		name:      "channel username",
+		input:     ChatID{Username: "@toby3dMe"},
+		expResult: []byte("@toby3dMe"),
+	}, {
+		name:      "prefer id",
+		input:     ChatID{ID: 123456, Username: "@toby3dMe"},
+		expResult: strconv.AppendInt(nil, 123456, 10),
+	}, {
+		name:      "empty",
+		input:     ChatID{},
+		expResult: nil,
+	}} {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			result, err := tc.input.MarshalJSON()
+			assert.NoError(t, err)
+			assert.Equal(t, tc.expResult, result)
+		})
+	}
 }
