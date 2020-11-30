@@ -480,13 +480,13 @@ type (
 	// Location represents a point on the map.
 	Location struct {
 		// Longitude as defined by sender
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// Latitude as defined by sender
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// The radius of uncertainty for the location, measured in meters; 0-1500
-		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+		HorizontalAccuracy float64 `json:"horizontal_accuracy,omitempty"`
 
 		// Time relative to the message sending date, during which the location can be updated, in seconds.
 		// For active live locations only.

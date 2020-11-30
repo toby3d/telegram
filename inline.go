@@ -392,16 +392,16 @@ type (
 		ID string `json:"id"`
 
 		// Location latitude in degrees
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Location longitude in degrees
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// Location title
 		Title string `json:"title"`
 
 		// The radius of uncertainty for the location, measured in meters; 0-1500
-		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+		HorizontalAccuracy float64 `json:"horizontal_accuracy,omitempty"`
 
 		// Period in seconds for which the location can be updated, should be between 60 and 86400.
 		LivePeriod int `json:"live_period,omitempty"`
@@ -440,10 +440,10 @@ type (
 		ID string `json:"id"`
 
 		// Latitude of the venue location in degrees
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of the venue location in degrees
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// Title of the venue
 		Title string `json:"title"`
@@ -817,13 +817,13 @@ type (
 	// inline query.
 	InputLocationMessageContent struct {
 		// Latitude of the location in degrees
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of the location in degrees
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// The radius of uncertainty for the location, measured in meters; 0-1500
-		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+		HorizontalAccuracy float64 `json:"horizontal_accuracy,omitempty"`
 
 		// Period in seconds for which the location can be updated, should be between 60 and 86400.
 		LivePeriod int `json:"live_period,omitempty"`
@@ -841,10 +841,10 @@ type (
 	// query.
 	InputVenueMessageContent struct {
 		// Latitude of the location in degrees
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of the location in degrees
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// Name of the venue
 		Title string `json:"title"`
@@ -1168,7 +1168,7 @@ func NewInlineQueryResultGif(id, gif, thumb string) InlineQueryResultGif {
 
 func (InlineQueryResultGif) IsCached() bool { return false }
 
-func NewInlineQueryResultLocation(id, title string, lat, long float32) InlineQueryResultLocation {
+func NewInlineQueryResultLocation(id, title string, lat, long float64) InlineQueryResultLocation {
 	return InlineQueryResultLocation{
 		Type:      TypeLocation,
 		ID:        id,
@@ -1202,7 +1202,7 @@ func NewInlineQueryResultPhoto(id, photo, thumb string) InlineQueryResultPhoto {
 
 func (InlineQueryResultPhoto) IsCached() bool { return false }
 
-func NewInlineQueryResultVenue(id, title, addr string, lat, long float32) InlineQueryResultVenue {
+func NewInlineQueryResultVenue(id, title, addr string, lat, long float64) InlineQueryResultVenue {
 	return InlineQueryResultVenue{
 		Type:      TypeVenue,
 		ID:        id,

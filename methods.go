@@ -362,13 +362,13 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Latitude of the location
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of the location
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// The radius of uncertainty for the location, measured in meters; 0-1500
-		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+		HorizontalAccuracy float64 `json:"horizontal_accuracy,omitempty"`
 
 		// Period in seconds for which the location will be updated (see Live Locations), should be between 60
 		// and 86400.
@@ -407,13 +407,13 @@ type (
 		InlineMessageID string `json:"inline_message_id,omitempty"`
 
 		// Latitude of new location
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of new location
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// The radius of uncertainty for the location, measured in meters; 0-1500
-		HorizontalAccuracy float32 `json:"horizontal_accuracy,omitempty"`
+		HorizontalAccuracy float64 `json:"horizontal_accuracy,omitempty"`
 
 		// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
 		Heading int `json:"heading,omitempty"`
@@ -445,10 +445,10 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Latitude of the venue
-		Latitude float32 `json:"latitude"`
+		Latitude float64 `json:"latitude"`
 
 		// Longitude of the venue
-		Longitude float32 `json:"longitude"`
+		Longitude float64 `json:"longitude"`
 
 		// Name of the venue
 		Title string `json:"title"`
@@ -1346,7 +1346,7 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	return result, nil
 }
 
-func NewLocation(chatID ChatID, latitude, longitude float32) SendLocation {
+func NewLocation(chatID ChatID, latitude, longitude float64) SendLocation {
 	return SendLocation{
 		ChatID:    chatID,
 		Latitude:  latitude,
@@ -1369,7 +1369,7 @@ func (b Bot) SendLocation(p SendLocation) (*Message, error) {
 	return result, nil
 }
 
-func NewLiveLocation(latitude, longitude float32) EditMessageLiveLocation {
+func NewLiveLocation(latitude, longitude float64) EditMessageLiveLocation {
 	return EditMessageLiveLocation{
 		Latitude:  latitude,
 		Longitude: longitude,
@@ -1406,11 +1406,11 @@ func (b Bot) StopMessageLiveLocation(p StopMessageLiveLocation) (*Message, error
 	return result, nil
 }
 
-func NewVenue(chatID ChatID, latitude, longitude float32, title, address string) SendVenue {
+func NewVenue(chatID ChatID, lat, long float64, title, address string) SendVenue {
 	return SendVenue{
 		ChatID:    chatID,
-		Latitude:  latitude,
-		Longitude: longitude,
+		Latitude:  lat,
+		Longitude: long,
 		Title:     title,
 		Address:   address,
 	}
