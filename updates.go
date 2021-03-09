@@ -15,7 +15,7 @@ type (
 	// At most one of the optional parameters can be present in any given update.
 	Update struct {
 		// The update‘s unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you’re using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order.
-		ID int `json:"update_id"`
+		ID int64 `json:"update_id"`
 
 		// New incoming message of any kind — text, photo, sticker, etc.
 		Message *Message `json:"message,omitempty"`
@@ -50,6 +50,14 @@ type (
 		// A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were
 		// sent by the bot itself.
 		PollAnswer *PollAnswer `json:"poll_answer,omitempty"`
+
+		// The bot's chat member status was updated in a chat. For private chats, this update is received only
+		// when the bot is blocked or unblocked by the user.
+		MyChatMember *ChatMemberUpdated `json:"my_chat_member,omitempty"`
+
+		// A chat member's status was updated in a chat. The bot must be an administrator in the chat and must
+		// explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
+		ChatMember *ChatMemberUpdated `json:"chat_member,omitempty"`
 	}
 
 	// WebhookInfo contains information about the current status of a webhook.
@@ -83,7 +91,7 @@ type (
 	// GetUpdatesParameters represents data for GetUpdates method.
 	GetUpdates struct {
 		// Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id. The negative offset can be specified to retrieve updates starting from -offset update from the end of the updates queue. All previous updates will forgotten.
-		Offset int `json:"offset,omitempty"`
+		Offset int64 `json:"offset,omitempty"`
 
 		// Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100.
 		Limit int `json:"limit,omitempty"`

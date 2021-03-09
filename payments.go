@@ -182,7 +182,7 @@ type (
 		PhotoHeight int `json:"photo_height,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if you require the user's full name to complete the order
 		NeedName bool `json:"need_name,omitempty"`

@@ -6,7 +6,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -32,7 +32,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -55,7 +55,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -72,7 +72,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -85,7 +85,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of the original message with the poll
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 
 		// A JSON-serialized object for a new message inline keyboard.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -96,7 +96,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of the message to delete
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 	}
 )
 
@@ -170,7 +170,7 @@ func (b Bot) EditMessageReplyMarkup(p EditMessageReplyMarkup) (*Message, error) 
 	return result, nil
 }
 
-func NewStopPoll(chatID ChatID, messageID int) StopPoll {
+func NewStopPoll(chatID ChatID, messageID int64) StopPoll {
 	return StopPoll{
 		ChatID:    chatID,
 		MessageID: messageID,

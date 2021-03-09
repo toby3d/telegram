@@ -230,7 +230,7 @@ type (
 
 	SetPassportDataErrors struct {
 		// User identifier
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// A JSON-serialized array describing the errors
 		Errors []PassportElementError `json:"errors"`
@@ -239,7 +239,7 @@ type (
 	// AuthParameters represent a Telegram Passport auth parameters for SDK.
 	Auth struct {
 		// Unique identifier for the b. You can get it from bot token. For example, for the bot token 1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy, the bot id is 1234567.
-		BotID int `json:"bot_id"`
+		BotID int64 `json:"bot_id"`
 
 		// A JSON-serialized object describing the data you want to request
 		Scope *PassportScope `json:"scope"`
@@ -530,7 +530,7 @@ var ErrNotEqual = errors.New("credentials hash and credentials data hash is not 
 // SetPassportDataErrors informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
 //
 // Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
-func (b Bot) SetPassportDataErrors(uid int, errors ...PassportElementError) (ok bool, err error) {
+func (b Bot) SetPassportDataErrors(uid int64, errors ...PassportElementError) (ok bool, err error) {
 	src, err := b.Do(MethodSetPassportDataErrors, SetPassportDataErrors{
 		UserID: uid, Errors: errors,
 	})

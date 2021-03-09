@@ -1,7 +1,7 @@
 package telegram
 
 // Version represents current version of Telegram API supported by this package
-const Version = "5.0.0"
+const Version string = "5.1.0"
 
 // Action represents available and supported status actions of bot
 const (
@@ -63,12 +63,14 @@ const (
 	MethodAnswerShippingQuery             string = "answerShippingQuery"
 	MethodClose                           string = "close"
 	MethodCopyMessage                     string = "copyMessage"
+	MethodCreateChatInviteLink            string = "createChatInviteLink"
 	MethodCreateNewStickerSet             string = "createNewStickerSet"
 	MethodDeleteChatPhoto                 string = "deleteChatPhoto"
 	MethodDeleteChatStickerSet            string = "deleteChatStickerSet"
 	MethodDeleteMessage                   string = "deleteMessage"
 	MethodDeleteStickerFromSet            string = "deleteStickerFromSet"
 	MethodDeleteWebhook                   string = "deleteWebhook"
+	MethodEditChatInviteLink              string = "editChatInviteLink"
 	MethodEditMessageCaption              string = "editMessageCaption"
 	MethodEditMessageLiveLocation         string = "editMessageLiveLocation"
 	MethodEditMessageMedia                string = "editMessageMedia"
@@ -94,6 +96,7 @@ const (
 	MethodPinChatMessage                  string = "pinChatMessage"
 	MethodPromoteChatMember               string = "promoteChatMember"
 	MethodRestrictChatMember              string = "restrictChatMember"
+	MethodRevokeChatInviteLink            string = "revokeChatInviteLink"
 	MethodSendAnimation                   string = "sendAnimation"
 	MethodSendAudio                       string = "sendAudio"
 	MethodSendChatAction                  string = "sendChatAction"
@@ -219,8 +222,8 @@ const (
 
 // Default represents a default values for some helpers
 const (
-	DefaultAudioSeparator = " – "
-	DefaultAudioTitle     = "[untitled]"
+	DefaultAudioSeparator string = " – "
+	DefaultAudioTitle     string = "[untitled]"
 )
 
 // Poll represents a poll types
@@ -232,6 +235,7 @@ const (
 // Emoji represents emoji supported by SendDice method
 const (
 	EmojiBasketball  string = "🏀" // 1-5
+	EmojiBowling     string = "🎳" // 1-6
 	EmojiDart        string = "🎯" // 1-6
 	EmojiGameDie     string = "🎲" // 1-6
 	EmojiSlotMachine string = "🎰" // 1-64
@@ -240,7 +244,7 @@ const (
 
 const (
 	// FromAnonymous is a User ID for messages from anonymous group administrators.
-	FromAnonymous int = 1087968824 // @GroupAnonymousBot
+	FromAnonymous int64 = 1087968824 // @GroupAnonymousBot
 	// FromForwarder is a User ID for messages automatically forwarded to the discussion group.
-	FromForwarder int = 777000
+	FromForwarder int64 = 777000
 )

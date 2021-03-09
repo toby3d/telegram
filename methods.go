@@ -26,7 +26,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -46,7 +46,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// Message identifier in the chat specified in from_chat_id
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 	}
 
 	// CopyMessage represents data for CopyMessage method.
@@ -57,7 +57,7 @@ type (
 		FromChatID ChatID `json:"from_chat_id"`
 
 		// Message identifier in the chat specified in from_chat_id
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 
 		// New caption for media, 0-1024 characters after entities parsing. If not specified, the original
 		// caption is kept
@@ -74,7 +74,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -104,7 +104,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -145,7 +145,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -185,7 +185,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -229,7 +229,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -270,7 +270,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -302,7 +302,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -331,7 +331,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -351,7 +351,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty" form:"disable_notification"`
 
 		// If the messages are a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty" form:"reply_to_message_id"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty" form:"reply_to_message_id"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty" form:"reply_to_message_id"`
@@ -386,7 +386,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -401,7 +401,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -431,7 +431,7 @@ type (
 		ChatID ChatID `json:"chat_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Identifier of the message with live location to stop
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if chat_id and message_id are not specified. Identifier of the inline message
 		InlineMessageID string `json:"inline_message_id,omitempty"`
@@ -473,7 +473,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -502,7 +502,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -531,7 +531,7 @@ type (
 		AllowsMultipleAnswers bool `json:"allows_multiple_answers,omitempty"`
 
 		// 0-based identifier of the correct answer option, required for polls in quiz mode
-		CorrectOptionID int `json:"correct_option_id,omitempty"`
+		CorrectOptionID int64 `json:"correct_option_id,omitempty"`
 
 		// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
 		// poll, 0-200 characters with at most 2 line feeds after entities parsing
@@ -556,7 +556,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -578,7 +578,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -598,7 +598,7 @@ type (
 	// GetUserProfilePhotos represents data for GetUserProfilePhotos method.
 	GetUserProfilePhotos struct {
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Sequential number of the first photo to be returned. By default, all photos are returned.
 		Offset int `json:"offset,omitempty"`
@@ -618,10 +618,13 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever
 		UntilDate int64 `json:"until_date"`
+
+		// Pass True to delete all messages from the chat for the user that is being removed. If False, the user will be able to see messages in the group that were sent before the user was removed. Always True for supergroups and channels.
+		RevokeMessages bool `json:"revoke_messages,omitempty"`
 	}
 
 	// UnbanChatMember represents data for UnbanChatMember method.
@@ -629,7 +632,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Do nothing if the user is not banned
 		OnlyIfBanned bool `json:"only_if_banned,omitempty"`
@@ -640,7 +643,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// New user permissions
 		Permissions *ChatPermissions `json:"permissions"`
@@ -654,10 +657,15 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Pass True, if the administrator's presence in the chat is hidden
 		IsAnonymous bool `json:"is_anonymous,omitempty"`
+
+		// Pass True, if the administrator can access the chat event log, chat statistics, message statistics
+		// in channels, see channel members, see anonymous administrators in supergoups and ignore slow mode.
+		// Implied by any other administrator privilege
+		CanManageChat bool `json:"can_manage_chat,omitempty"`
 
 		// Pass True, if the administrator can change chat title, photo and other settings
 		CanChangeInfo bool `json:"can_change_info,omitempty"`
@@ -670,6 +678,9 @@ type (
 
 		// Pass True, if the administrator can delete messages of other users
 		CanDeleteMessages bool `json:"can_delete_messages,omitempty"`
+
+		// Pass True, if the administrator can manage voice chats, supergroups only
+		CanManageVoiceChats bool `json:"can_manage_voice_chats,omitempty"`
 
 		// Pass True, if the administrator can invite new users to the chat
 		CanInviteUsers bool `json:"can_invite_users,omitempty"`
@@ -691,7 +702,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// New custom title for the administrator; 0-16 characters, emoji are not allowed
 		CustomTitle string `json:"custom_title"`
@@ -708,6 +719,41 @@ type (
 	// ExportChatInviteLink represents data for ExportChatInviteLink method.
 	ExportChatInviteLink struct {
 		ChatID ChatID `json:"chat_id"`
+	}
+
+	// CreateChatInviteLink represents data for CreateChatInviteLink method.
+	CreateChatInviteLink struct {
+		ChatID ChatID `json:"chat_id"`
+
+		// Point in time (Unix timestamp) when the link will expire
+		ExpireDate int64 `json:"expire_date,omitempty"`
+
+		// Maximum number of users that can be members of the chat simultaneously after joining the chat via
+		// this invite link; 1-99999
+		MemberLimit int `json:"member_limit,omitempty"`
+	}
+
+	// EditChatInviteLink represents data for EditChatInviteLink method.
+	EditChatInviteLink struct {
+		ChatID ChatID `json:"chat_id"`
+
+		// The invite link to edit
+		InviteLink string `json:"invite_link"`
+
+		// Point in time (Unix timestamp) when the link will expire
+		ExpireDate int64 `json:"expire_date,omitempty"`
+
+		// Maximum number of users that can be members of the chat simultaneously after joining the chat via
+		// this invite link; 1-99999
+		MemberLimit int `json:"member_limit,omitempty"`
+	}
+
+	// RevokeChatInviteLink represents data for RevokeChatInviteLink method.
+	RevokeChatInviteLink struct {
+		ChatID ChatID `json:"chat_id"`
+
+		// The invite link to revoke
+		InviteLink string `json:"invite_link"`
 	}
 
 	// SetChatPhoto represents data for SetChatPhoto method.
@@ -744,7 +790,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Identifier of a message to pin
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 
 		// Pass true, if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels.
 		DisableNotification bool `json:"disable_notification"`
@@ -756,7 +802,7 @@ type (
 
 		// Identifier of a message to unpin. If not specified, the most recent pinned message (by sending
 		// date) will be unpinned.
-		MessageID int `json:"messge_id,omitempty"`
+		MessageID int64 `json:"messge_id,omitempty"`
 	}
 
 	// UnpinAllChatMessages represents data for UnpinAllChatMessages method.
@@ -789,7 +835,7 @@ type (
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 	}
 
 	// SetChatStickerSet represents data for SetChatStickerSet method.
@@ -914,7 +960,7 @@ func (b Bot) SendMessage(p SendMessage) (*Message, error) {
 	return result, nil
 }
 
-func NewForward(fromChatID, toChatID ChatID, messageID int) ForwardMessage {
+func NewForward(fromChatID, toChatID ChatID, messageID int64) ForwardMessage {
 	return ForwardMessage{
 		FromChatID: fromChatID,
 		ChatID:     toChatID,
@@ -968,7 +1014,7 @@ func (b Bot) SendPhoto(p SendPhoto) (*Message, error) {
 	params["parse_mode"] = p.ParseMode
 	params["allow_sending_without_reply"] = strconv.FormatBool(p.AllowSendingWithoutReply)
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["photo"], err = b.marshler.MarshalToString(p.Photo); err != nil {
@@ -1016,7 +1062,7 @@ func (b Bot) SendAudio(p SendAudio) (*Message, error) {
 	params["performer"] = p.Performer
 	params["title"] = p.Title
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["audio"], err = b.marshler.MarshalToString(p.Audio); err != nil {
@@ -1067,7 +1113,7 @@ func (b Bot) SendDocument(p SendDocument) (*Message, error) {
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["document"], err = b.marshler.MarshalToString(p.Document); err != nil {
@@ -1114,7 +1160,7 @@ func (b Bot) SendVideo(p SendVideo) (*Message, error) {
 	params["parse_mode"] = p.ParseMode
 	params["supports_streaming"] = strconv.FormatBool(p.SupportsStreaming)
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["video"], err = b.marshler.MarshalToString(p.Video); err != nil {
@@ -1168,7 +1214,7 @@ func (b Bot) SendAnimation(p SendAnimation) (*Message, error) {
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["animation"], err = b.marshler.MarshalToString(p.Animation); err != nil {
@@ -1220,7 +1266,7 @@ func (b Bot) SendVoice(p SendVoice) (*Message, error) {
 	params["caption"] = p.Caption
 	params["parse_mode"] = p.ParseMode
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["voice"], err = b.marshler.MarshalToString(p.Voice); err != nil {
@@ -1263,7 +1309,7 @@ func (b Bot) SendVideoNote(p SendVideoNote) (*Message, error) {
 	params["duration"] = strconv.Itoa(p.Duration)
 	params["length"] = strconv.Itoa(p.Length)
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 
 	var err error
 	if params["video_note"], err = b.marshler.MarshalToString(p.VideoNote); err != nil {
@@ -1330,7 +1376,7 @@ func (b Bot) SendMediaGroup(p SendMediaGroup) ([]*Message, error) {
 	params := make(map[string]string)
 	params["chat_id"] = p.ChatID.String()
 	params["disable_notification"] = strconv.FormatBool(p.DisableNotification)
-	params["reply_to_message_id"] = strconv.Itoa(p.ReplyToMessageID)
+	params["reply_to_message_id"] = strconv.FormatInt(p.ReplyToMessageID, 10)
 	params["media"] = "[" + strings.Join(media, ",") + "]"
 
 	src, err := b.Upload(MethodSendMediaGroup, params, files...)
@@ -1547,7 +1593,7 @@ func (b Bot) GetFile(fid string) (*File, error) {
 	return result, nil
 }
 
-func NewKick(chatID ChatID, userID int) KickChatMember {
+func NewKick(chatID ChatID, userID int64) KickChatMember {
 	return KickChatMember{
 		ChatID: chatID,
 		UserID: userID,
@@ -1594,7 +1640,7 @@ func (b Bot) UnbanChatMember(p UnbanChatMember) (ok bool, err error) {
 	return
 }
 
-func NewRestrict(chatID ChatID, userID int, permissions ChatPermissions) RestrictChatMember {
+func NewRestrict(chatID ChatID, userID int64, permissions ChatPermissions) RestrictChatMember {
 	return RestrictChatMember{
 		ChatID:      chatID,
 		UserID:      userID,
@@ -1621,7 +1667,7 @@ func (b Bot) RestrictChatMember(p RestrictChatMember) (ok bool, err error) {
 	return
 }
 
-func NewPromote(chatID ChatID, userID int) PromoteChatMember {
+func NewPromote(chatID ChatID, userID int64) PromoteChatMember {
 	return PromoteChatMember{
 		ChatID: chatID,
 		UserID: userID,
@@ -1700,6 +1746,72 @@ func (b Bot) ExportChatInviteLink(p ExportChatInviteLink) (string, error) {
 	var result string
 	if err = b.marshler.Unmarshal(resp.Result, &result); err != nil {
 		return "", err
+	}
+
+	return result, nil
+}
+
+// CreateChatInviteLink create an additional invite link for a chat. The bot must be an administrator in the chat for
+// this to work and must have the appropriate admin rights. The link can be revoked using the method
+// revokeChatInviteLink. Returns the new invite link as ChatInviteLink object.
+func (b Bot) CreateChatInviteLink(p CreateChatInviteLink) (*ChatInviteLink, error) {
+	src, err := b.Do(MethodCreateChatInviteLink, p)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(ChatInviteLink)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// EditChatInviteLink method to edit a non-primary invite link created by the bot. The bot must be an administrator in
+// the chat for this to work and must have the appropriate admin rights. Returns the edited invite link as a
+// ChatInviteLink object.
+func (b Bot) EditChatInviteLink(p EditChatInviteLink) (*ChatInviteLink, error) {
+	src, err := b.Do(MethodEditChatInviteLink, p)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(ChatInviteLink)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// RevokeChatInviteLink method to revoke an invite link created by the bot. If the primary link is revoked, a new link
+// is automatically generated. The bot must be an administrator in the chat for this to work and must have the
+// appropriate admin rights. Returns the revoked invite link as ChatInviteLink object.
+func (b Bot) RevokeChatInviteLink(p RevokeChatInviteLink) (*ChatInviteLink, error) {
+	src, err := b.Do(MethodRevokeChatInviteLink, p)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return nil, err
+	}
+
+	result := new(ChatInviteLink)
+	if err = b.marshler.Unmarshal(resp.Result, result); err != nil {
+		return nil, err
 	}
 
 	return result, nil
@@ -1793,7 +1905,7 @@ func (b Bot) SetChatDescription(p SetChatDescription) (ok bool, err error) {
 	return
 }
 
-func NewPin(chatID ChatID, messageID int) PinChatMessage {
+func NewPin(chatID ChatID, messageID int64) PinChatMessage {
 	return PinChatMessage{
 		ChatID:    chatID,
 		MessageID: messageID,

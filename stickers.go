@@ -86,7 +86,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -103,7 +103,7 @@ type (
 
 	UploadStickerFile struct {
 		// User identifier of sticker file owner
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Png image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px.
 		PNGSticker *InputFile `json:"png_sticker"`
@@ -111,7 +111,7 @@ type (
 
 	CreateNewStickerSet struct {
 		// User identifier of created sticker set owner
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_<bot username>”. <bot_username> is case insensitive. 1-64 characters.
 		Name string `json:"name"`
@@ -138,7 +138,7 @@ type (
 
 	AddStickerToSet struct {
 		// User identifier of sticker set owner
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Sticker set name
 		Name string `json:"name"`
@@ -178,7 +178,7 @@ type (
 		Name string `json:"name"`
 
 		// User identifier of the sticker set owner
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height
 		// exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size;
@@ -251,7 +251,7 @@ func (b Bot) UploadStickerFile(uid int, sticker *InputFile) (*File, error) {
 	return result, nil
 }
 
-func NewStickerSet(userID int, name, title string, pngSticker *InputFile, emojis ...string) CreateNewStickerSet {
+func NewStickerSet(userID int64, name, title string, pngSticker *InputFile, emojis ...string) CreateNewStickerSet {
 	return CreateNewStickerSet{
 		UserID:     userID,
 		Name:       name,
@@ -264,7 +264,7 @@ func NewStickerSet(userID int, name, title string, pngSticker *InputFile, emojis
 // CreateNewStickerSet create new sticker set owned by a user. The bot will be able to edit the created sticker set. Returns True on success.
 func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (ok bool, err error) {
 	params := make(map[string]string)
-	params["user_id"] = strconv.Itoa(p.UserID)
+	params["user_id"] = strconv.FormatInt(p.UserID, 10)
 	params["name"] = p.Name
 	params["title"] = p.Title
 	params["emojis"] = p.Emojis
@@ -298,7 +298,7 @@ func (b *Bot) CreateNewStickerSet(p CreateNewStickerSet) (ok bool, err error) {
 // AddStickerToSet add a new sticker to a set created by the b. Returns True on success.
 func (b *Bot) AddStickerToSet(p AddStickerToSet) (ok bool, err error) {
 	params := make(map[string]string)
-	params["user_id"] = strconv.Itoa(p.UserID)
+	params["user_id"] = strconv.FormatInt(p.UserID, 10)
 	params["name"] = p.Name
 	params["emojis"] = p.Emojis
 
@@ -363,7 +363,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (ok bool, err error) {
 func (b *Bot) SetStickerSetThumb(p SetStickerSetThumb) (ok bool, err error) {
 	params := make(map[string]string)
 	params["name"] = p.Name
-	params["user_id"] = strconv.Itoa(p.UserID)
+	params["user_id"] = strconv.FormatInt(p.UserID, 10)
 
 	if params["thumb"], err = b.marshler.MarshalToString(p.Thumb); err != nil {
 		return

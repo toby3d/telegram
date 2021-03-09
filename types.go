@@ -31,7 +31,7 @@ type (
 	// User represents a Telegram user or bot.
 	User struct {
 		// Unique identifier for this user or bot
-		ID int `json:"id"`
+		ID int64 `json:"id"`
 
 		// True, if this user is a bot
 		IsBot bool `json:"is_bot"`
@@ -106,7 +106,7 @@ type (
 	// Message represents a message.
 	Message struct {
 		// Unique message identifier inside this chat
-		ID int `json:"message_id"`
+		ID int64 `json:"message_id"`
 
 		// Sender, empty for messages sent to channels
 		From *User `json:"from,omitempty"`
@@ -129,7 +129,7 @@ type (
 		ForwardFromChat *Chat `json:"forward_from_chat,omitempty"`
 
 		// For messages forwarded from channels, identifier of the original message in the channel
-		ForwardFromMessageID int `json:"forward_from_message_id,omitempty"`
+		ForwardFromMessageID int64 `json:"forward_from_message_id,omitempty"`
 
 		// For messages forwarded from channels, signature of the post author if present
 		ForwardSignature string `json:"forward_signature,omitempty"`
@@ -235,6 +235,9 @@ type (
 		// Service message: the channel has been created. This field can‘t be received in a message coming through updates, because bot can’t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
 		ChannelChatCreated bool `json:"channel_chat_created,omitempty"`
 
+		// Service message: auto-delete timer settings changed in the chat
+		MessageAutoDeleteTimerChanged *MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed,omitempty"`
+
 		// The group has been migrated to a supergroup with the specified identifier.
 		MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
 
@@ -260,6 +263,15 @@ type (
 		// Location.
 		ProximityAlertTriggered *ProximityAlertTriggered `json:"proximity_alert_triggered,omitempty"`
 
+		// Service message: voice chat started
+		VoiceChatStarted *VoiceChatStarted `json:"voice_chat_started,omitempty"`
+
+		// Service message: voice chat ended
+		VoiceChatEnded *VoiceChatEnded `json:"voice_chat_ended,omitempty"`
+
+		// Service message: new participants invited to a voice chat
+		VoiceChatParticipantsInvited *VoiceChatParticipantsInvited `json:"voice_chat_participants_invited,omitempty"`
+
 		// Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
 		ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	}
@@ -267,7 +279,7 @@ type (
 	// MessageID represents a unique message identifier.
 	MessageID struct {
 		// Unique message identifier
-		MessageID int `json:"message_id"`
+		MessageID int64 `json:"message_id"`
 	}
 
 	// MessageEntity represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
@@ -471,7 +483,7 @@ type (
 		LastName string `json:"last_name,omitempty"`
 
 		// Contact's user identifier in Telegram
-		UserID int `json:"user_id,omitempty"`
+		UserID int64 `json:"user_id,omitempty"`
 
 		// Additional data about the contact in the form of a vCard
 		VCard string `json:"vcard,omitempty"`
@@ -573,7 +585,7 @@ type (
 		AllowsMultipleAnswers bool `json:"allows_multiple_answers"`
 
 		// 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
-		CorrectOptionID int `json:"correct_option_id,omitempty"`
+		CorrectOptionID int64 `json:"correct_option_id,omitempty"`
 
 		// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style
 		// poll, 0-200 characters
@@ -610,6 +622,28 @@ type (
 
 		// The distance between the users
 		Distance int `json:"distance"`
+	}
+
+	// MessageAutoDeleteTimerChanged represents a service message about a change in auto-delete timer settings.
+	MessageAutoDeleteTimerChanged struct {
+		// New auto-delete time for messages in the chat
+		MessageAutoDeleteTime int `json:"message_auto_delete_time"`
+	}
+
+	// VoiceChatStarted represents a service message about a voice chat started in the chat. Currently holds no
+	// information.
+	VoiceChatStarted struct{}
+
+	// VoiceChatEnded represents a service message about a voice chat ended in the chat.
+	VoiceChatEnded struct {
+		// Voice chat duration; in seconds
+		Duration int64 `json:"duration"`
+	}
+
+	// VoiceChatParticipantsInvited represents a service message about new members invited to a voice chat.
+	VoiceChatParticipantsInvited struct {
+		// New members that were invited to the voice chat
+		Users []*User `json:"users,omitempty"`
 	}
 
 	// UserProfilePhotos represent a user's profile pictures.
@@ -798,6 +832,29 @@ type (
 		BigFileUniqueID string `json:"big_file_unique_id"`
 	}
 
+	// ChatInviteLink represents an invite link for a chat.
+	ChatInviteLink struct {
+		// The invite link. If the link was created by another chat administrator, then the second part of the
+		// link will be replaced with “…”.
+		InviteLink string `json:"invite_link"`
+
+		// Creator of the link
+		Creator *User `json:"creator"`
+
+		// True, if the link is primary
+		IsPrimary bool `json:"is_primary"`
+
+		// True, if the link is revoked
+		IsRevoked bool `json:"is_revoked"`
+
+		// Optional. Point in time (Unix timestamp) when the link will expire or has been expired
+		ExpireDate int64 `json:"expire_date,omitempty"`
+
+		// Optional. Maximum number of users that can be members of the chat simultaneously after joining the
+		// chat via this invite link; 1-99999
+		MemberLimit int `json:"member_limit,omitempty"`
+	}
+
 	// ChatMember contains information about one member of a chat.
 	ChatMember struct {
 		// Information about the user
@@ -815,6 +872,11 @@ type (
 		// Administrators only. True, if the bot is allowed to edit administrator privileges of that user
 		CanBeEdited bool `json:"can_be_edited,omitempty"`
 
+		// Administrators only. True, if the administrator can access the chat event log, chat statistics,
+		// message statistics in channels, see channel members, see anonymous administrators in supergoups and
+		// ignore slow mode. Implied by any other administrator privilege
+		CanManageChat bool `json:"can_manage_chat,omitempty"`
+
 		// Administrators only. True, if the administrator can post in the channel, channels only
 		CanPostMessages bool `json:"can_post_messages,omitempty"`
 
@@ -823,6 +885,9 @@ type (
 
 		// Administrators only. True, if the administrator can delete messages of other users
 		CanDeleteMessages bool `json:"can_delete_messages,omitempty"`
+
+		// Administrators only. True, if the administrator can manage voice chats
+		CanManageVoiceChats bool `json:"can_manage_voice_chats,omitempty"`
 
 		// Administrators only. True, if the administrator can restrict, ban or
 		// unban chat members
@@ -839,6 +904,27 @@ type (
 
 		// Restictred and kicked only. Date when restrictions will be lifted for this user, unix time
 		UntilDate int64 `json:"until_date,omitempty"`
+	}
+
+	// ChatMemberUpdated represents changes in the status of a chat member.
+	ChatMemberUpdated struct {
+		// Chat the user belongs to.
+		Chat *Chat `json:"chat"`
+
+		// Performer of the action, which resulted in the change.
+		From *User `json:"from"`
+
+		// Date the change was done in Unix time.
+		Date int64 `json:"date"`
+
+		// Previous information about the chat member.
+		OldChatMember *ChatMember `json:"old_chat_member"`
+
+		// New information about the chat member.
+		NewChatMember *ChatMember `json:"new_chat_member"`
+
+		// Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
+		InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 	}
 
 	// ChatPermissions describes actions that a non-administrator user is allowed to take in a chat.

@@ -53,7 +53,7 @@ type (
 		DisableNotification bool `json:"disable_notification,omitempty"`
 
 		// If the message is a reply, ID of the original message.
-		ReplyToMessageID int `json:"reply_to_message_id,omitempty"`
+		ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
 
 		// Pass True, if the message should be sent even if the specified replied-to message is not found
 		AllowSendingWithoutReply bool `json:"allow_sending_without_reply,omitempty"`
@@ -66,13 +66,13 @@ type (
 	// SetGameScoreParameters represents data for SetGameScore method.
 	SetGameScore struct {
 		// User identifier
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// New score, must be non-negative
 		Score int `json:"score"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Pass True, if the high score is allowed to decrease. This can be useful when fixing mistakes or
 		// banning cheaters
@@ -91,10 +91,10 @@ type (
 	// GetGameHighScoresParameters represents data for GetGameHighScores method.
 	GetGameHighScores struct {
 		// Target user id
-		UserID int `json:"user_id"`
+		UserID int64 `json:"user_id"`
 
 		// Required if inline_message_id is not specified. Identifier of the sent message
-		MessageID int `json:"message_id,omitempty"`
+		MessageID int64 `json:"message_id,omitempty"`
 
 		// Required if inline_message_id is not specified. Unique identifier for the target chat
 		ChatID int64 `json:"chat_id,omitempty"`
@@ -126,7 +126,7 @@ func (b Bot) SendGame(p SendGame) (*Message, error) {
 	return result, nil
 }
 
-func NewGameScore(userID int, score int) SetGameScore {
+func NewGameScore(userID int64, score int) SetGameScore {
 	return SetGameScore{
 		UserID: userID,
 		Score:  score,
