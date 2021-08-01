@@ -1,7 +1,7 @@
 package telegram
 
 // Version represents current version of Telegram API supported by this package
-const Version string = "5.2.0"
+const Version string = "5.3.0"
 
 // Action represents available and supported status actions of bot
 const (
@@ -61,6 +61,7 @@ const (
 	MethodAnswerInlineQuery               string = "answerInlineQuery"
 	MethodAnswerPreCheckoutQuery          string = "answerPreCheckoutQuery"
 	MethodAnswerShippingQuery             string = "answerShippingQuery"
+	MethodBanChatMember                   string = "banChatMember"
 	MethodClose                           string = "close"
 	MethodCopyMessage                     string = "copyMessage"
 	MethodCreateChatInviteLink            string = "createChatInviteLink"
@@ -68,6 +69,7 @@ const (
 	MethodDeleteChatPhoto                 string = "deleteChatPhoto"
 	MethodDeleteChatStickerSet            string = "deleteChatStickerSet"
 	MethodDeleteMessage                   string = "deleteMessage"
+	MethodDeleteMyCommands                string = "deleteMyCommands"
 	MethodDeleteStickerFromSet            string = "deleteStickerFromSet"
 	MethodDeleteWebhook                   string = "deleteWebhook"
 	MethodEditChatInviteLink              string = "editChatInviteLink"
@@ -81,7 +83,7 @@ const (
 	MethodGetChat                         string = "getChat"
 	MethodGetChatAdministrators           string = "getChatAdministrators"
 	MethodGetChatMember                   string = "getChatMember"
-	MethodGetChatMembersCount             string = "getChatMembersCount"
+	MethodGetChatMemberCount              string = "getChatMemberCount"
 	MethodGetFile                         string = "getFile"
 	MethodGetGameHighScores               string = "getGameHighScores"
 	MethodGetMe                           string = "getMe"
@@ -90,7 +92,6 @@ const (
 	MethodGetUpdates                      string = "getUpdates"
 	MethodGetUserProfilePhotos            string = "getUserProfilePhotos"
 	MethodGetWebhookInfo                  string = "getWebhookInfo"
-	MethodKickChatMember                  string = "kickChatMember"
 	MethodLeaveChat                       string = "leaveChat"
 	MethodLogOut                          string = "logOut"
 	MethodPinChatMessage                  string = "pinChatMessage"

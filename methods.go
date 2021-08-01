@@ -613,8 +613,8 @@ type (
 		FileID string `json:"file_id"`
 	}
 
-	// KickChatMember represents data for KickChatMember method.
-	KickChatMember struct {
+	// BanChatMember represents data for BanChatMember method.
+	BanChatMember struct {
 		ChatID ChatID `json:"chat_id"`
 
 		// Unique identifier of the target user
@@ -825,8 +825,8 @@ type (
 		ChatID ChatID `json:"chat_id"`
 	}
 
-	// GetChatMembersCount represents data for GetChatMembersCount method.
-	GetChatMembersCount struct {
+	// GetChatMemberCount represents data for GetChatMemberCount method.
+	GetChatMemberCount struct {
 		ChatID ChatID `json:"chat_id"`
 	}
 
@@ -876,6 +876,34 @@ type (
 		// A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100
 		// commands can be specified.
 		Commands []*BotCommand `json:"commands"`
+
+		// A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to
+		// BotCommandScopeDefault.
+		Scope BotCommandScope `json:"scope,omitempty"`
+
+		// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given
+		// scope, for whose language there are no dedicated commands
+		LanguageCode string `json:"language_code,omitempty"`
+	}
+
+	// DeleteMyCommands represents data for DeleteMyCommands method.
+	DeleteMyCommands struct {
+		// A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to
+		// BotCommandScopeDefault.
+		Scope BotCommandScope `json:"scope,omitempty"`
+
+		// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given
+		// scope, for whose language there are no dedicated commands
+		LanguageCode string `json:"language_code,omitempty"`
+	}
+
+	// GetMyCommands represents data for GetMyCommands method.
+	GetMyCommands struct {
+		// A JSON-serialized object, describing scope of users. Defaults to BotCommandScopeDefault.
+		Scope BotCommandScope `json:"scope,omitempty"`
+
+		// A two-letter ISO 639-1 language code or an empty string
+		LanguageCode string `json:"language_code,omitempty"`
 	}
 )
 
@@ -1593,18 +1621,18 @@ func (b Bot) GetFile(fid string) (*File, error) {
 	return result, nil
 }
 
-func NewKick(chatID ChatID, userID int64) KickChatMember {
-	return KickChatMember{
+func NewKick(chatID ChatID, userID int64) BanChatMember {
+	return BanChatMember{
 		ChatID: chatID,
 		UserID: userID,
 	}
 }
 
-// KickChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
+// BanChatMember kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.
 //
 // Note: In regular groups (non-supergroups), this method will only work if the 'All Members Are Admins' setting is off in the target group. Otherwise members may only be removed by the group's creator or by the member that added them.
-func (b Bot) KickChatMember(p KickChatMember) (ok bool, err error) {
-	src, err := b.Do(MethodKickChatMember, p)
+func (b Bot) BanChatMember(p BanChatMember) (ok bool, err error) {
+	src, err := b.Do(MethodBanChatMember, p)
 	if err != nil {
 		return ok, err
 	}
@@ -2020,9 +2048,9 @@ func (b Bot) GetChatAdministrators(p GetChatAdministrators) ([]*ChatMember, erro
 	return result, nil
 }
 
-// GetChatMembersCount get the number of members in a chat. Returns Int on success.
-func (b Bot) GetChatMembersCount(p GetChatMembersCount) (int, error) {
-	src, err := b.Do(MethodGetChatMembersCount, p)
+// GetChatMemberCount get the number of members in a chat. Returns Int on success.
+func (b Bot) GetChatMemberCount(p GetChatMemberCount) (int, error) {
+	src, err := b.Do(MethodGetChatMemberCount, p)
 	if err != nil {
 		return 0, err
 	}
@@ -2135,10 +2163,30 @@ func (b Bot) SetMyCommands(p SetMyCommands) (ok bool, err error) {
 	return
 }
 
+// DeleteMyCommands delete the list of the bot's commands for the given scope and user language. After deletion, higher
+// level commands will be shown to affected users. Returns True on success.
+func (b Bot) DeleteMyCommands(p DeleteMyCommands) (ok bool, err error) {
+	src, err := b.Do(MethodDeleteMyCommands, p)
+	if err != nil {
+		return ok, err
+	}
+
+	resp := new(Response)
+	if err = b.marshler.Unmarshal(src, resp); err != nil {
+		return
+	}
+
+	if err = b.marshler.Unmarshal(resp.Result, &ok); err != nil {
+		return
+	}
+
+	return
+}
+
 // GetMyCommands get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on
 // success.
-func (b Bot) GetMyCommands() ([]*BotCommand, error) {
-	src, err := b.Do(MethodGetMyCommands, nil)
+func (b Bot) GetMyCommands(p GetMyCommands) ([]*BotCommand, error) {
+	src, err := b.Do(MethodGetMyCommands, p)
 	if err != nil {
 		return nil, err
 	}

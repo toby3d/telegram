@@ -692,6 +692,9 @@ type (
 		// Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
 		OneTimeKeyboard bool `json:"one_time_keyboard,omitempty"`
 
+		// The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
+		InputFieldPlaceholder string `json:"input_field_placeholder,omitempty"`
+
 		// Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		//
 		// Example: A user requests to change the bot‘s language, bot replies to the request with a keyboard to select the new language. Other users in the group don’t see the keyboard.
@@ -822,6 +825,9 @@ type (
 		// Shows reply interface to the user, as if they manually selected the bot‘s message and tapped ’Reply'
 		ForceReply bool `json:"force_reply"`
 
+		// The placeholder to be shown in the input field when the reply is active; 1-64 characters
+		InputFieldPlaceholder string `json:"input_field_placeholder,omitempty"`
+
 		// Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
 		Selective bool `json:"selective,omitempty"`
 	}
@@ -856,63 +862,158 @@ type (
 		// True, if the link is revoked
 		IsRevoked bool `json:"is_revoked"`
 
-		// Optional. Point in time (Unix timestamp) when the link will expire or has been expired
+		// Point in time (Unix timestamp) when the link will expire or has been expired
 		ExpireDate int64 `json:"expire_date,omitempty"`
 
-		// Optional. Maximum number of users that can be members of the chat simultaneously after joining the
+		// Maximum number of users that can be members of the chat simultaneously after joining the
 		// chat via this invite link; 1-99999
 		MemberLimit int `json:"member_limit,omitempty"`
 	}
 
 	// ChatMember contains information about one member of a chat.
-	ChatMember struct {
+	ChatMember interface {
+		isChatMember()
+	}
+
+	// ChatMemberOwner represents a chat member that owns the chat and has all administrator privileges.
+	ChatMemberOwner struct {
+		// The member's status in the chat, always “creator”
+		Status string `json:"status"`
+
+		// Information about the user
+		User User `json:"user"`
+
+		// True, if the user's presence in the chat is hidden
+		IsAnonymous bool `json:"is_anonymous"`
+
+		// Custom title for this user
+		CustomTitle string `json:"custom_title,omitempty"`
+	}
+
+	// ChatMemberAdministrator represents a chat member that has some additional privileges.
+	ChatMemberAdministrator struct {
+		// The member's status in the chat, always “administrator”
+		Status string `json:"status"`
+
 		// Information about the user
 		User *User `json:"user"`
 
-		// The member's status in the chat. Can be "creator", "administrator", "member", "restricted", "left" or "kicked"
-		Status string `json:"status"`
+		// True, if the bot is allowed to edit administrator privileges of that user
+		CanBeEdited bool `json:"can_be_edited"`
 
-		// Owner and administrators only. Custom title for this user
-		CustomTitle string `json:"custom_title,omitempty"`
+		// True, if the user's presence in the chat is hidden
+		IsAnonymous bool `json:"is_anonymous"`
 
-		// Owner and administrators only. True, if the user's presence in the chat is hidden
-		IsAnonymous bool `json:"is_anonymous,omitempty"`
+		// True, if the administrator can access the chat event log, chat statistics, message statistics in
+		// channels, see channel members, see anonymous administrators in supergroups and ignore slow mode.
+		// Implied by any other administrator privilege
+		CanManageChat bool `json:"can_manage_chat"`
 
-		// Administrators only. True, if the bot is allowed to edit administrator privileges of that user
-		CanBeEdited bool `json:"can_be_edited,omitempty"`
+		// True, if the administrator can delete messages of other users
+		CanDeleteMessages bool `json:"can_delete_messages"`
 
-		// Administrators only. True, if the administrator can access the chat event log, chat statistics,
-		// message statistics in channels, see channel members, see anonymous administrators in supergoups and
-		// ignore slow mode. Implied by any other administrator privilege
-		CanManageChat bool `json:"can_manage_chat,omitempty"`
+		// True, if the administrator can manage voice chats
+		CanManageVoiceChats bool `json:"can_manage_voice_chats"`
 
-		// Administrators only. True, if the administrator can post in the channel, channels only
+		// True, if the administrator can restrict, ban or unban chat members
+		CanRestrictMembers bool `json:"can_restrict_members"`
+
+		// True, if the administrator can add new administrators with a subset of their own privileges or
+		// demote administrators that he has promoted, directly or indirectly (promoted by administrators that
+		// were appointed by the user)
+		CanPromoteMembers bool `json:"can_promote_members"`
+
+		// True, if the user is allowed to change the chat title, photo and other settings
+		CanChangeInfo bool `json:"can_change_info"`
+
+		// True, if the user is allowed to invite new users to the chat
+		CanInviteUsers bool `json:"can_invite_users"`
+
+		// True, if the administrator can post in the channel; channels only
 		CanPostMessages bool `json:"can_post_messages,omitempty"`
 
-		// Administrators only. True, if the administrator can edit messages of other users, channels only
+		// True, if the administrator can edit messages of other users and can pin messages; channels
+		// only
 		CanEditMessages bool `json:"can_edit_messages,omitempty"`
 
-		// Administrators only. True, if the administrator can delete messages of other users
-		CanDeleteMessages bool `json:"can_delete_messages,omitempty"`
+		// True, if the user is allowed to pin messages; groups and supergroups only
+		CanPinMessages bool `json:"can_pin_messages,omitempty"`
 
-		// Administrators only. True, if the administrator can manage voice chats
-		CanManageVoiceChats bool `json:"can_manage_voice_chats,omitempty"`
+		// Custom title for this user
+		CustomTitle string `json:"custom_title,omitempty"`
+	}
 
-		// Administrators only. True, if the administrator can restrict, ban or
-		// unban chat members
-		CanRestrictMembers bool `json:"can_restrict_members,omitempty"`
+	// ChatMemberMember represents a chat member that has no additional privileges or restrictions.
+	ChatMemberMember struct {
+		// The member's status in the chat, always “member”
+		Status string `json:"status"`
 
-		// Administrators only. True, if the administrator can add new administrators with a subset of his own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
-		CanPromoteMembers bool `json:"can_promote_members,omitempty"`
+		// Information about the user
+		User *User `json:"user"`
+	}
 
-		// Restricted only. True, if the user is a member of the chat at the moment of the request
-		IsMember bool `json:"is_member,omitempty"`
+	// ChatMemberRestricted represents a chat member that is under certain restrictions in the chat. Supergroups
+	// only.
+	ChatMemberRestricted struct {
+		// The member's status in the chat, always “restricted”
+		Status string `json:"status"`
 
-		// Actions that a non-administrator user is allowed to take in a chat.
-		ChatPermissions
+		// Information about the user
+		User *User `json:"user"`
 
-		// Restictred and kicked only. Date when restrictions will be lifted for this user, unix time
-		UntilDate int64 `json:"until_date,omitempty"`
+		// True, if the user is a member of the chat at the moment of the request
+		IsMember bool `json:"is_member"`
+
+		// True, if the user is allowed to change the chat title, photo and other settings
+		CanChangeInfo bool `json:"can_change_info"`
+
+		// True, if the user is allowed to invite new users to the chat
+		CanInviteUsers bool `json:"can_invite_users"`
+
+		// True, if the user is allowed to pin messages
+		CanPinMessages bool `json:"can_pin_messages"`
+
+		// True, if the user is allowed to send text messages, contacts, locations and venues
+		CanSendMessages bool `json:"can_send_messages"`
+
+		// True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
+		CanSendMediaMessages bool `json:"can_send_media_messages"`
+
+		// True, if the user is allowed to send polls
+		CanSendPolls bool `json:"can_send_polls"`
+
+		// True, if the user is allowed to send animations, games, stickers and use inline bots
+		CanSendOtherMessages bool `json:"can_send_other_messages"`
+
+		// True, if the user is allowed to add web page previews to their messages
+		CanAddWebPagePreviews bool `json:"can_add_web_page_previews"`
+
+		// Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted
+		// forever
+		UntilDate int64 `json:"until_date"`
+	}
+
+	// ChatMemberLeft represents a chat member that isn't currently a member of the chat, but may join it
+	// themselves.
+	ChatMemberLeft struct {
+		// The member's status in the chat, always “left”
+		Status string `json:"status"`
+
+		// Information about the user
+		User *User `json:"user"`
+	}
+
+	// ChatMemberBanned represents a chat member that was banned in the chat and can't return to the chat or view
+	// chat messages.
+	ChatMemberBanned struct {
+		// The member's status in the chat, always “kicked”
+		Status string `json:"status"`
+
+		// Information about the user
+		User *User `json:"user"`
+
+		// Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever
+		UntilDate int64 `json:"until_date"`
 	}
 
 	// ChatMemberUpdated represents changes in the status of a chat member.
@@ -927,10 +1028,10 @@ type (
 		Date int64 `json:"date"`
 
 		// Previous information about the chat member.
-		OldChatMember *ChatMember `json:"old_chat_member"`
+		OldChatMember ChatMember `json:"old_chat_member"`
 
 		// New information about the chat member.
-		NewChatMember *ChatMember `json:"new_chat_member"`
+		NewChatMember ChatMember `json:"new_chat_member"`
 
 		// Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
 		InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
@@ -980,6 +1081,72 @@ type (
 
 		// Description of the command, 3-256 characters.
 		Description string `json:"description"`
+	}
+
+	// BotCommandScope represents the scope to which bot commands are applied.
+	BotCommandScope interface {
+		isBotCommandScope()
+	}
+
+	// BotCommandScopeDefault represents the default scope of bot commands. Default commands are used if no
+	// commands with a narrower scope are specified for the user.
+	BotCommandScopeDefault struct {
+		// Scope type, must be default
+		Type string `json:"type"`
+	}
+
+	// BotCommandScopeAllPrivateChats represents the scope of bot commands, covering all private chats.
+	BotCommandScopeAllPrivateChats struct {
+		// Scope type, must be all_private_chats
+		Type string `json:"type"`
+	}
+
+	// BotCommandScopeAllGroupChats represents the scope of bot commands, covering all group and supergroup chats.
+	BotCommandScopeAllGroupChats struct {
+		// Scope type, must be all_group_chats
+		Type string `json:"type"`
+	}
+
+	// BotCommandScopeAllChatAdministrators represents the scope of bot commands, covering all group and supergroup
+	// chat administrators.
+	BotCommandScopeAllChatAdministrators struct {
+		// Scope type, must be all_chat_administrators
+		Type string `json:"type"`
+	}
+
+	// BotCommandScopeChat represents the scope of bot commands, covering a specific chat.
+	BotCommandScopeChat struct {
+		// Scope type, must be chat
+		Type string `json:"type"`
+
+		// Unique identifier for the target chat or username of the target supergroup (in the format
+		// @supergroupusername)
+		ChatID ChatID `json:"chat_id"`
+	}
+
+	// BotCommandScopeChatAdministrators represents the scope of bot commands, covering all administrators of a
+	// specific group or supergroup chat.
+	BotCommandScopeChatAdministrators struct {
+		// Scope type, must be chat_administrators
+		Type string `json:"type"`
+
+		// Unique identifier for the target chat or username of the target supergroup (in the format
+		// @supergroupusername)
+		ChatID ChatID `json:"chat_id"`
+	}
+
+	// BotCommandScopeChatMember represents the scope of bot commands, covering a specific member of a group or
+	// supergroup chat.
+	BotCommandScopeChatMember struct {
+		// Scope type, must be chat_member
+		Type string `json:"type"`
+
+		// Unique identifier for the target chat or username of the target supergroup (in the format
+		// @supergroupusername)
+		ChatID ChatID `json:"chat_id"`
+
+		// Unique identifier of the target user
+		UserID int64 `json:"user_id"`
 	}
 
 	// ResponseParameters contains information about why a request was unsuccessful.
@@ -1641,24 +1808,6 @@ func (p ChatPhoto) BigFile() File {
 	}
 }
 
-// IsAdministrator checks that current member is administrator.
-func (m ChatMember) IsAdministrator() bool { return strings.EqualFold(m.Status, StatusAdministrator) }
-
-// IsCreator checks that current member is creator.
-func (m ChatMember) IsCreator() bool { return strings.EqualFold(m.Status, StatusCreator) }
-
-// IsKicked checks that current member has been kicked.
-func (m ChatMember) IsKicked() bool { return strings.EqualFold(m.Status, StatusKicked) }
-
-// IsLeft checks that current member has left the chat.
-func (m ChatMember) IsLeft() bool { return strings.EqualFold(m.Status, StatusLeft) }
-
-// IsRestricted checks that current member has been restricted.
-func (m ChatMember) IsRestricted() bool { return strings.EqualFold(m.Status, StatusRestricted) }
-
-// UntilTime parse UntilDate of restrictions and returns time.Time.
-func (m ChatMember) UntilTime() time.Time { return time.Unix(m.UntilDate, 0) }
-
 func (m *InputMediaAnimation) GetMedia() *InputFile { return m.Media }
 
 func (m *InputMediaAudio) GetMedia() *InputFile { return m.Media }
@@ -1733,3 +1882,29 @@ func (c ChatID) String() string {
 }
 
 // TODO(toby3d): create method for checking what message from AnonymousGroupBot or this is a auto channel repost
+
+func (BotCommandScopeDefault) isBotCommandScope() {}
+
+func (BotCommandScopeAllPrivateChats) isBotCommandScope() {}
+
+func (BotCommandScopeAllGroupChats) isBotCommandScope() {}
+
+func (BotCommandScopeAllChatAdministrators) isBotCommandScope() {}
+
+func (BotCommandScopeChat) isBotCommandScope() {}
+
+func (BotCommandScopeChatAdministrators) isBotCommandScope() {}
+
+func (BotCommandScopeChatMember) isBotCommandScope() {}
+
+func (ChatMemberOwner) isChatMember() {}
+
+func (ChatMemberAdministrator) isChatMember() {}
+
+func (ChatMemberMember) isChatMember() {}
+
+func (ChatMemberRestricted) isChatMember() {}
+
+func (ChatMemberLeft) isChatMember() {}
+
+func (ChatMemberBanned) isChatMember() {}
