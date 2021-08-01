@@ -587,7 +587,7 @@ type (
 		ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 	}
 
-	// SendChatAction represents data for SendChat method.
+	// SendChatAction represents data for SendChatAction method.
 	SendChatAction struct {
 		ChatID ChatID `json:"chat_id"`
 

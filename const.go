@@ -1,16 +1,16 @@
 package telegram
 
 // Version represents current version of Telegram API supported by this package
-const Version string = "5.1.0"
+const Version string = "5.2.0"
 
 // Action represents available and supported status actions of bot
 const (
 	ActionFindLocation    string = "find_location"
-	ActionRecordAudio     string = "record_audio"
+	ActionRecordVoice     string = "record_voice"
 	ActionRecordVideo     string = "record_video"
 	ActionRecordVideoNote string = "record_video_note"
 	ActionTyping          string = "typing"
-	ActionUploadAudio     string = "upload_audio"
+	ActionUploadVoice     string = "upload_voice"
 	ActionUploadDocument  string = "upload_document"
 	ActionUploadPhoto     string = "upload_photo"
 	ActionUploadVideo     string = "upload_video"

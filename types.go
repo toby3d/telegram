@@ -263,6 +263,9 @@ type (
 		// Location.
 		ProximityAlertTriggered *ProximityAlertTriggered `json:"proximity_alert_triggered,omitempty"`
 
+		// Service message: voice chat scheduled
+		VoiceChatScheduled *VoiceChatScheduled `json:"voice_chat_scheduled,omitempty"`
+
 		// Service message: voice chat started
 		VoiceChatStarted *VoiceChatStarted `json:"voice_chat_started,omitempty"`
 
@@ -628,6 +631,12 @@ type (
 	MessageAutoDeleteTimerChanged struct {
 		// New auto-delete time for messages in the chat
 		MessageAutoDeleteTime int `json:"message_auto_delete_time"`
+	}
+
+	// VoiceChatScheduled represents a service message about a voice chat scheduled in the chat.
+	VoiceChatScheduled struct {
+		// Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator
+		StartDate int64 `json:"start_date"`
 	}
 
 	// VoiceChatStarted represents a service message about a voice chat started in the chat. Currently holds no
