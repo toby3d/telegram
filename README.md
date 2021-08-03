@@ -1,4 +1,7 @@
 # GoLang bindings for [Telegram Bot API](https://core.telegram.org/bots/api)
+
+[![Build Status](https://drone.toby3d.me/api/badges/toby3d/telegram/status.svg)](https://drone.toby3d.me/toby3d/telegram)
+
 All-in-one package with a huge range of additional helpers for designing your bot for Telegram. [Login widget](login) support included.
 
 ## Install
