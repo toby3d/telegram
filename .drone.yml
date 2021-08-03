@@ -1,0 +1,15 @@
+---
+name: default
+type: docker
+kind: pipeline
+steps:
+  - name: test
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands: 
+      - go test -v -cover -race ./...
+volumes:
+  - name: deps
+    temp: {}
