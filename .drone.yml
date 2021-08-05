@@ -1,24 +1,31 @@
 ---
-name: default
-type: docker
 kind: pipeline
+type: docker
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
 steps:
-  - name: test
-    image: golang
-    volumes:
-      - name: deps
-        path: /go
-    commands: 
-      - go test -v -cover -race ./...
-  - name: lint
-    image: golang
-    volumes:
-      - name: deps
-        path: /go
-    commands:
-      - wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
-      - ./bin/golangci-lint run
-    failure: ignore
-volumes:
+- name: test
+  image: golang
+  commands:
+  - go test -v -cover -race ./...
+  volumes:
   - name: deps
-    temp: {}
+    path: /go
+
+- name: lint
+  image: golang
+  commands:
+  - wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
+  - ./bin/golangci-lint run
+  failure: ignore
+  volumes:
+  - name: deps
+    path: /go
+
+volumes:
+- name: deps
+  temp: {}
