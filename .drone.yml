@@ -17,10 +17,9 @@ steps:
     path: /go
 
 - name: lint
-  image: golang
+  image: golangci/golangci-lint
   commands:
-  - wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
-  - ./bin/golangci-lint run
+  - golangci-lint run ./...
   failure: ignore
   volumes:
   - name: deps

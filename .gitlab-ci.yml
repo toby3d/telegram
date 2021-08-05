@@ -42,9 +42,8 @@ cover:
       cobertura: coverage.xml
 
 lint:
+  image: golangci/golangci-lint
   stage: test
-  before_script:
-    - wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
   script:
-    - ./bin/golangci-lint run
+    - golangci-lint run $REPO_NAME/...
   allow_failure: true
