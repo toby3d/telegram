@@ -10,6 +10,15 @@ steps:
         path: /go
     commands: 
       - go test -v -cover -race ./...
+  - name: lint
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
+      - ./bin/golangci-lint run
+    failure: ignore
 volumes:
   - name: deps
     temp: {}
